@@ -1,7 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Evenmate" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorSurface">@color/beige</item>
+        <item name="colorOnSurface">@color/grey</item>
+        <item name="colorPrimary">@color/purple</item>
+        <item name="colorPrimaryContainer">@color/light_purple</item>
+        <item name="colorOnPrimary">@color/beige</item>
+        <item name="colorOnPrimaryContainer">@color/grey</item>
+        <item name="colorSecondary">@color/green</item>
+        <item name="colorSecondaryContainer">@color/light_green</item>
+        <item name="colorOnSecondary">@color/beige</item>
+        <item name="colorOnSecondaryContainer">@color/grey</item>
+        <item name="colorTertiaryContainer">@color/light_grey</item>
+        <item name="colorOnTertiaryContainer">@color/black</item>
     </style>
 </resources>
