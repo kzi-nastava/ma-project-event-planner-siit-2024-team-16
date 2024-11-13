@@ -1,4 +1,4 @@
-package com.example.evenmate.activity;
+package com.example.evenmate.activities;
 
 import android.os.Bundle;
 
