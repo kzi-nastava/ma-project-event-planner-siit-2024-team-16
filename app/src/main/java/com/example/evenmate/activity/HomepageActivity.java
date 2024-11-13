@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.evenmate.R;
 
-public class Homepage extends AppCompatActivity {
+public class HomepageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
