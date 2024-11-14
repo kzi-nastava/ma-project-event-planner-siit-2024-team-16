@@ -2,10 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
     tools:context=".activities.HomepageActivity">
-
+<ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingConstraints">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +32,6 @@
                 android:text="@string/events"
                 android:textDirection="rtl" />
 
-            <!-- switch from fragment with events to services and products-->
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -55,12 +58,20 @@
         <FrameLayout
             android:id="@+id/top_5"
             android:layout_width="380dp"
-            android:layout_height="400dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:layout_marginBottom="30dp"
             android:maxHeight="300dp"
             tools:ignore="MissingConstraints" />
 
+        <FrameLayout
+            android:id="@+id/all"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            tools:ignore="MissingConstraints" />
 
 
     </LinearLayout>
+</ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

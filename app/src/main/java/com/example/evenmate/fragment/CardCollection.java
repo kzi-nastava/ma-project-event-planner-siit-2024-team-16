@@ -1,66 +1,80 @@
 package com.example.evenmate.fragment;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
+import com.example.evenmate.activities.HomepageActivity;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CardCollection#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 public class CardCollection extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private LinearLayout cardCollectionHolder;
+    private List<Map<String, String>> data = new ArrayList<>();
+    private Button loadMoreButton;
+    private Button loadLessButton;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public CardCollection() {
-        // Required empty public constructor
+    public CardCollection(List<Map<String, String>> initialData) {
+        this.data.addAll(initialData);
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment_cards_swiper.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CardCollection newInstance(String param1, String param2) {
-        CardCollection fragment = new CardCollection();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_card_collection, container, false);
+        cardCollectionHolder = rootView.findViewById(R.id.card_collection_holder);
+        loadMoreButton = rootView.findViewById(R.id.load_more_button);
+        loadLessButton = rootView.findViewById(R.id.load_less_button);
+
+        loadCards();
+
+        if (data.get(0).containsKey("date")){
+            loadMoreButton.setOnClickListener(v -> loadNewEvents());
+            loadLessButton.setOnClickListener(v -> loadNewEvents());
+            loadLessButton.setBackgroundTintList(getResources().getColorStateList(R.color.green));
+            loadMoreButton.setBackgroundTintList(getResources().getColorStateList(R.color.green));
+        }else{
+            loadMoreButton.setOnClickListener(v -> loadNewAssets());
+            loadLessButton.setOnClickListener(v -> loadNewAssets());
+            loadLessButton.setBackgroundTintList(getResources().getColorStateList(R.color.purple));
+            loadMoreButton.setBackgroundTintList(getResources().getColorStateList(R.color.purple));
+        }
+        return rootView;
+    }
+
+    private void loadCards() {
+        cardCollectionHolder.removeAllViews();
+        for (Map<String, String> item : data) {
+            View cardView = getLayoutInflater().inflate(R.layout.card_item, cardCollectionHolder, false);
+            new CardAdapter(cardView, this, item);
+            cardCollectionHolder.addView(cardView);
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card_collection, container, false);
+    private void loadNewEvents() {
+        List<Map<String, String>> newData = HomepageActivity.getTop5Events();
+        data=newData;
+        loadCards();
+        Toast.makeText(this.getContext(),"NEW PAGE",Toast.LENGTH_SHORT).show();
     }
+    private void loadNewAssets() {
+        List<Map<String, String>> newData = HomepageActivity.getTop5ServicesAndProducts();
+        data=newData;
+        loadCards();
+        Toast.makeText(this.getContext(),"NEW PAGE",Toast.LENGTH_SHORT).show();
+
+    }
+
+
 }
