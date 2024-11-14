@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 import java.util.List;
 import java.util.Map;
 
-public class CardSwiper extends Fragment {
+public class TopCardSwiper extends Fragment {
 
     private List<Map<String, String>> data;
 
-    public CardSwiper(List<Map<String, String>> _data) {
+    public TopCardSwiper(List<Map<String, String>> _data) {
         data = _data;
     }
 
@@ -27,7 +27,7 @@ public class CardSwiper extends Fragment {
         View view = inflater.inflate(R.layout.fragment_top_cards_swiper, container, false);
         ViewPager2 viewPager = view.findViewById(R.id.viewPager);
         LinearProgressIndicator progressIndicator = view.findViewById(R.id.progressIndicatorOfCurrentSwiper);
-        CardAdapter cardAdapter = new CardAdapter(data);
+        TopCardAdapter cardAdapter = new TopCardAdapter(data);
         viewPager.setAdapter(cardAdapter);
 
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {

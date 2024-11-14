@@ -2,7 +2,7 @@ package com.example.evenmate.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.View;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -10,8 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import com.example.evenmate.R;
-import com.example.evenmate.fragment.CardSwiper;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.example.evenmate.fragment.TopCardSwiper;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +35,8 @@ public class HomepageActivity extends AppCompatActivity {
         });
         fragmentSwitch = findViewById(R.id.fragment_switch);
 
-        this.top_5_events = new CardSwiper(getTop5Events());
-        this.top_5_s_and_p = new CardSwiper(getTop5ServicesAndProducts());
+        this.top_5_events = new TopCardSwiper(getTop5Events());
+        this.top_5_s_and_p = new TopCardSwiper(getTop5ServicesAndProducts());
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top_5_events).commit();

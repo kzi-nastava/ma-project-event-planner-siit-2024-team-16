@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.Objects;
 
 // class implements the behaviour of a update in cards while changing in top 5 sections
-public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolderEvent> {
+public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardViewHolderEvent> {
     private final List<Map<String, String>> data; // will have specific form while getting it from backend
 
-    public CardAdapter(List<Map<String, String>> _data) {
+    public TopCardAdapter(List<Map<String, String>> _data) {
         this.data = _data;
     }
 
