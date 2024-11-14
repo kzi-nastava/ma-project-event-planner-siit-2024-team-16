@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.example.evenmate.activity.HomepageActivity;
+import com.example.evenmate.activities.HomepageActivity;
 
 public class MainActivity extends AppCompatActivity {
 
