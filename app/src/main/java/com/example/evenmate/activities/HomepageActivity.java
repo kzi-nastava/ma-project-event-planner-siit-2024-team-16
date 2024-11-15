@@ -1,11 +1,16 @@
 package com.example.evenmate.activities;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -25,6 +30,7 @@ public class HomepageActivity extends AppCompatActivity {
     private Fragment top_5_s_and_p;
     private Fragment all_s_and_p;
     private SwitchMaterial fragmentSwitch;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +57,41 @@ public class HomepageActivity extends AppCompatActivity {
 
         fragmentSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> switched_fragments(isChecked));
         updateSwitchColors(false);
+        searchView = findViewById(R.id.search_bar);
+        HomepageActivity that=this;
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!fragmentSwitch.isChecked()){
+                    // search for events on backend
+                    Toast.makeText(that,"You event searched for: " + query , Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    //search for services and products on backend
+                    Toast.makeText(that, "You s/p searched for: " + query, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
+
     public void switched_fragments(boolean isChecked) {
-        if (isChecked) {
+        if (isChecked) { //services and products
             getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top_5_s_and_p).commit();
             getSupportFragmentManager().beginTransaction().replace(R.id.all, all_s_and_p).commit();
             Toast.makeText(this, "SERVICES AND PRODUCTS", Toast.LENGTH_SHORT).show();
-        } else {
+            searchView.setQuery("",false);
+        } else { //events
             getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top_5_events).commit();
             getSupportFragmentManager().beginTransaction().replace(R.id.all, all_events).commit();
             Toast.makeText(this, "EVENTS", Toast.LENGTH_SHORT).show();
+            searchView.setQuery("",false);
         }
         updateSwitchColors(isChecked);
     }
@@ -70,10 +100,21 @@ public class HomepageActivity extends AppCompatActivity {
         if (isChecked) {
             fragmentSwitch.setTrackTintList(getResources().getColorStateList(R.color.light_purple));
             fragmentSwitch.setThumbTintList(getResources().getColorStateList(R.color.purple));
+            FrameLayout frameLayout = findViewById(R.id.search_bar_frame);
+            GradientDrawable background = (GradientDrawable) frameLayout.getBackground();
+            background.setColor(ContextCompat.getColor(this, R.color.purple));
+            findViewById(R.id.sort).setBackgroundColor(getResources().getColor(R.color.purple));
+            findViewById(R.id.filter).setBackgroundColor(getResources().getColor(R.color.purple));
+
 
         } else {
             fragmentSwitch.setTrackTintList(getColorStateList(R.color.light_green));
             fragmentSwitch.setThumbTintList(getResources().getColorStateList(R.color.green));
+            FrameLayout frameLayout = findViewById(R.id.search_bar_frame);
+            GradientDrawable background = (GradientDrawable) frameLayout.getBackground();
+            background.setColor(ContextCompat.getColor(this, R.color.green));
+            findViewById(R.id.sort).setBackgroundColor(getResources().getColor(R.color.green));
+            findViewById(R.id.filter).setBackgroundColor(getResources().getColor(R.color.green));
 
         }
     }

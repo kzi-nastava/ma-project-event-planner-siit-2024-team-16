@@ -23,7 +23,7 @@
             >
             <Button
                 android:id="@+id/load_less_button"
-                android:width="120dp"
+                android:width="140dp"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
 
             <Button
                 android:id="@+id/load_more_button"
-                android:width="120dp"
+                android:width="140dp"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

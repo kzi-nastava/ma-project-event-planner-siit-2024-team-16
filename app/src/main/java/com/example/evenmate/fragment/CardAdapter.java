@@ -28,6 +28,8 @@ public class CardAdapter {
     @SuppressLint("SetTextI18n")
     public void fill_event(View cardView, Fragment fragment, Map<String,String> item) {
         cardView.findViewById(R.id.card).setBackgroundTintList(fragment.getResources().getColorStateList(R.color.light_green));
+        cardView.findViewById(R.id.favorite).setBackgroundTintList(fragment.getResources().getColorStateList(R.color.light_green));
+        cardView.findViewById(R.id.title_frame).setBackgroundTintList(fragment.getResources().getColorStateList(R.color.green));
         this.id = item.get("id");
 
         TextView title = cardView.findViewById(R.id.title);
@@ -64,6 +66,8 @@ public class CardAdapter {
 
     public void fill_asset(View cardView, Fragment fragment, Map<String,String> item) {
         cardView.findViewById(R.id.card).setBackgroundTintList(fragment.getResources().getColorStateList(R.color.light_purple));
+        cardView.findViewById(R.id.favorite).setBackgroundTintList(fragment.getResources().getColorStateList(R.color.light_purple));
+        cardView.findViewById(R.id.title_frame).setBackgroundTintList(fragment.getResources().getColorStateList(R.color.purple));
         this.id = item.get("id");
 
         TextView title = cardView.findViewById(R.id.title);

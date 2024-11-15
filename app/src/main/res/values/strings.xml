@@ -6,4 +6,7 @@
     <string name="events">EVENTS</string>
     <string name="back">BACK</string>
     <string name="forward">FORWARD</string>
+    <string name="search">search...</string>
+    <string name="sort">SORT</string>
+    <string name="filter">FILTER</string>
 </resources>
