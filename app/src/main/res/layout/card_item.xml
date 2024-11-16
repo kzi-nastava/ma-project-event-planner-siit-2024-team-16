@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.CardAdapter"
+    tools:context=".fragments.CardAdapter"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
@@ -88,9 +88,7 @@
                         android:id="@+id/favorite"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_gravity="right"
-                        android:contentDescription="favorite button"
-                        android:onClick="set_favorite"
+                        android:layout_gravity="end"
                         app:srcCompat="@drawable/baseline_favorite_border_24" />
 
                 </LinearLayout>

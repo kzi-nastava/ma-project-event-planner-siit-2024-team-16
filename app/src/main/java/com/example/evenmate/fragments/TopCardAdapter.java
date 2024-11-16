@@ -1,5 +1,6 @@
-package com.example.evenmate.fragment;
+package com.example.evenmate.fragments;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 // class implements the behaviour of a update in cards while changing in top 5 sections
-public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardViewHolderEvent> {
+public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardViewHolder> {
     private final List<Map<String, String>> data; // will have specific form while getting it from backend
 
     public TopCardAdapter(List<Map<String, String>> _data) {
@@ -25,13 +26,13 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
 
     @NonNull
     @Override
-    public CardViewHolderEvent onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.top_card_item, parent, false);
-        return new CardViewHolderEvent(view);
+        return new CardViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CardViewHolderEvent holder, int position) {
+    public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         Map<String, String> card_info = this.data.get(position);
         holder.title.setText(card_info.get("title"));
         if (card_info.containsKey("date")){ //its event
@@ -49,7 +50,7 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
         }
         //image handler
         String drawableName = Objects.requireNonNull(card_info.get("image")).replace("@drawable/", "");
-        int resourceId = holder.itemView.getContext().getResources().getIdentifier(drawableName, "drawable", holder.itemView.getContext().getPackageName());
+        @SuppressLint("DiscouragedApi") int resourceId = holder.itemView.getContext().getResources().getIdentifier(drawableName, "drawable", holder.itemView.getContext().getPackageName());
         holder.image.setImageResource(resourceId);
     }
 
@@ -59,11 +60,11 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
     }
 
     // class that returns specific card details, in future it will provide with certain id that will return detailed page of information
-public static class CardViewHolderEvent extends RecyclerView.ViewHolder {
+    public static class CardViewHolder extends RecyclerView.ViewHolder {
         TextView title, box1, box2, box3, box4, box5;
         ImageView image;
 
-        public CardViewHolderEvent(View itemView) {
+        public CardViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             box1 = itemView.findViewById(R.id.box1);

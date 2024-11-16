@@ -6,8 +6,17 @@
     <string name="events">EVENTS</string>
     <string name="back">BACK</string>
     <string name="forward">FORWARD</string>
-    <string name="search">search...</string>
+    <string name="search">search…</string>
     <string name="sort">SORT</string>
     <string name="filter">FILTER</string>
     <string name="chat">chat</string>
+    <string name="location">"Location: "</string>
+    <string name="category">"Category: "</string>
+    <string name="date">"Date: "</string>
+    <string name="price">"Price: "</string>
+    <string name="rating">"Rating: "</string>
+    <string name="max_guests">"Max guests: "</string>
+    <string name="unselected_favorite">"UN-SELECTED A FAVORITE"</string>
+    <string name="selected_favorite">"SELECTED A FAVORITE"</string>
+    <string name="new_page">"NEW PAGE"</string>
 </resources>

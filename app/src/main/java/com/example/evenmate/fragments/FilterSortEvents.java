@@ -1,4 +1,4 @@
-package com.example.evenmate.fragment;
+package com.example.evenmate.fragments;
 
 import android.os.Bundle;
 
@@ -10,15 +10,17 @@ import android.view.ViewGroup;
 
 import com.example.evenmate.R;
 
+public class FilterSortEvents extends Fragment {
 
-public class FilterSortServicesProducts extends Fragment {
-
-    public FilterSortServicesProducts() {
+    public FilterSortEvents() {
+        // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_filter_sort_services_products, container, false);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_filter_sort_events, container, false);
     }
 }

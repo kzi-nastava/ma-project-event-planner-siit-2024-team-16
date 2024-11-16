@@ -1,9 +1,7 @@
 package com.example.evenmate.activities;
 
-import android.annotation.SuppressLint;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -16,8 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import com.example.evenmate.R;
-import com.example.evenmate.fragment.CardCollection;
-import com.example.evenmate.fragment.TopCardSwiper;
+import com.example.evenmate.fragments.CardCollection;
+import com.example.evenmate.fragments.TopCardSwiper;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +23,10 @@ import java.util.Map;
 
 public class HomepageActivity extends AppCompatActivity {
 
-    private Fragment top_5_events;
-    private Fragment all_events;
-    private Fragment top_5_s_and_p;
-    private Fragment all_s_and_p;
+    private Fragment top5Events;
+    private Fragment allEvents;
+    private Fragment top5ServicesAndProducts;
+    private Fragment allServicesAndProducts;
     private SwitchMaterial fragmentSwitch;
     private SearchView searchView;
 
@@ -45,17 +43,17 @@ public class HomepageActivity extends AppCompatActivity {
         });
         fragmentSwitch = findViewById(R.id.fragment_switch);
 
-        this.top_5_events = new TopCardSwiper(getTop5Events());
-        this.all_events = new CardCollection(getTop5Events());
-        this.top_5_s_and_p = new TopCardSwiper(getTop5ServicesAndProducts());
-        this.all_s_and_p = new CardCollection(getTop5ServicesAndProducts());
+        this.top5Events = new TopCardSwiper(getTop5Events());
+        this.allEvents = new CardCollection(getTop5Events());
+        this.top5ServicesAndProducts = new TopCardSwiper(getTop5ServicesAndProducts());
+        this.allServicesAndProducts = new CardCollection(getTop5ServicesAndProducts());
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top_5_events).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.all, all_events).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5Events).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.all, allEvents).commit();
         }
 
-        fragmentSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> switched_fragments(isChecked));
+        fragmentSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> switchedFragments(isChecked));
         updateSwitchColors(false);
         searchView = findViewById(R.id.search_bar);
         HomepageActivity that=this;
@@ -81,40 +79,39 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
 
-    public void switched_fragments(boolean isChecked) {
+    public void switchedFragments(boolean isChecked) {
         if (isChecked) { //services and products
-            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top_5_s_and_p).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.all, all_s_and_p).commit();
-            Toast.makeText(this, "SERVICES AND PRODUCTS", Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5ServicesAndProducts ).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.all, allServicesAndProducts).commit();
+            Toast.makeText(this, R.string.services_and_products, Toast.LENGTH_SHORT).show();
             searchView.setQuery("",false);
         } else { //events
-            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top_5_events).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.all, all_events).commit();
-            Toast.makeText(this, "EVENTS", Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5Events).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.all, allEvents).commit();
+            Toast.makeText(this, R.string.events, Toast.LENGTH_SHORT).show();
             searchView.setQuery("",false);
         }
         updateSwitchColors(isChecked);
     }
-    @SuppressLint("UseCompatLoadingForColorStateLists")
     private void updateSwitchColors(boolean isChecked) {
         if (isChecked) {
-            fragmentSwitch.setTrackTintList(getResources().getColorStateList(R.color.light_purple));
-            fragmentSwitch.setThumbTintList(getResources().getColorStateList(R.color.purple));
+            fragmentSwitch.setTrackTintList(ContextCompat.getColorStateList(this, R.color.light_purple));
+            fragmentSwitch.setThumbTintList(ContextCompat.getColorStateList(this, R.color.purple));
             FrameLayout frameLayout = findViewById(R.id.search_bar_frame);
             GradientDrawable background = (GradientDrawable) frameLayout.getBackground();
             background.setColor(ContextCompat.getColor(this, R.color.purple));
-            findViewById(R.id.sort).setBackgroundColor(getResources().getColor(R.color.purple));
-            findViewById(R.id.filter).setBackgroundColor(getResources().getColor(R.color.purple));
+            findViewById(R.id.sort).setBackgroundColor(getColor(R.color.purple));
+            findViewById(R.id.filter).setBackgroundColor(getColor(R.color.purple));
 
 
         } else {
-            fragmentSwitch.setTrackTintList(getColorStateList(R.color.light_green));
-            fragmentSwitch.setThumbTintList(getResources().getColorStateList(R.color.green));
+            fragmentSwitch.setTrackTintList(ContextCompat.getColorStateList(this, R.color.light_green));
+            fragmentSwitch.setThumbTintList(ContextCompat.getColorStateList(this, R.color.green));
             FrameLayout frameLayout = findViewById(R.id.search_bar_frame);
             GradientDrawable background = (GradientDrawable) frameLayout.getBackground();
             background.setColor(ContextCompat.getColor(this, R.color.green));
-            findViewById(R.id.sort).setBackgroundColor(getResources().getColor(R.color.green));
-            findViewById(R.id.filter).setBackgroundColor(getResources().getColor(R.color.green));
+            findViewById(R.id.sort).setBackgroundColor(getColor(R.color.green));
+            findViewById(R.id.filter).setBackgroundColor(getColor(R.color.green));
 
         }
     }

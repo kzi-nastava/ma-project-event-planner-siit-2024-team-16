@@ -1,7 +1,8 @@
-package com.example.evenmate.fragment;
+package com.example.evenmate.fragments;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import com.example.evenmate.R;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public class TopCardSwiper extends Fragment {
 
-    private List<Map<String, String>> data;
+    private final List<Map<String, String>> data;
 
     public TopCardSwiper(List<Map<String, String>> _data) {
         data = _data;
@@ -25,7 +26,7 @@ public class TopCardSwiper extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_top_cards_swiper, container, false);
-        ViewPager2 viewPager = view.findViewById(R.id.viewPager);
+        ViewPager2 viewPager = view.findViewById(R.id.cardSwiper);
         LinearProgressIndicator progressIndicator = view.findViewById(R.id.progressIndicatorOfCurrentSwiper);
         TopCardAdapter cardAdapter = new TopCardAdapter(data);
         viewPager.setAdapter(cardAdapter);
@@ -38,14 +39,14 @@ public class TopCardSwiper extends Fragment {
                 progressIndicator.setProgress((int) (progress * 100));  //progress 0 to 100
             }
         });
-        if (data.get(0).containsKey("date")){
-            progressIndicator.setIndicatorColor(getResources().getColor(R.color.green));
-            progressIndicator.setTrackColor(getResources().getColor(R.color.light_green));
+        if (data.get(0).containsKey("date")) {
+            progressIndicator.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.green));
+            progressIndicator.setTrackColor(ContextCompat.getColor(requireContext(), R.color.light_green));
+        } else {
+            progressIndicator.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.purple));
+            progressIndicator.setTrackColor(ContextCompat.getColor(requireContext(), R.color.light_purple));
         }
-        else{
-            progressIndicator.setIndicatorColor(getResources().getColor(R.color.purple));
-            progressIndicator.setTrackColor(getResources().getColor(R.color.light_purple));
-        }
+
 
 
         return view;

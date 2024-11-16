@@ -1,4 +1,4 @@
-package com.example.evenmate.fragment;
+package com.example.evenmate.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
@@ -22,8 +23,8 @@ public class CardCollection extends Fragment {
 
     private LinearLayout cardCollectionHolder;
     private List<Map<String, String>> data = new ArrayList<>();
-    private Button loadMoreButton;
-    private Button loadLessButton;
+    private Button loadMoreButton; // not local because int the future it will have more functionality
+    private Button loadLessButton; // not local because int the future it will have more functionality
 
     public CardCollection(List<Map<String, String>> initialData) {
         this.data.addAll(initialData);
@@ -39,17 +40,18 @@ public class CardCollection extends Fragment {
 
         loadCards();
 
-        if (data.get(0).containsKey("date")){
+        if (data.get(0).containsKey("date")) {
             loadMoreButton.setOnClickListener(v -> loadNewEvents());
             loadLessButton.setOnClickListener(v -> loadNewEvents());
-            loadLessButton.setBackgroundTintList(getResources().getColorStateList(R.color.green));
-            loadMoreButton.setBackgroundTintList(getResources().getColorStateList(R.color.green));
-        }else{
+            loadLessButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.green));
+            loadMoreButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.green));
+        } else {
             loadMoreButton.setOnClickListener(v -> loadNewAssets());
             loadLessButton.setOnClickListener(v -> loadNewAssets());
-            loadLessButton.setBackgroundTintList(getResources().getColorStateList(R.color.purple));
-            loadMoreButton.setBackgroundTintList(getResources().getColorStateList(R.color.purple));
+            loadLessButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.purple));
+            loadMoreButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.purple));
         }
+
         return rootView;
     }
 
@@ -63,16 +65,14 @@ public class CardCollection extends Fragment {
     }
 
     private void loadNewEvents() {
-        List<Map<String, String>> newData = HomepageActivity.getTop5Events();
-        data=newData;
+        data= HomepageActivity.getTop5Events();
         loadCards();
-        Toast.makeText(this.getContext(),"NEW PAGE",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getContext(),R.string.new_page,Toast.LENGTH_SHORT).show();
     }
     private void loadNewAssets() {
-        List<Map<String, String>> newData = HomepageActivity.getTop5ServicesAndProducts();
-        data=newData;
+        data= HomepageActivity.getTop5ServicesAndProducts();
         loadCards();
-        Toast.makeText(this.getContext(),"NEW PAGE",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getContext(),R.string.new_page,Toast.LENGTH_SHORT).show();
 
     }
 
