@@ -3,8 +3,129 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
     tools:context=".activities.HomepageActivity">
+
+    <ScrollView
+        android:id="@+id/homepage_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="150dp"
+            tools:ignore="MissingConstraints"
+            tools:paddingTop="50dp">
+
+            <!-- button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/events"
+                    android:textDirection="rtl" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/fragment_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:thumbTint="@color/purple"
+                        android:trackTint="@color/light_purple" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/services_and_products" />
+            </LinearLayout>
+            <!-- top 5's -->
+            <FrameLayout
+                android:id="@+id/top_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="40dp"
+                android:maxHeight="350dp"
+                tools:ignore="MissingConstraints" />
+            <!-- search -->
+            <FrameLayout
+                android:id="@+id/search_bar_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="15dp"
+                android:background="@xml/round_frame">
+
+                <SearchView
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:queryHint="@string/search" />
+            </FrameLayout>
+            <!-- filters -->
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="end">
+
+                <Button
+                    android:id="@+id/sort"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort" />
+
+                <Button
+                    android:id="@+id/filter"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter" />
+
+            </LinearLayout>
+            <!-- all -->
+            <FrameLayout
+                android:id="@+id/all"
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                tools:ignore="MissingConstraints" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/chat_bubble"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:contentDescription="@string/chat"
+        android:foregroundGravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/baseline_chat_bubble_24"
+        tools:ignore="MissingConstraints"
+        android:background="@xml/round_frame"
+        android:backgroundTint="@color/light_grey"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
