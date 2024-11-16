@@ -9,6 +9,7 @@
     tools:context=".activities.HomepageActivity">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
@@ -16,9 +17,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="150dp"
             android:gravity="center"
             android:orientation="vertical"
+            android:paddingBottom="150dp"
             tools:ignore="MissingConstraints"
             tools:paddingTop="50dp">
 
@@ -79,8 +80,7 @@
                     android:id="@+id/search_bar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:queryHint="Search here..."
-                     />
+                    android:queryHint="Search here..." />
             </FrameLayout>
             <!-- filters -->
             <LinearLayout
@@ -112,4 +112,19 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/chat_bubble"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="15dp"
+        android:contentDescription="@string/chat"
+        android:foregroundGravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/baseline_chat_bubble_24"
+        tools:ignore="MissingConstraints"
+        android:background="@xml/round_frame"
+        android:backgroundTint="@color/light_grey"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

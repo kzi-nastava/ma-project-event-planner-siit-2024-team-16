@@ -9,4 +9,5 @@
     <string name="search">search...</string>
     <string name="sort">SORT</string>
     <string name="filter">FILTER</string>
+    <string name="chat">chat</string>
 </resources>
