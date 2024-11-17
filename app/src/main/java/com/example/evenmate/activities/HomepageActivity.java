@@ -92,7 +92,7 @@ public class HomepageActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
         mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.blankFragment)
+                .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.providerServicesProductsFragment)
                 .setOpenableLayout(drawer)
                 .build();
         NavigationUI.setupWithNavController(navigationView, navController);
