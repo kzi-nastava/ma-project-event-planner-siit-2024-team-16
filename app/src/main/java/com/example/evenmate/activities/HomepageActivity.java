@@ -308,10 +308,10 @@ public class HomepageActivity extends AppCompatActivity {
         ));
         return data;
     }
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        getSupportFragmentManager().putFragment(outState, "top5EventsFragment", top5Events);
-    }
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        getSupportFragmentManager().putFragment(outState, "top5EventsFragment", top5Events);
+//    }
 
 }
