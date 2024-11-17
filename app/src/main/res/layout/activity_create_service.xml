@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:text="Suggest New Category"
                 app:icon="@drawable/ic_add" />
-            
+
             <LinearLayout
                 android:id="@+id/newCategoryLayout"
                 android:layout_width="match_parent"
