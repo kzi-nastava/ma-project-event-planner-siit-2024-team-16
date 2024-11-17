@@ -2,14 +2,12 @@ package com.example.evenmate.activities;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -93,38 +91,11 @@ public class HomepageActivity extends AppCompatActivity {
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
-
-//        navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
-//            Log.i("ShopApp", "Destination Changed");
-//
-//            int id = navDestination.getId();
-//            boolean isTopLevelDestination = topLevelDestinations.contains(id);
-//            if (!isTopLevelDestination) {
-//                if (id == R.id.homepageContentFragment) {
-//                    Toast.makeText(HomepageActivity.this, "homepage", Toast.LENGTH_SHORT).show();
-//                drawer.closeDrawers();
-//            }} else {
-//                if (id == R.id.nav_login) {
-//                    Toast.makeText(HomepageActivity.this, "login", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
-        // AppBarConfiguration odnosi se na konfiguraciju ActionBar-a (ili Toolbar-a) u Android aplikaciji
-        // kako bi se omogućila navigacija koristeći Android Navigation komponentu.
-        // Takođe, postavlja se bočni meni (navigation drawer) u skladu sa
-        // konfiguracijom akcione trake i navigacije.
-        // Svaki ID menija prosleđuje se kao skup ID-ova jer svaki meni treba smatrati odredištima najvišeg nivoa.
         mAppBarConfiguration = new AppBarConfiguration
                 .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.blankFragment)
                 .setOpenableLayout(drawer)
                 .build();
-        // Ova linija koda postavlja navigationView da radi zajedno sa NavController-om.
-        // To znači da će NavigationView reagovati na korisničke interakcije i navigaciju kroz aplikaciju putem NavController-a.
         NavigationUI.setupWithNavController(navigationView, navController);
-        // Ova linija koda povezuje NavController sa ActionBar-om (ili Toolbar-om) tako da ActionBar (ili Toolbar)
-        // može pravilno reagovati na navigaciju kroz različite destinacije koje su navedene unutar mAppBarConfiguration.
-        // NavController će upravljati povratnom strelicom i ponašanjem akcione trake u skladu sa postavljenim destinacijama.
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 
         fragmentSwitch = findViewById(R.id.fragment_switch);
@@ -166,35 +137,12 @@ public class HomepageActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // menu.clear();
-        // koristimo ako je nasa arhitekrura takva da imamo jednu aktivnost
-        // i vise fragmentaa gde svaki od njih ima svoj menu unutar toolbar-a
-
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        int id = item.getItemId();
-//        switch (id) {
-//            case R.id.nav_settings:
-//                Toast.makeText(HomeActivity.this, "Settings", Toast.LENGTH_SHORT).show();
-//                break;
-//            case R.id.nav_language:
-//                Toast.makeText(HomeActivity.this, "Language", Toast.LENGTH_SHORT).show();
-//                break;
-//        }
-        // U ovoj metodi, prvo se pomoću Navigation komponente pronalazi NavController.
-        // NavController je odgovoran za upravljanje navigacijom unutar aplikacije
-        // koristeći Androidov servis za navigaciju.
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
-        // Nakon toga, koristi se NavigationUI.onNavDestinationSelected(item, navController)
-        // kako bi se omogućila integracija između MenuItem-a i odredišta unutar aplikacije
-        // definisanih unutar navigacionog grafa (NavGraph).
-        // Ova funkcija proverava da li je odabrana stavka izbornika povezana s nekim
-        // odredištem unutar navigacionog grafa i pokreće tu navigaciju ako postoji
-        // odgovarajuće podudaranje.
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
     @Override
@@ -361,9 +309,8 @@ public class HomepageActivity extends AppCompatActivity {
         return data;
     }
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Save the fragment state
         getSupportFragmentManager().putFragment(outState, "top5EventsFragment", top5Events);
     }
 
