@@ -80,27 +80,19 @@ public class HomepageActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
             Log.i("ShopApp", "Destination Changed");
-            // Implementacija koja se poziva kada se promijeni destinacija
-            // Check if the current destination is a top-level destination (destination outside the drawer)
+
             int id = navDestination.getId();
             boolean isTopLevelDestination = topLevelDestinations.contains(id);
-            /* Logic to determine if the destination is top level */;
             if (!isTopLevelDestination) {
-                if (id == R.id.nav_login) {
+                if (id == R.id.blankFragment2) {
                     Toast.makeText(HomepageActivity.this, "homepage", Toast.LENGTH_SHORT).show();
-
-                     navController.navigate(R.id.nav_login);
-
-
-
                 drawer.closeDrawers();
-            } else {
+            }} else {
                 if (id == R.id.nav_login) {
                     Toast.makeText(HomepageActivity.this, "login", Toast.LENGTH_SHORT).show();
-                    navController.navigate(R.id.nav_login);
                 }
             }
-        }});
+        });
 
         // AppBarConfiguration odnosi se na konfiguraciju ActionBar-a (ili Toolbar-a) u Android aplikaciji
         // kako bi se omogućila navigacija koristeći Android Navigation komponentu.
@@ -108,7 +100,7 @@ public class HomepageActivity extends AppCompatActivity {
         // konfiguracijom akcione trake i navigacije.
         // Svaki ID menija prosleđuje se kao skup ID-ova jer svaki meni treba smatrati odredištima najvišeg nivoa.
         mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.nav_login)
+                .Builder(R.id.nav_login, R.id.blankFragment2)
                 .setOpenableLayout(drawer)
                 .build();
         // Ova linija koda postavlja navigationView da radi zajedno sa NavController-om.

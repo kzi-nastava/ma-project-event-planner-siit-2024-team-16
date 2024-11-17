@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.LoginFragment"
-    >
+    tools:context=".fragments.LoginFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txt_field_email"

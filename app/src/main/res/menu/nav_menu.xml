@@ -4,8 +4,8 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_login"
-            android:title="Login"
+        <item android:id="@+id/blankFragment2"
+            android:title="@string/register"
             android:orderInCategory="100" />
     </group>
 </menu>
