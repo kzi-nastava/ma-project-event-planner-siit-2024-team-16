@@ -92,7 +92,7 @@ public class HomepageActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
         mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.blankFragment)
+                .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.providerServicesProductsFragment)
                 .setOpenableLayout(drawer)
                 .build();
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -308,10 +308,10 @@ public class HomepageActivity extends AppCompatActivity {
         ));
         return data;
     }
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        getSupportFragmentManager().putFragment(outState, "top5EventsFragment", top5Events);
-    }
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        getSupportFragmentManager().putFragment(outState, "top5EventsFragment", top5Events);
+//    }
 
 }

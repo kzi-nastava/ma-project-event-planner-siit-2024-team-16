@@ -8,7 +8,7 @@
     tools:context=".fragments.RegisterFragment">
 <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent">>
+    android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.07999998">
+            app:layout_constraintVertical_bias="0.007999998">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_email"
@@ -282,12 +282,12 @@
             android:id="@+id/company_info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginBottom="8dp"
-            android:visibility="visible"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/btn_register"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/switch_provider"
-            app:layout_constraintBottom_toTopOf="@id/btn_register">
+            app:layout_constraintTop_toBottomOf="@id/switch_provider">
 
             <TextView
                 android:id="@+id/txt_company_info"
