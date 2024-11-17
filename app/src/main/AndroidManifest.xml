@@ -21,6 +21,9 @@
             android:name=".activities.ServiceDetailsActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.CreateServiceActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.HomepageActivity"
             android:exported="false" />
         <activity
