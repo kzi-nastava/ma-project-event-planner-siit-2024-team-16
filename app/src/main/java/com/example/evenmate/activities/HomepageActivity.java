@@ -2,16 +2,24 @@ package com.example.evenmate.activities;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
 import androidx.fragment.app.Fragment;
 import com.example.evenmate.R;
 import com.example.evenmate.fragments.CardCollection;
@@ -20,6 +28,11 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import com.example.evenmate.databinding.ActivityHomepageBinding;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class HomepageActivity extends AppCompatActivity {
 
@@ -30,17 +43,61 @@ public class HomepageActivity extends AppCompatActivity {
     private SwitchMaterial fragmentSwitch;
     private SearchView searchView;
 
+    private ActivityHomepageBinding binding;
+    private AppBarConfiguration mAppBarConfiguration;
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
+    private NavController navController;
+    private ActionBar actionBar;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private Set<Integer> topLevelDestinations = new HashSet<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_homepage);
+        if (savedInstanceState != null) {
+            top5Events = getSupportFragmentManager().getFragment(savedInstanceState, "top5EventsFragment");
+        } else {
+            top5Events = new TopCardSwiper(getTop5Events());
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5Events).commit();
+        binding = ActivityHomepageBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        drawer = binding.drawerLayout;
+        navigationView = binding.navView;
+        toolbar = binding.activityHomepageBase.toolbar;
+
+        setSupportActionBar(toolbar);
+
+        actionBar = getSupportActionBar();
+        if(actionBar != null){
+
+            actionBar.setDisplayHomeAsUpEnabled(false);
+
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
+
+            actionBar.setHomeButtonEnabled(true);
+        }
+
+        actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(actionBarDrawerToggle);
+
+        actionBarDrawerToggle.syncState();
+
+        topLevelDestinations.add(R.id.nav_login);
+
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+
+        mAppBarConfiguration = new AppBarConfiguration
+                .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.blankFragment)
+                .setOpenableLayout(drawer)
+                .build();
+        NavigationUI.setupWithNavController(navigationView, navController);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+
         fragmentSwitch = findViewById(R.id.fragment_switch);
 
         this.top5Events = new TopCardSwiper(getTop5Events());
@@ -77,6 +134,29 @@ public class HomepageActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+
 
 
     public void switchedFragments(boolean isChecked) {
@@ -228,4 +308,10 @@ public class HomepageActivity extends AppCompatActivity {
         ));
         return data;
     }
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, "top5EventsFragment", top5Events);
+    }
+
 }
