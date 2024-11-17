@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.CardAdapter"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        app:cardCornerRadius="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <FrameLayout
+                android:id="@+id/title_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#80000000"
+                >
+            <TextView
+                android:id="@+id/title"
+                android:textColor="@color/white"
+                android:textAllCaps="true"
+                android:textSize="15sp"
+                android:layout_gravity="center"
+                android:textFontWeight="10"
+                android:padding="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"/>
+        </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:backgroundTint="@color/light_green">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    android:layout_width="155dp"
+                    android:layout_height="155dp"
+                    android:layout_margin="20dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+
+                    <TextView
+                        android:id="@+id/box1"
+                        android:padding="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/box2"
+                        android:padding="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/box3"
+                        android:padding="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/box4"
+                        android:padding="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/box5"
+                        android:padding="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <ImageButton
+                        android:id="@+id/favorite"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="end"
+                        app:srcCompat="@drawable/baseline_favorite_border_24" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>
