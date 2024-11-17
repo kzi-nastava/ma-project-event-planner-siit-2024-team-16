@@ -37,4 +37,9 @@
     <string name="selected_favorite">"SELECTED A FAVORITE"</string>
     <string name="new_page">"NEW PAGE"</string>
     <string name="hello_blank_fragment">blank</string>
+    <string name="sign_up_as_product_and_service_provider">Sign up as Product and Service Provider    </string>
+    <string name="company_info">COMPANY INFO</string>
+    <string name="company_email">Company email</string>
+    <string name="company_name">Name</string>
+    <string name="description">Description</string>
 </resources>
