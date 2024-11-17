@@ -1,5 +1,6 @@
 package com.example.evenmate.activities;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -76,7 +77,7 @@ public class ServiceDetailsActivity extends AppCompatActivity {
 
     private void setupListeners() {
         editButton.setOnClickListener(v ->
-                Toast.makeText(this, "Edit clicked", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, EditServiceActivity.class)));
 
         deleteButton.setOnClickListener(v -> showDeleteConfirmation());
     }
