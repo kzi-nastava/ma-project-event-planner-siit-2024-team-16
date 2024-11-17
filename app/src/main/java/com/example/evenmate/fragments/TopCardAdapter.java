@@ -31,6 +31,7 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
         return new CardViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
         Map<String, String> card_info = this.data.get(position);

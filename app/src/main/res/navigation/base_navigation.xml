@@ -4,12 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/base_navigation"
-    app:startDestination="@id/nav_blank">
-    <fragment
-        android:id="@+id/nav_blank"
-        android:name="com.example.evenmate.fragments.BlankFragment"
-        android:label="fragment_blank"
-        tools:layout="@layout/fragment_blank" />
+    app:startDestination="@+id/homepageContentFragment">
     <fragment
         android:id="@+id/nav_login"
         android:name="com.example.evenmate.fragments.LoginFragment"
@@ -25,8 +20,16 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" />
     <fragment
-        android:id="@+id/blankFragment2"
-        android:name="com.example.evenmate.fragments.BlankFragment2"
-        android:label="fragment_blank2"
-        tools:layout="@layout/fragment_blank2" />
+        android:id="@+id/homepageContentFragment"
+        android:name="com.example.evenmate.fragments.HomepageContentFragment"
+        android:label="Evenmate"
+        tools:layout="@layout/fragment_homepage_content"
+        />
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.example.evenmate.fragments.BlankFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_blank"
+        app:popUpTo="@+id/nav_products"
+        app:popUpToInclusive="true"/>
 </navigation>

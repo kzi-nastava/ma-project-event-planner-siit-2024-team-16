@@ -5,12 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -19,14 +16,9 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -39,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.example.evenmate.databinding.ActivityHomepageBinding;
-import com.example.evenmate.fragments.LoginFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashSet;
@@ -66,7 +57,12 @@ public class HomepageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        if (savedInstanceState != null) {
+            top5Events = getSupportFragmentManager().getFragment(savedInstanceState, "top5EventsFragment");
+        } else {
+            top5Events = new TopCardSwiper(getTop5Events());
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5Events).commit();
         binding = ActivityHomepageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -83,7 +79,7 @@ public class HomepageActivity extends AppCompatActivity {
 
             actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
 
-            actionBar.setHomeButtonEnabled(false);
+            actionBar.setHomeButtonEnabled(true);
         }
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(
@@ -98,21 +94,21 @@ public class HomepageActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
 
-        navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
-            Log.i("ShopApp", "Destination Changed");
-
-            int id = navDestination.getId();
-            boolean isTopLevelDestination = topLevelDestinations.contains(id);
-            if (!isTopLevelDestination) {
-                if (id == R.id.blankFragment2) {
-                    Toast.makeText(HomepageActivity.this, "homepage", Toast.LENGTH_SHORT).show();
-                drawer.closeDrawers();
-            }} else {
-                if (id == R.id.nav_login) {
-                    Toast.makeText(HomepageActivity.this, "login", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
+//            Log.i("ShopApp", "Destination Changed");
+//
+//            int id = navDestination.getId();
+//            boolean isTopLevelDestination = topLevelDestinations.contains(id);
+//            if (!isTopLevelDestination) {
+//                if (id == R.id.homepageContentFragment) {
+//                    Toast.makeText(HomepageActivity.this, "homepage", Toast.LENGTH_SHORT).show();
+//                drawer.closeDrawers();
+//            }} else {
+//                if (id == R.id.nav_login) {
+//                    Toast.makeText(HomepageActivity.this, "login", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         // AppBarConfiguration odnosi se na konfiguraciju ActionBar-a (ili Toolbar-a) u Android aplikaciji
         // kako bi se omogućila navigacija koristeći Android Navigation komponentu.
@@ -120,7 +116,7 @@ public class HomepageActivity extends AppCompatActivity {
         // konfiguracijom akcione trake i navigacije.
         // Svaki ID menija prosleđuje se kao skup ID-ova jer svaki meni treba smatrati odredištima najvišeg nivoa.
         mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.nav_login, R.id.blankFragment2)
+                .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.blankFragment)
                 .setOpenableLayout(drawer)
                 .build();
         // Ova linija koda postavlja navigationView da radi zajedno sa NavController-om.
@@ -364,4 +360,11 @@ public class HomepageActivity extends AppCompatActivity {
         ));
         return data;
     }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save the fragment state
+        getSupportFragmentManager().putFragment(outState, "top5EventsFragment", top5Events);
+    }
+
 }
