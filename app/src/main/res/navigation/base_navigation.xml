@@ -32,4 +32,9 @@
         app:popUpTo="@+id/nav_products"
         app:popUpToInclusive="true"
         tools:layout="@layout/fragment_provider_services_products" />
+    <fragment
+        android:id="@+id/eventTypesFragment"
+        android:name="com.example.evenmate.fragments.event_type.EventTypesFragment"
+        android:label="Event types"
+        tools:layout="@layout/fragment_event_types" />
 </navigation>
