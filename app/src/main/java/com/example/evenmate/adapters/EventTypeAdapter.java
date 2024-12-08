@@ -1,5 +1,6 @@
 package com.example.evenmate.adapters;
 
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,8 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evenmate.R;
@@ -94,8 +94,17 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.Even
                     String.join(", ", eventType.getRecommendedCategories())
             );
 
+            boolean isActive = eventType.isActive();
             btnActivate.setText(eventType.isActive() ? "Deactivate" : "Activate");
-
+            if (isActive) {
+                btnActivate.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.white)));
+                btnActivate.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.red)));
+                btnActivate.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.red));
+            } else {
+                btnActivate.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.white)));
+                btnActivate.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.green)));
+                btnActivate.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.green));
+            }
             btnEdit.setOnClickListener(v -> {
                 if (onEditClickListener != null && currentEventType != null) {
                     onEditClickListener.onEditClick(currentEventType);

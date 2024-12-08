@@ -37,28 +37,23 @@ public class EventTypesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(EventTypesViewModel.class);
 
-        // Setup RecyclerView
         setupRecyclerView();
 
-        // Setup Pagination
         setupPagination();
 
-        // Add Event Type Button
         binding.btnAddEventType.setOnClickListener(v -> {
             // TODO: Implement add event type functionality
             Toast.makeText(getContext(), "Add Event Type", Toast.LENGTH_SHORT).show();
         });
 
-        // Observe changes
         observeViewModel();
     }
 
     private void setupRecyclerView() {
         adapter = new EventTypeAdapter(
-                new ArrayList<>(), // Initial empty list
+                new ArrayList<>(),
                 eventType -> {
                     // TODO: Implement edit event type logic
                     Toast.makeText(getContext(), "Edit " + eventType.getName(), Toast.LENGTH_SHORT).show();

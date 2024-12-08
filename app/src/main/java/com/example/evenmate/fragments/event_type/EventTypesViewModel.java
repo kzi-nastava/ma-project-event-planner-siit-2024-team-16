@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.evenmate.R;
 import com.example.evenmate.models.EventType;
 
 import java.util.ArrayList;
@@ -50,15 +51,17 @@ public class EventTypesViewModel extends ViewModel {
 
     public void toggleEventTypeStatus(String eventTypeId) {
         List<EventType> currentEventTypes = eventTypes.getValue();
-        if (currentEventTypes != null) {
-            List<EventType> updatedEventTypes = new ArrayList<>();
-            for (EventType eventType : currentEventTypes) {
-                if (eventType.getId().equals(eventTypeId)) {
-                    eventType.setActive(!eventType.isActive());
-                }
-                updatedEventTypes.add(eventType);
+        if (currentEventTypes == null) {
+            return;
+        }
+        // Go though the list until it finds event type with the given  id
+        for (int i = 0; i < currentEventTypes.size(); i++) {
+            if (currentEventTypes.get(i).getId().equals(eventTypeId)) {
+                List<EventType> updatedEventTypes = new ArrayList<>(currentEventTypes);
+                updatedEventTypes.get(i).setActive(!updatedEventTypes.get(i).isActive());
+                eventTypes.setValue(updatedEventTypes);
+                break;
             }
-            eventTypes.setValue(updatedEventTypes);
         }
     }
 
@@ -71,5 +74,14 @@ public class EventTypesViewModel extends ViewModel {
     public void previousPage() {
         int current = currentPage.getValue() != null ? currentPage.getValue() : 1;
         currentPage.setValue(Math.max(current - 1, 1));
+    }
+
+    public int getButtonStyle(String text) {
+        if ("ACTIVATE".equals(text)) {
+            return R.style.GreenOutlinedButton;
+        } else if ("DEACTIVATE".equals(text)) {
+            return R.style.RedOutlinedButton;
+        }
+        return R.style.GreenOutlinedButton;
     }
 }
