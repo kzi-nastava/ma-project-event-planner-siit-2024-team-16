@@ -10,6 +10,7 @@ public class EventType {
     private List<String> recommendedCategories;
     private boolean isActive;
 
+    public EventType() {}
     public EventType(String id, String name, String description,
                      List<String> recommendedCategories, boolean isActive) {
         this.id = id;

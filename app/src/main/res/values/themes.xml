@@ -20,6 +20,11 @@
         <item name="android:textColor">@color/beige</item>
         <item name="strokeColor">@color/purple</item>
     </style>
+    <style name="GreenFilledButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@color/green</item>
+        <item name="android:textColor">@color/beige</item>
+        <item name="strokeColor">@color/green</item>
+    </style>
     <style name="GreenOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="backgroundTint">@color/white</item>
         <item name="android:textColor">@color/green</item>

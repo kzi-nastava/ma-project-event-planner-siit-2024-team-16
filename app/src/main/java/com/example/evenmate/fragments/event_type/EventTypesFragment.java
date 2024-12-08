@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import com.example.evenmate.adapters.EventTypeAdapter;
 import com.example.evenmate.databinding.FragmentEventTypesBinding;
+import com.example.evenmate.models.EventType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class EventTypesFragment extends Fragment {
@@ -43,13 +45,11 @@ public class EventTypesFragment extends Fragment {
 
         setupPagination();
 
-        binding.btnAddEventType.setOnClickListener(v -> {
-            // TODO: Implement add event type functionality
-            Toast.makeText(getContext(), "Add Event Type", Toast.LENGTH_SHORT).show();
-        });
+        setupAddEventTypeButton();
 
         observeViewModel();
     }
+
 
     private void setupRecyclerView() {
         adapter = new EventTypeAdapter(
@@ -68,12 +68,32 @@ public class EventTypesFragment extends Fragment {
     private void setupPagination() {
         binding.btnPrevious.setOnClickListener(v -> viewModel.previousPage());
         binding.btnNext.setOnClickListener(v -> viewModel.nextPage());
-    }
-
-    private void observeViewModel() {
-        viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes ->
-                adapter.setEventTypes(eventTypes)
+        viewModel.getCurrentPage().observe(getViewLifecycleOwner(), currentPage ->
+                updatePaginationUI(currentPage, viewModel.getTotalPages().getValue())
         );
+        viewModel.getTotalPages().observe(getViewLifecycleOwner(), totalPages ->
+                updatePaginationUI(viewModel.getCurrentPage().getValue(), totalPages)
+        );
+    }
+    private void updatePaginationUI(Integer currentPage, Integer totalPages) {
+        if (currentPage != null && totalPages != null) {
+            binding.tvPageInfo.setText(String.format("%d / %d", currentPage, totalPages));
+            binding.btnPrevious.setEnabled(currentPage > 1);
+            binding.btnNext.setEnabled(currentPage < totalPages);
+        }
+    }
+    private void setupAddEventTypeButton() {
+        binding.btnAddEventType.setOnClickListener(v -> {
+            CreateEventTypeFragment dialogFragment = new CreateEventTypeFragment();
+            dialogFragment.show(getParentFragmentManager(), "CreateEventType");
+        });
+    }
+    private void observeViewModel() {
+        viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            adapter.setEventTypes(eventTypes);
+            binding.recyclerViewEventTypes.setVisibility(eventTypes.isEmpty() ? View.GONE : View.VISIBLE);
+            binding.textViewNoEventTypes.setVisibility(eventTypes.isEmpty() ? View.VISIBLE : View.GONE);
+        });
 
         viewModel.getCurrentPage().observe(getViewLifecycleOwner(), page -> {
             Integer totalPages = viewModel.getTotalPages().getValue();

@@ -46,4 +46,12 @@
     <string name="activate">Activate</string>
     <string name="edit">Edit</string>
     <string name="recommended_ps_categories"><![CDATA[Recommended P&S Categories : ]]></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">SAVE</string>
+    <string name="name">Name</string>
+    <string name="no_event_types">No event types</string>
+    <string name="add_an_event_type">ADD AN EVENT TYPE</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
 </resources>
