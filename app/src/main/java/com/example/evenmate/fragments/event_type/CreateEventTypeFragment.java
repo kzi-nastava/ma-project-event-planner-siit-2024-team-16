@@ -18,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class CreateEventTypeFragment extends DialogFragment {
     private FragmentCreateEventTypeBinding binding;
@@ -58,8 +59,8 @@ public class CreateEventTypeFragment extends DialogFragment {
     private boolean validateInput() {
         boolean isValid = true;
 
-        String name = binding.etName.getText().toString().trim();
-        String description = binding.etDescription.getText().toString().trim();
+        String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
+        String description = Objects.requireNonNull(binding.etDescription.getText()).toString().trim();
 
         if (TextUtils.isEmpty(name)) {
             binding.tilName.setError("Name is required");
@@ -79,8 +80,8 @@ public class CreateEventTypeFragment extends DialogFragment {
     }
 
     private EventType createEventType() {
-        String name = binding.etName.getText().toString().trim();
-        String description = binding.etDescription.getText().toString().trim();
+        String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
+        String description = Objects.requireNonNull(binding.etDescription.getText()).toString().trim();
         List<String> selectedCategories = binding.spinnerCategories.getSelectedItems();
 
         EventType eventType = new EventType();

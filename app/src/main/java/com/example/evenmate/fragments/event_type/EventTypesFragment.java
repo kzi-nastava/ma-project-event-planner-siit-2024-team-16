@@ -4,24 +4,18 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.evenmate.adapters.EventTypeAdapter;
 import com.example.evenmate.databinding.FragmentEventTypesBinding;
-import com.example.evenmate.models.EventType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class EventTypesFragment extends Fragment {
+public class EventTypesFragment extends ListFragment {
     private FragmentEventTypesBinding binding;
     private EventTypesViewModel viewModel;
     private EventTypeAdapter adapter;
@@ -41,29 +35,15 @@ public class EventTypesFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(EventTypesViewModel.class);
 
-        setupRecyclerView();
-
         setupPagination();
 
         setupAddEventTypeButton();
 
         observeViewModel();
+
+        viewModel.fetchEventTypes();
     }
 
-
-    private void setupRecyclerView() {
-        adapter = new EventTypeAdapter(
-                new ArrayList<>(),
-                eventType -> {
-                    // TODO: Implement edit event type logic
-                    Toast.makeText(getContext(), "Edit " + eventType.getName(), Toast.LENGTH_SHORT).show();
-                },
-                eventType -> viewModel.toggleEventTypeStatus(eventType.getId())
-        );
-
-        binding.recyclerViewEventTypes.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerViewEventTypes.setAdapter(adapter);
-    }
 
     private void setupPagination() {
         binding.btnPrevious.setOnClickListener(v -> viewModel.previousPage());
@@ -89,8 +69,12 @@ public class EventTypesFragment extends Fragment {
         });
     }
     private void observeViewModel() {
+
         viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
-            adapter.setEventTypes(eventTypes);
+            assert getActivity() != null;
+            adapter = new EventTypeAdapter(getActivity(), getActivity().getSupportFragmentManager(), eventTypes);
+            setListAdapter(adapter);
+            adapter.notifyDataSetChanged();
             binding.recyclerViewEventTypes.setVisibility(eventTypes.isEmpty() ? View.GONE : View.VISIBLE);
             binding.textViewNoEventTypes.setVisibility(eventTypes.isEmpty() ? View.VISIBLE : View.GONE);
         });
@@ -102,7 +86,11 @@ public class EventTypesFragment extends Fragment {
             }
         });
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.fetchEventTypes();
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

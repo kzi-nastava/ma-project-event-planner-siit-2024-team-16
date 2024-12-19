@@ -28,7 +28,7 @@ public class EventTypesViewModel extends ViewModel {
     }
 
 
-    private void fetchEventTypes() {
+    public void fetchEventTypes() {
         // Initial mock data
         List<EventType> mockEventTypes = new ArrayList<>(Arrays.asList(
                 new EventType("1", "Conference", "Large gathering for professionals",
