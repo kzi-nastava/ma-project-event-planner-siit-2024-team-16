@@ -75,7 +75,7 @@ public class EventTypesFragment extends ListFragment {
             adapter = new EventTypeAdapter(getActivity(), getActivity().getSupportFragmentManager(), eventTypes);
             setListAdapter(adapter);
             adapter.notifyDataSetChanged();
-            binding.recyclerViewEventTypes.setVisibility(eventTypes.isEmpty() ? View.GONE : View.VISIBLE);
+            binding.list.setVisibility(eventTypes.isEmpty() ? View.GONE : View.VISIBLE);
             binding.textViewNoEventTypes.setVisibility(eventTypes.isEmpty() ? View.VISIBLE : View.GONE);
         });
 

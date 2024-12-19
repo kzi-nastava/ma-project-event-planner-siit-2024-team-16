@@ -64,7 +64,7 @@
                 android:text="@string/recommended_ps_categories" />
 
             <com.example.evenmate.fragments.event_type.MultiSelectSpinner
-                android:id="@+id/spinner_categories"
+                android:id="@+id/multiSelectSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

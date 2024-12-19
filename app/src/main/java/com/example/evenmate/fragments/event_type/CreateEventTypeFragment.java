@@ -43,7 +43,7 @@ public class CreateEventTypeFragment extends DialogFragment {
         List<String> categories = Arrays.asList("ballons", "music", "food");
 
         // Set the items in your MultiSelectSpinner
-        binding.spinnerCategories.setItems(categories);
+        binding.multiSelectSpinner.setItems(categories);
     }
 
     private void setupSaveButton() {
@@ -82,7 +82,7 @@ public class CreateEventTypeFragment extends DialogFragment {
     private EventType createEventType() {
         String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
         String description = Objects.requireNonNull(binding.etDescription.getText()).toString().trim();
-        List<String> selectedCategories = binding.spinnerCategories.getSelectedItems();
+        List<String> selectedCategories = binding.multiSelectSpinner.getSelectedItems();
 
         EventType eventType = new EventType();
         eventType.setName(name);
