@@ -1,6 +1,7 @@
 package com.example.evenmate.fragments.event_type;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.example.evenmate.databinding.FragmentCreateEventTypeBinding;
 import com.example.evenmate.models.EventType;
@@ -22,12 +24,14 @@ import java.util.Objects;
 
 public class CreateEventTypeFragment extends DialogFragment {
     private FragmentCreateEventTypeBinding binding;
-    private ArrayAdapter<String> categoriesAdapter;
+//    private ArrayAdapter<String> categoriesAdapter;
+    private CreateEventTypeViewModel viewModel;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         binding = FragmentCreateEventTypeBinding.inflate(getLayoutInflater());
+        viewModel = new ViewModelProvider(requireActivity()).get(CreateEventTypeViewModel.class);
 
         setupCategoriesSpinner();
         setupSaveButton();
@@ -50,13 +54,14 @@ public class CreateEventTypeFragment extends DialogFragment {
         binding.btnSave.setOnClickListener(v -> {
             if (validateInput()) {
                 EventType newEventType = createEventType();
-                sendResult(newEventType);
+                viewModel.addEventType(newEventType);
                 dismiss();
             }
         });
     }
 
     private boolean validateInput() {
+        // TODO: Add validation for categories
         boolean isValid = true;
 
         String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
@@ -88,19 +93,29 @@ public class CreateEventTypeFragment extends DialogFragment {
         eventType.setName(name);
         eventType.setDescription(description);
 
-        List<String> recommendedCategories = new ArrayList<>();
-        if (selectedCategories != null) {
-            recommendedCategories.addAll(selectedCategories);
-        }
-        eventType.setRecommendedCategories(recommendedCategories);
+//        List<String> recommendedCategories = new ArrayList<>();
+//        if (selectedCategories != null) {
+//            recommendedCategories.addAll(selectedCategories);
+//        }
+        eventType.setRecommendedCategories(selectedCategories);
+
 
         return eventType;
     }
 
-    private void sendResult(EventType eventType) {
-        EventTypesViewModel viewModel = new ViewModelProvider(requireActivity()).get(EventTypesViewModel.class);
-        viewModel.addEventType(eventType);
-
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        viewModel.getSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (success) {
+                Toast.makeText(requireContext(), "Action successful", Toast.LENGTH_SHORT).show();
+            }
+        });
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
