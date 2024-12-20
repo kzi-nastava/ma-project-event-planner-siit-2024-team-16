@@ -64,11 +64,14 @@ public class MultiSelectSpinner extends AppCompatSpinner {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Select Items");
 
-        // Create temp array to hold selections
+        String[] itemNames = items.stream()
+                .map(Category::getName)
+                .toArray(String[]::new);
+
         boolean[] tempSelection = selectedItems.clone();
 
         builder.setMultiChoiceItems(
-                (CharSequence[]) items.toArray(),
+                itemNames,
                 tempSelection,
                 (dialog, which, isChecked) -> tempSelection[which] = isChecked
         );
