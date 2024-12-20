@@ -34,9 +34,9 @@ public class CreateEventTypeViewModel extends ViewModel {
         eventTypeLiveData.setValue(eventType);
     }
 
-    public void addNewEventType(EventType newEventType) {
+    public void addEventType(EventType newEventType) {
         retrofit2.Call<EventType> call = ClientUtils.eventTypeService.createType(newEventType);
-        call.enqueue(new Callback<EventType>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
                 if (response.isSuccessful()) {
