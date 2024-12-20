@@ -2,21 +2,27 @@ package com.example.evenmate.fragments.event_type;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.EventType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventTypesViewModel extends ViewModel {
     private final MutableLiveData<List<EventType>> eventTypes = new MutableLiveData<>();
     private final MutableLiveData<Integer> currentPage = new MutableLiveData<>(1);
     private final MutableLiveData<Integer> totalPages = new MutableLiveData<>(1);
-
+    private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     public LiveData<List<EventType>> getEventTypes() { return eventTypes; }
 
     public LiveData<Integer> getCurrentPage() { return currentPage; }
@@ -29,38 +35,25 @@ public class EventTypesViewModel extends ViewModel {
 
 
     public void fetchEventTypes() {
-        // Initial mock data
-        List<EventType> mockEventTypes = new ArrayList<>(Arrays.asList(
-                new EventType("1", "Conference", "Large gathering for professionals",
-                        Arrays.asList("Corporate", "Academic"), true),
-                new EventType("2", "Workshop", "Hands-on learning session",
-                        Arrays.asList("Educational", "Training"), false),
-                new EventType("3", "Seminar", "Lecture-style event",
-                        List.of("Professional Development"), true)
-        ));
-        eventTypes.setValue(mockEventTypes);
-        totalPages.setValue(1);
+        Call<ArrayList<EventType>> call = ClientUtils.eventTypeService.getTypes(1,5);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<ArrayList<EventType>> call, @NonNull Response<ArrayList<EventType>> response) {
+                if (response.isSuccessful()) {
+                    eventTypes.postValue(response.body());
+                } else {
+                    errorMessage.postValue("Failed to fetch eventTypes. Code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ArrayList<EventType>> call, @NonNull Throwable t) {
+                errorMessage.postValue(t.getMessage());
+            }
+        });
+        totalPages.setValue(Objects.requireNonNull(eventTypes.getValue()).size());
     }
 
-    public void addEventType(EventType newEventType) {
-        Log.d("EventTypesViewModel", "addEventType called");
-        List<EventType> currentList = eventTypes.getValue();
-        if (currentList == null) {
-            currentList = new ArrayList<>();
-        }
-
-        if (newEventType.getId() == null || newEventType.getId().isEmpty()) {
-            newEventType.setId(String.valueOf(System.currentTimeMillis()));
-        }
-
-        currentList.add(0, newEventType);
-
-        List<EventType> updatedList = new ArrayList<>(currentList);
-        updatedList.add(0, newEventType);
-
-        // Explicitly post the new list
-        eventTypes.postValue(updatedList);
-    }
     public void refreshEventTypes() {
         List<EventType> currentList = eventTypes.getValue();
         if (currentList != null) {
@@ -73,7 +66,7 @@ public class EventTypesViewModel extends ViewModel {
         if (currentEventTypes == null) {
             return;
         }
-
+        //TODO: Update event type
         for (int i = 0; i < currentEventTypes.size(); i++) {
             if (currentEventTypes.get(i).getId().equals(eventTypeId)) {
                 EventType eventType = currentEventTypes.get(i);
