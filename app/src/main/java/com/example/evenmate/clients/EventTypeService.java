@@ -1,7 +1,8 @@
 package com.example.evenmate.clients;
 
 import com.example.evenmate.models.EventType;
-import java.util.ArrayList;
+import com.example.evenmate.models.PaginatedResponse;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -17,8 +18,8 @@ public interface EventTypeService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @GET("api/v1/types")
-    Call<ArrayList<EventType>> getTypes(
+    @GET("types")
+    Call<PaginatedResponse<EventType>> getTypes(
             @Query("page") int page,
             @Query("size") int size
     );
@@ -26,25 +27,25 @@ public interface EventTypeService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @GET("api/v1/types/{id}")
+    @GET("types/{id}")
     Call<EventType> getType(@Path("id") Long id);
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @POST("api/v1/types")
+    @POST("types")
     Call<EventType> createType(@Body EventType request);
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @PUT("api/v1/types")
+    @PUT("types")
     Call<EventType> updateType(@Body EventType request);
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @DELETE("api/v1/types/{id}")
+    @DELETE("types/{id}")
     Call<Void> deleteType(@Path("id") Long id);
 }
 

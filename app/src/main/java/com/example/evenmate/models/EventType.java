@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class EventType {
-    private String id;
+    private Long id;
     private String name;
     private String description;
-    private List<String> recommendedCategories;
+    private List<Category> recommendedCategories;
     private boolean isActive;
 
     public EventType() {}
-    public EventType(String id, String name, String description,
-                     List<String> recommendedCategories, boolean isActive) {
+    public EventType(Long id, String name, String description,
+                     List<Category> recommendedCategories, boolean isActive) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -20,8 +20,8 @@ public class EventType {
         this.isActive = isActive;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -29,8 +29,8 @@ public class EventType {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public List<String> getRecommendedCategories() { return recommendedCategories; }
-    public void setRecommendedCategories(List<String> recommendedCategories) {
+    public List<Category> getRecommendedCategories() { return recommendedCategories; }
+    public void setRecommendedCategories(List<Category> recommendedCategories) {
         this.recommendedCategories = recommendedCategories;
     }
 

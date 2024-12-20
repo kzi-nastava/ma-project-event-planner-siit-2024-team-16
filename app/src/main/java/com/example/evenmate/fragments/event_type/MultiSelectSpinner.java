@@ -9,11 +9,13 @@ import android.widget.ArrayAdapter;
 
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import com.example.evenmate.models.Category;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MultiSelectSpinner extends AppCompatSpinner {
-    private List<String> items;
+    private List<Category> items;
     private boolean[] selectedItems;
     private String defaultText = "Select Items";
     private ArrayAdapter<String> adapter;
@@ -52,7 +54,7 @@ public class MultiSelectSpinner extends AppCompatSpinner {
         });
     }
 
-    public void setItems(List<String> items) {
+    public void setItems(List<Category> items) {
         this.items = new ArrayList<>(items);
         this.selectedItems = new boolean[items.size()];
         updateText();
@@ -66,7 +68,7 @@ public class MultiSelectSpinner extends AppCompatSpinner {
         boolean[] tempSelection = selectedItems.clone();
 
         builder.setMultiChoiceItems(
-                items.toArray(new String[0]),
+                (CharSequence[]) items.toArray(),
                 tempSelection,
                 (dialog, which, isChecked) -> tempSelection[which] = isChecked
         );
@@ -101,8 +103,8 @@ public class MultiSelectSpinner extends AppCompatSpinner {
         adapter.notifyDataSetChanged();
     }
 
-    public List<String> getSelectedItems() {
-        List<String> selected = new ArrayList<>();
+    public List<Category> getSelectedItems() {
+        List<Category> selected = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
             if (selectedItems[i]) {
                 selected.add(items.get(i));

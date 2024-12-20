@@ -10,14 +10,13 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.evenmate.databinding.FragmentCreateEventTypeBinding;
+import com.example.evenmate.models.Category;
 import com.example.evenmate.models.EventType;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -44,9 +43,7 @@ public class CreateEventTypeFragment extends DialogFragment {
     }
 
     private void setupCategoriesSpinner() {
-        List<String> categories = Arrays.asList("ballons", "music", "food");
-
-        // Set the items in your MultiSelectSpinner
+        List<Category> categories = List.of(new Category(1L, "ballons", "n", false));
         binding.multiSelectSpinner.setItems(categories);
     }
 
@@ -87,7 +84,7 @@ public class CreateEventTypeFragment extends DialogFragment {
     private EventType createEventType() {
         String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
         String description = Objects.requireNonNull(binding.etDescription.getText()).toString().trim();
-        List<String> selectedCategories = binding.multiSelectSpinner.getSelectedItems();
+        List<Category> selectedCategories = binding.multiSelectSpinner.getSelectedItems();
 
         EventType eventType = new EventType();
         eventType.setName(name);
