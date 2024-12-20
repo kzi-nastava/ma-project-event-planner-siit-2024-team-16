@@ -1,7 +1,6 @@
 package com.example.evenmate.fragments.event_type;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,13 +16,11 @@ import com.example.evenmate.models.Category;
 import com.example.evenmate.models.EventType;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class CreateEventTypeFragment extends DialogFragment {
     private FragmentCreateEventTypeBinding binding;
-//    private ArrayAdapter<String> categoriesAdapter;
     private CreateEventTypeViewModel viewModel;
 
     @NonNull
@@ -34,6 +31,7 @@ public class CreateEventTypeFragment extends DialogFragment {
 
         setupCategoriesSpinner();
         setupSaveButton();
+        observeViewModel();
 
         return new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Add Event Type")
@@ -43,8 +41,24 @@ public class CreateEventTypeFragment extends DialogFragment {
     }
 
     private void setupCategoriesSpinner() {
-        List<Category> categories = List.of(new Category(1L, "ballons", "n", false));
+        //TODO: fix the problem when saving the type
+        List<Category> categories = List.of(new Category(4L, "food", "", false));
         binding.multiSelectSpinner.setItems(categories);
+    }
+
+    private void observeViewModel() {
+        viewModel.getSuccess().observe(this, success -> {
+            if (success) {
+                Toast.makeText(requireContext(), "Action successful", Toast.LENGTH_SHORT).show();
+                dismissAllowingStateLoss();
+            }
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupSaveButton() {
@@ -52,13 +66,11 @@ public class CreateEventTypeFragment extends DialogFragment {
             if (validateInput()) {
                 EventType newEventType = createEventType();
                 viewModel.addEventType(newEventType);
-                dismiss();
             }
         });
     }
 
     private boolean validateInput() {
-        // TODO: Add validation for categories
         boolean isValid = true;
 
         String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
@@ -89,30 +101,9 @@ public class CreateEventTypeFragment extends DialogFragment {
         EventType eventType = new EventType();
         eventType.setName(name);
         eventType.setDescription(description);
-
-//        List<String> recommendedCategories = new ArrayList<>();
-//        if (selectedCategories != null) {
-//            recommendedCategories.addAll(selectedCategories);
-//        }
         eventType.setRecommendedCategories(selectedCategories);
 
-
         return eventType;
-    }
-
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        viewModel.getSuccess().observe(getViewLifecycleOwner(), success -> {
-            if (success) {
-                Toast.makeText(requireContext(), "Action successful", Toast.LENGTH_SHORT).show();
-            }
-        });
-        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
-            if (error != null) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
