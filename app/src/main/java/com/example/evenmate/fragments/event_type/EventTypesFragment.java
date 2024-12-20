@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,7 @@ public class EventTypesFragment extends ListFragment {
 
         observeViewModel();
 
-        viewModel.fetchEventTypes();
+//        viewModel.fetchEventTypes();
     }
 
 
@@ -57,9 +58,10 @@ public class EventTypesFragment extends ListFragment {
     }
     private void updatePaginationUI(Integer currentPage, Integer totalPages) {
         if (currentPage != null && totalPages != null) {
-            binding.tvPageInfo.setText(String.format("%d / %d", currentPage, totalPages));
+            binding.tvPageInfo.setText(String.format("Page %d of %d", currentPage, totalPages));
             binding.btnPrevious.setEnabled(currentPage > 1);
             binding.btnNext.setEnabled(currentPage < totalPages);
+            binding.paginationLayout.setVisibility(totalPages > 1 ? View.VISIBLE : View.GONE);
         }
     }
     private void setupAddEventTypeButton() {
@@ -69,8 +71,8 @@ public class EventTypesFragment extends ListFragment {
         });
     }
     private void observeViewModel() {
-
         viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            Log.d("EventTypes", "Received event types: " + eventTypes.size());
             assert getActivity() != null;
             adapter = new EventTypeAdapter(getActivity(), getActivity().getSupportFragmentManager(), eventTypes);
             setListAdapter(adapter);
@@ -78,6 +80,7 @@ public class EventTypesFragment extends ListFragment {
             binding.list.setVisibility(eventTypes.isEmpty() ? View.GONE : View.VISIBLE);
             binding.textViewNoEventTypes.setVisibility(eventTypes.isEmpty() ? View.VISIBLE : View.GONE);
         });
+
 
         viewModel.getCurrentPage().observe(getViewLifecycleOwner(), page -> {
             Integer totalPages = viewModel.getTotalPages().getValue();

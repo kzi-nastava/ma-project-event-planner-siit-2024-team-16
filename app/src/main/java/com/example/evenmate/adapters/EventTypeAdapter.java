@@ -16,10 +16,12 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.evenmate.R;
 import com.example.evenmate.models.EventType;
+import com.example.evenmate.models.Category;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EventTypeAdapter extends ArrayAdapter<EventType> {
     private List<EventType> eventTypes;
@@ -79,8 +81,11 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
             tvName.setText(eventType.getName());
             tvDescription.setText(eventType.getDescription());
             tvRecommendedCategories.setText(
-                    String.join(", ", eventType.getRecommendedCategories())
+                    eventType.getRecommendedCategories().stream()
+                    .map(Category::getName)
+                    .collect(Collectors.joining(", "))
             );
+
 
             boolean isActive = eventType.isActive();
             btnActivate.setText(eventType.isActive() ? "Deactivate" : "Activate");

@@ -1,5 +1,6 @@
 package com.example.evenmate.fragments.event_type;
 
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.EventType;
+import com.example.evenmate.models.PaginatedResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EventTypesViewModel extends ViewModel {
+    private static final int PAGE_SIZE = 5;
     private final MutableLiveData<List<EventType>> eventTypes = new MutableLiveData<>();
     private final MutableLiveData<Integer> currentPage = new MutableLiveData<>(1);
     private final MutableLiveData<Integer> totalPages = new MutableLiveData<>(1);
@@ -30,28 +33,27 @@ public class EventTypesViewModel extends ViewModel {
     public LiveData<Integer> getTotalPages() { return totalPages; }
 
     public EventTypesViewModel(){
-        fetchEventTypes();
+//        fetchEventTypes();
     }
 
 
     public void fetchEventTypes() {
-        Call<ArrayList<EventType>> call = ClientUtils.eventTypeService.getTypes(1,5);
-        call.enqueue(new Callback<>() {
+        int apiPage = currentPage.getValue() != null ? currentPage.getValue() - 1 : 0;
+        Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getTypes(apiPage, PAGE_SIZE);
+        call.enqueue(new Callback<PaginatedResponse<EventType>>() {
             @Override
-            public void onResponse(@NonNull Call<ArrayList<EventType>> call, @NonNull Response<ArrayList<EventType>> response) {
-                if (response.isSuccessful()) {
-                    eventTypes.postValue(response.body());
-                } else {
-                    errorMessage.postValue("Failed to fetch eventTypes. Code: " + response.code());
+            public void onResponse(Call<PaginatedResponse<EventType>> call, Response<PaginatedResponse<EventType>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    eventTypes.setValue(response.body().getContent());
+                    totalPages.setValue(response.body().getTotalPages());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ArrayList<EventType>> call, @NonNull Throwable t) {
-                errorMessage.postValue(t.getMessage());
+            public void onFailure(Call<PaginatedResponse<EventType>> call, Throwable t) {
+                Log.e("API_ERROR", "Error fetching event types: " + t.getMessage());
             }
         });
-        totalPages.setValue(Objects.requireNonNull(eventTypes.getValue()).size());
     }
 
     public void refreshEventTypes() {
@@ -78,13 +80,19 @@ public class EventTypesViewModel extends ViewModel {
     }
 
     public void nextPage() {
-        int current = currentPage.getValue() != null ? currentPage.getValue() : 1;
-        int total = totalPages.getValue() != null ? totalPages.getValue() : 1;
-        currentPage.setValue(Math.min(current + 1, total));
+        Integer current = currentPage.getValue();
+        Integer total = totalPages.getValue();
+        if (current != null && total != null && current < total) {
+            currentPage.setValue(current + 1);
+            fetchEventTypes();
+        }
     }
 
     public void previousPage() {
-        int current = currentPage.getValue() != null ? currentPage.getValue() : 1;
-        currentPage.setValue(Math.max(current - 1, 1));
+        Integer current = currentPage.getValue();
+        if (current != null && current > 1) {
+            currentPage.setValue(current - 1);
+            fetchEventTypes();
+        }
     }
 }
