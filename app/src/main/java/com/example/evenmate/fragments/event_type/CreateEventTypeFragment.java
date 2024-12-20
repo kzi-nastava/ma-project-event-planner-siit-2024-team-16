@@ -42,7 +42,7 @@ public class CreateEventTypeFragment extends DialogFragment {
 
     private void setupCategoriesSpinner() {
         //TODO: fix the problem when saving the type
-        List<Category> categories = List.of(new Category(4L, "food", "", false));
+        List<Category> categories = List.of(new Category("food"), new Category("balloons"));
         binding.multiSelectSpinner.setItems(categories);
     }
 
