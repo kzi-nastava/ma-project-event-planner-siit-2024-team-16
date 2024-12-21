@@ -33,9 +33,18 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
     public void setOnStatusClickListener(OnStatusClickListener listener) {
         this.onStatusClickListener = listener;
     }
+    private OnEditClickListener onEditClickListener;
+
+    public interface OnEditClickListener {
+        void onEditClick(EventType eventType);
+    }
+
+    public void setOnEditClickListener(OnEditClickListener listener) {
+        this.onEditClickListener = listener;
+    }
     public EventTypeAdapter(
             Activity context, List<EventType> eventTypes) {
-        super(context, R.layout.fragment_event_type, eventTypes);
+        super(context, R.layout.event_type_card, eventTypes);
         this.eventTypes = eventTypes;
     }
 
@@ -56,14 +65,14 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
     public View getView(int position, @Nullable View itemView, @NonNull ViewGroup parent) {
         EventType eventType = getItem(position);
         if (itemView == null) {
-            itemView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_event_type,
+            itemView = LayoutInflater.from(getContext()).inflate(R.layout.event_type_card,
                     parent, false);
         }
 
         TextView tvName = itemView.findViewById(R.id.tvName);
         TextView tvDescription = itemView.findViewById(R.id.tvDescription);
         TextView tvRecommendedCategories = itemView.findViewById(R.id.tvRecommendedCategories);
-        itemView.findViewById(R.id.btnEdit);
+        ImageButton btnEdit = itemView.findViewById(R.id.btnEdit);
         MaterialButton btnStatus = itemView.findViewById(R.id.btnStatus);
 
         if (eventType != null) {
@@ -81,6 +90,11 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
             btnStatus.setOnClickListener(v -> {
                 if (onStatusClickListener != null) {
                     onStatusClickListener.onStatusClick(eventType);
+                }
+            });
+            btnEdit.setOnClickListener(v -> {
+                if (onEditClickListener != null) {
+                    onEditClickListener.onEditClick(eventType);
                 }
             });
         }

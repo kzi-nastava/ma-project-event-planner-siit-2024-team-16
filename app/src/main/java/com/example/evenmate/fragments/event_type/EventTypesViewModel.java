@@ -34,7 +34,6 @@ public class EventTypesViewModel extends ViewModel {
     public EventTypesViewModel(){
     }
 
-
     public void fetchEventTypes() {
         int apiPage = currentPage.getValue() != null ? currentPage.getValue() - 1 : 0;
         Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getTypes(apiPage, PAGE_SIZE);
@@ -87,7 +86,6 @@ public class EventTypesViewModel extends ViewModel {
             @Override
             public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // Update the item in the current list
                     List<EventType> currentList = eventTypes.getValue();
                     if (currentList != null) {
                         int index = currentList.indexOf(eventType);
@@ -97,7 +95,6 @@ public class EventTypesViewModel extends ViewModel {
                         }
                     }
                 } else {
-                    // Revert the status if update failed
                     eventType.setActive(!newStatus);
                     errorMessage.setValue("Failed to update event type status");
                     refreshEventTypes();

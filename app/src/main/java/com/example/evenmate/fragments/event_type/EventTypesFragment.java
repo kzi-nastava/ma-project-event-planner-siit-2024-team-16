@@ -43,6 +43,11 @@ public class EventTypesFragment extends ListFragment {
         adapter.setOnStatusClickListener(eventType ->
                 viewModel.updateEventTypeStatus(eventType)
         );
+        adapter.setOnEditClickListener(eventType -> {
+                CreateEventTypeFragment dialogFragment = new CreateEventTypeFragment(eventType);
+                dialogFragment.show(getParentFragmentManager(), "EditEventType");
+            }
+        );
         setListAdapter(adapter);
         setupPagination();
 

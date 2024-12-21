@@ -53,15 +53,15 @@ public class CreateEventTypeViewModel extends ViewModel {
         });
     }
 
-    public void editEventType(EventType editEventType) {
-        Call<EventType> call = ClientUtils.eventTypeService.updateType(editEventType);
+    public void updateEventType(EventType eventType) {
+        Call<EventType> call = ClientUtils.eventTypeService.updateType(eventType);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
                 if (response.isSuccessful()) {
                     success.postValue(true);
                 } else {
-                    errorMessage.postValue("Failed to edit eventType. Code: " + response.code());
+                    errorMessage.postValue("Failed to update eventType. Code: " + response.code());
                 }
             }
 

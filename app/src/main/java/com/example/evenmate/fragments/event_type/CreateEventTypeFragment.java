@@ -23,6 +23,16 @@ public class CreateEventTypeFragment extends DialogFragment {
     private FragmentCreateEventTypeBinding binding;
     private CreateEventTypeViewModel viewModel;
 
+    private EventType eventType;
+
+    public CreateEventTypeFragment() {
+        this.eventType = null;
+    }
+
+    public CreateEventTypeFragment(EventType eventType) {
+        this.eventType = eventType;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -31,43 +41,42 @@ public class CreateEventTypeFragment extends DialogFragment {
 
         setupCategoriesSpinner();
         setupSaveButton();
+        setupFormFields();
         observeViewModel();
+        String title = eventType == null ? "Add Event Type" : "Edit Event Type";
 
         return new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Add Event Type")
+                .setTitle(title)
                 .setView(binding.getRoot())
                 .setNegativeButton("Cancel", (dialog, which) -> dismiss())
                 .create();
     }
 
     private void setupCategoriesSpinner() {
-        //TODO: fix the problem when saving the type
+        //TODO: update for categories
         List<Category> categories = List.of(new Category("food"), new Category("balloons"));
         binding.multiSelectSpinner.setItems(categories);
-    }
-
-    private void observeViewModel() {
-        viewModel.getSuccess().observe(this, success -> {
-            if (success) {
-                Toast.makeText(requireContext(), "Action successful", Toast.LENGTH_SHORT).show();
-                dismissAllowingStateLoss();
-            }
-        });
-
-        viewModel.getErrorMessage().observe(this, error -> {
-            if (error != null) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if(eventType != null){
+            binding.multiSelectSpinner.setPreselectedItems(eventType.getRecommendedCategories());
+        }
     }
 
     private void setupSaveButton() {
-        binding.btnSave.setOnClickListener(v -> {
-            if (validateInput()) {
-                EventType newEventType = createEventType();
-                viewModel.addEventType(newEventType);
-            }
-        });
+        if(eventType == null) {
+            binding.btnSave.setOnClickListener(v -> {
+                if (validateInput()) {
+                    getEventTypeValues();
+                    viewModel.addEventType(eventType);
+                }
+            });
+        } else{
+            binding.btnSave.setOnClickListener(v -> {
+                if (validateInput()) {
+                    getEventTypeValues();
+                    viewModel.updateEventType(eventType);
+                }
+            });
+        }
     }
 
     private boolean validateInput() {
@@ -93,22 +102,43 @@ public class CreateEventTypeFragment extends DialogFragment {
         return isValid;
     }
 
-    private EventType createEventType() {
-        String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
+    private void getEventTypeValues() {
         String description = Objects.requireNonNull(binding.etDescription.getText()).toString().trim();
         List<Category> selectedCategories = binding.multiSelectSpinner.getSelectedItems();
 
-        EventType eventType = new EventType();
-        eventType.setName(name);
+        if(eventType == null) {
+            eventType = new EventType();
+        }
         eventType.setDescription(description);
         eventType.setRecommendedCategories(selectedCategories);
+    }
 
-        return eventType;
+    private void setupFormFields() {
+        if(eventType != null){
+            binding.etName.setText(eventType.getName());
+            binding.etName.setEnabled(false);
+            binding.etDescription.setText(eventType.getDescription());
+        }
+    }
+    private void observeViewModel() {
+        viewModel.getSuccess().observe(this, success -> {
+            if (success) {
+                Toast.makeText(requireContext(), "Action successful", Toast.LENGTH_SHORT).show();
+                dismissAllowingStateLoss();
+            }
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        eventType = null;
     }
 }

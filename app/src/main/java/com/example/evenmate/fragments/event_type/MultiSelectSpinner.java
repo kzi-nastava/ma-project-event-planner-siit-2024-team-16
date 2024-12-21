@@ -105,4 +105,21 @@ public class MultiSelectSpinner extends AppCompatSpinner {
         }
         return selected;
     }
+
+    public void setPreselectedItems(List<Category> preselectedItems) {
+        if (items == null || items.isEmpty() || preselectedItems.isEmpty()) {
+            return;
+        }
+        //TODO: use this after categories update
+//        for (int i = 0; i < items.size(); i++) {
+//            selectedItems[i] = preselectedItems.contains(items.get(i));
+//        }
+        for (int i = 0; i < items.size(); i++) {
+            String itemName = items.get(i).getName();
+            selectedItems[i] = preselectedItems.stream()
+                    .anyMatch(preselected -> preselected.getName().equals(itemName));
+        }
+        updateText();
+    }
+
 }
