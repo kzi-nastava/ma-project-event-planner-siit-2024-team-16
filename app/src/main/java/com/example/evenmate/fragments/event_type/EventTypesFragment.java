@@ -41,10 +41,7 @@ public class EventTypesFragment extends ListFragment {
         setupAddEventTypeButton();
 
         observeViewModel();
-
-//        viewModel.fetchEventTypes();
     }
-
 
     private void setupPagination() {
         binding.btnPrevious.setOnClickListener(v -> viewModel.previousPage());
@@ -56,6 +53,7 @@ public class EventTypesFragment extends ListFragment {
                 updatePaginationUI(viewModel.getCurrentPage().getValue(), totalPages)
         );
     }
+
     private void updatePaginationUI(Integer currentPage, Integer totalPages) {
         if (currentPage != null && totalPages != null) {
             binding.tvPageInfo.setText(String.format("Page %d of %d", currentPage, totalPages));
@@ -64,12 +62,14 @@ public class EventTypesFragment extends ListFragment {
             binding.paginationLayout.setVisibility(totalPages > 1 ? View.VISIBLE : View.GONE);
         }
     }
+
     private void setupAddEventTypeButton() {
         binding.btnAddEventType.setOnClickListener(v -> {
             CreateEventTypeFragment dialogFragment = new CreateEventTypeFragment();
             dialogFragment.show(getParentFragmentManager(), "CreateEventType");
         });
     }
+
     private void observeViewModel() {
         viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             Log.d("EventTypes", "Received event types: " + eventTypes.size());
@@ -81,7 +81,6 @@ public class EventTypesFragment extends ListFragment {
             binding.textViewNoEventTypes.setVisibility(eventTypes.isEmpty() ? View.VISIBLE : View.GONE);
         });
 
-
         viewModel.getCurrentPage().observe(getViewLifecycleOwner(), page -> {
             Integer totalPages = viewModel.getTotalPages().getValue();
             if (totalPages != null) {
@@ -89,11 +88,13 @@ public class EventTypesFragment extends ListFragment {
             }
         });
     }
+
     @Override
     public void onResume() {
         super.onResume();
         viewModel.fetchEventTypes();
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

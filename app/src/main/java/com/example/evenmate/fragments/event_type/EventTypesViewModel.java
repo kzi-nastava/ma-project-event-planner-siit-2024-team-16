@@ -14,7 +14,6 @@ import com.example.evenmate.models.PaginatedResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,16 +32,15 @@ public class EventTypesViewModel extends ViewModel {
     public LiveData<Integer> getTotalPages() { return totalPages; }
 
     public EventTypesViewModel(){
-//        fetchEventTypes();
     }
 
 
     public void fetchEventTypes() {
         int apiPage = currentPage.getValue() != null ? currentPage.getValue() - 1 : 0;
         Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getTypes(apiPage, PAGE_SIZE);
-        call.enqueue(new Callback<PaginatedResponse<EventType>>() {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<PaginatedResponse<EventType>> call, Response<PaginatedResponse<EventType>> response) {
+            public void onResponse(@NonNull Call<PaginatedResponse<EventType>> call, @NonNull Response<PaginatedResponse<EventType>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     eventTypes.setValue(response.body().getContent());
                     totalPages.setValue(response.body().getTotalPages());
@@ -50,7 +48,7 @@ public class EventTypesViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<PaginatedResponse<EventType>> call, Throwable t) {
+            public void onFailure(@NonNull Call<PaginatedResponse<EventType>> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error fetching event types: " + t.getMessage());
             }
         });
@@ -63,7 +61,7 @@ public class EventTypesViewModel extends ViewModel {
         }
     }
 
-    public void toggleEventTypeStatus(String eventTypeId) {
+    public void toggleEventTypeStatus(Long eventTypeId) {
         List<EventType> currentEventTypes = eventTypes.getValue();
         if (currentEventTypes == null) {
             return;

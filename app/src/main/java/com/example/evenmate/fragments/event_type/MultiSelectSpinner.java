@@ -16,7 +16,6 @@ import java.util.List;
 public class MultiSelectSpinner extends AppCompatSpinner {
     private List<Category> items;
     private boolean[] selectedItems;
-    private String defaultText = "Select Items";
     private ArrayAdapter<String> adapter;
 
     public MultiSelectSpinner(Context context) {
@@ -44,21 +43,6 @@ public class MultiSelectSpinner extends AppCompatSpinner {
             }
             return false;
         });
-
-//        Override the spinner's click behavior
-//        setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                // Show multi-select dialog when spinner item is clicked
-//                showMultiSelectDialog();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//
-//        });
     }
 
     public void setItems(List<Category> items) {
@@ -106,8 +90,7 @@ public class MultiSelectSpinner extends AppCompatSpinner {
                 selectedCount++;
             }
         }
-
-        String displayText = selectedCount > 0 ? text.toString() : defaultText;
+        String displayText = selectedCount > 0 ? text.toString() : "Select Items";
         adapter.clear();
         adapter.add(displayText);
         adapter.notifyDataSetChanged();
@@ -121,10 +104,5 @@ public class MultiSelectSpinner extends AppCompatSpinner {
             }
         }
         return selected;
-    }
-
-    public void setDefaultText(String defaultText) {
-        this.defaultText = defaultText;
-        updateText();
     }
 }
