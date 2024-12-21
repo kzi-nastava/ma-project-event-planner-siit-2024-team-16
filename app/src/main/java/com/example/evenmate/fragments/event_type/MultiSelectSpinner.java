@@ -3,8 +3,7 @@ package com.example.evenmate.fragments.event_type;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.AdapterView;
+import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -37,21 +36,29 @@ public class MultiSelectSpinner extends AppCompatSpinner {
                 new ArrayList<>());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setAdapter(adapter);
-
-        // Override the spinner's click behavior
-        setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Show multi-select dialog when spinner item is clicked
+        setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                v.performClick();  // Add this line for accessibility
                 showMultiSelectDialog();
+                return true;
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-
+            return false;
         });
+
+//        Override the spinner's click behavior
+//        setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                // Show multi-select dialog when spinner item is clicked
+//                showMultiSelectDialog();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//
+//        });
     }
 
     public void setItems(List<Category> items) {
