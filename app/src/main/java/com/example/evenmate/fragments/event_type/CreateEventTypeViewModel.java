@@ -55,7 +55,7 @@ public class CreateEventTypeViewModel extends ViewModel {
 
     public void editEventType(EventType editEventType) {
         Call<EventType> call = ClientUtils.eventTypeService.updateType(editEventType);
-        call.enqueue(new Callback<EventType>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
                 if (response.isSuccessful()) {

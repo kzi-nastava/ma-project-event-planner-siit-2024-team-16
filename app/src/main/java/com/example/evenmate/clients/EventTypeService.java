@@ -27,12 +27,6 @@ public interface EventTypeService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @GET("types/{id}")
-    Call<EventType> getType(@Path("id") Long id);
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
     @POST("types")
     Call<EventType> createType(@Body EventType request);
     @Headers({
@@ -41,11 +35,5 @@ public interface EventTypeService {
     })
     @PUT("types")
     Call<EventType> updateType(@Body EventType request);
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
-    @DELETE("types/{id}")
-    Call<Void> deleteType(@Path("id") Long id);
 }
 

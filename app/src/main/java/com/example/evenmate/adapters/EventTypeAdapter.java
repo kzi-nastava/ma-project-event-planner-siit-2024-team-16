@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.evenmate.R;
 import com.example.evenmate.models.EventType;
@@ -64,7 +63,7 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
         TextView tvName = itemView.findViewById(R.id.tvName);
         TextView tvDescription = itemView.findViewById(R.id.tvDescription);
         TextView tvRecommendedCategories = itemView.findViewById(R.id.tvRecommendedCategories);
-        ImageButton btnEdit = itemView.findViewById(R.id.btnEdit);
+        itemView.findViewById(R.id.btnEdit);
         MaterialButton btnStatus = itemView.findViewById(R.id.btnStatus);
 
         if (eventType != null) {
