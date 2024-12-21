@@ -44,7 +44,7 @@ public class EventTypesFragment extends ListFragment {
                 viewModel.updateEventTypeStatus(eventType)
         );
         adapter.setOnEditClickListener(eventType -> {
-                CreateEventTypeFragment dialogFragment = new CreateEventTypeFragment(eventType);
+                EventTypeFormFragment dialogFragment = new EventTypeFormFragment(eventType);
                 dialogFragment.show(getParentFragmentManager(), "EditEventType");
             }
         );
@@ -78,7 +78,7 @@ public class EventTypesFragment extends ListFragment {
 
     private void setupAddEventTypeButton() {
         binding.btnAddEventType.setOnClickListener(v -> {
-            CreateEventTypeFragment dialogFragment = new CreateEventTypeFragment();
+            EventTypeFormFragment dialogFragment = new EventTypeFormFragment();
             dialogFragment.show(getParentFragmentManager(), "CreateEventType");
         });
     }

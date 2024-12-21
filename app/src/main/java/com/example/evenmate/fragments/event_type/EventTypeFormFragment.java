@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.example.evenmate.databinding.FragmentCreateEventTypeBinding;
+import com.example.evenmate.databinding.FragmentEventTypeFormBinding;
 import com.example.evenmate.models.Category;
 import com.example.evenmate.models.EventType;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -19,25 +19,25 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.List;
 import java.util.Objects;
 
-public class CreateEventTypeFragment extends DialogFragment {
-    private FragmentCreateEventTypeBinding binding;
-    private CreateEventTypeViewModel viewModel;
+public class EventTypeFormFragment extends DialogFragment {
+    private FragmentEventTypeFormBinding binding;
+    private EventTypeFormViewModel viewModel;
 
     private EventType eventType;
 
-    public CreateEventTypeFragment() {
+    public EventTypeFormFragment() {
         this.eventType = null;
     }
 
-    public CreateEventTypeFragment(EventType eventType) {
+    public EventTypeFormFragment(EventType eventType) {
         this.eventType = eventType;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        binding = FragmentCreateEventTypeBinding.inflate(getLayoutInflater());
-        viewModel = new ViewModelProvider(requireActivity()).get(CreateEventTypeViewModel.class);
+        binding = FragmentEventTypeFormBinding.inflate(getLayoutInflater());
+        viewModel = new ViewModelProvider(requireActivity()).get(EventTypeFormViewModel.class);
 
         setupCategoriesSpinner();
         setupSaveButton();

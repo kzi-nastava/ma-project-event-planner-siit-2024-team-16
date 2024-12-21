@@ -43,6 +43,6 @@
     </fragment>
     <fragment
         android:id="@+id/createEventTypeFragment"
-        android:name="com.example.evenmate.fragments.event_type.CreateEventTypeFragment"
+        android:name="com.example.evenmate.fragments.event_type.EventTypeFormFragment"
         android:label="CreateEventTypeFragment" />
 </navigation>

@@ -13,7 +13,7 @@ import com.example.evenmate.models.EventType;
 import com.example.evenmate.clients.ClientUtils;
 
 
-public class CreateEventTypeViewModel extends ViewModel {
+public class EventTypeFormViewModel extends ViewModel {
     private final MutableLiveData<EventType> eventTypeLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> success = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
