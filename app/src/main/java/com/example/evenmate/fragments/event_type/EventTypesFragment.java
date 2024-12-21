@@ -11,9 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.evenmate.adapters.EventTypeAdapter;
 import com.example.evenmate.databinding.FragmentEventTypesBinding;
+
+import java.util.ArrayList;
 
 
 public class EventTypesFragment extends ListFragment {
@@ -36,6 +39,11 @@ public class EventTypesFragment extends ListFragment {
 
         viewModel = new ViewModelProvider(this).get(EventTypesViewModel.class);
 
+        adapter = new EventTypeAdapter(getActivity(), new ArrayList<>());
+        adapter.setOnStatusClickListener(eventType ->
+                viewModel.updateEventTypeStatus(eventType)
+        );
+        setListAdapter(adapter);
         setupPagination();
 
         setupAddEventTypeButton();
@@ -74,8 +82,7 @@ public class EventTypesFragment extends ListFragment {
         viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             Log.d("EventTypes", "Received event types: " + eventTypes.size());
             assert getActivity() != null;
-            adapter = new EventTypeAdapter(getActivity(), getActivity().getSupportFragmentManager(), eventTypes);
-            setListAdapter(adapter);
+            adapter.setEventTypes(new ArrayList<>(eventTypes));            setListAdapter(adapter);
             adapter.notifyDataSetChanged();
             binding.list.setVisibility(eventTypes.isEmpty() ? View.GONE : View.VISIBLE);
             binding.textViewNoEventTypes.setVisibility(eventTypes.isEmpty() ? View.VISIBLE : View.GONE);
@@ -85,6 +92,12 @@ public class EventTypesFragment extends ListFragment {
             Integer totalPages = viewModel.getTotalPages().getValue();
             if (totalPages != null) {
                 binding.tvPageInfo.setText(String.format("Page %d of %d", page, totalPages));
+            }
+        });
+
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), message -> {
+            if (message != null && !message.isEmpty()) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }

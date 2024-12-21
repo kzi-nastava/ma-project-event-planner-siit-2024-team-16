@@ -61,22 +61,6 @@ public class EventTypesViewModel extends ViewModel {
         }
     }
 
-    public void toggleEventTypeStatus(Long eventTypeId) {
-        List<EventType> currentEventTypes = eventTypes.getValue();
-        if (currentEventTypes == null) {
-            return;
-        }
-        //TODO: Update event type
-        for (int i = 0; i < currentEventTypes.size(); i++) {
-            if (currentEventTypes.get(i).getId().equals(eventTypeId)) {
-                EventType eventType = currentEventTypes.get(i);
-                eventType.setActive(!eventType.isActive());
-                eventTypes.setValue(currentEventTypes);
-                break;
-            }
-        }
-    }
-
     public void nextPage() {
         Integer current = currentPage.getValue();
         Integer total = totalPages.getValue();
@@ -92,5 +76,44 @@ public class EventTypesViewModel extends ViewModel {
             currentPage.setValue(current - 1);
             fetchEventTypes();
         }
+    }
+
+    public void updateEventTypeStatus(EventType eventType) {
+        boolean newStatus = !eventType.isActive();
+        eventType.setActive(newStatus);
+
+        Call<EventType> call = ClientUtils.eventTypeService.updateType(eventType);
+        call.enqueue(new Callback<EventType>() {
+            @Override
+            public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Update the item in the current list
+                    List<EventType> currentList = eventTypes.getValue();
+                    if (currentList != null) {
+                        int index = currentList.indexOf(eventType);
+                        if (index != -1) {
+                            currentList.set(index, response.body());
+                            eventTypes.setValue(currentList);
+                        }
+                    }
+                } else {
+                    // Revert the status if update failed
+                    eventType.setActive(!newStatus);
+                    errorMessage.setValue("Failed to update event type status");
+                    refreshEventTypes();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<EventType> call, @NonNull Throwable t) {
+                eventType.setActive(!newStatus);
+                errorMessage.setValue("Network error while updating status");
+                refreshEventTypes();
+            }
+        });
+    }
+
+    public LiveData<String> getErrorMessage() {
+        return errorMessage;
     }
 }

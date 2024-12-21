@@ -25,49 +25,39 @@ import java.util.stream.Collectors;
 
 public class EventTypeAdapter extends ArrayAdapter<EventType> {
     private List<EventType> eventTypes;
-    private OnEditClickListener onEditClickListener;
-    private OnActivateClickListener onActivateClickListener;
-    private Activity activity;
-    private FragmentManager fragmentManager;
+    private OnStatusClickListener onStatusClickListener;
 
-    public interface OnEditClickListener {
-        void onEditClick(EventType eventType);
+    public interface OnStatusClickListener {
+        void onStatusClick(EventType eventType);
     }
 
-    public interface OnActivateClickListener {
-        void onActivateClick(EventType eventType);
+    public void setOnStatusClickListener(OnStatusClickListener listener) {
+        this.onStatusClickListener = listener;
     }
-
     public EventTypeAdapter(
-            Activity context, FragmentManager fragmentManager,
-            List<EventType> eventTypes) {
-        super(context, R.layout.event_type_item, eventTypes);
+            Activity context, List<EventType> eventTypes) {
+        super(context, R.layout.fragment_event_type, eventTypes);
         this.eventTypes = eventTypes;
-        activity = context;
-        fragmentManager = fragmentManager;
-
     }
+
     @Override
     public int getCount() {
         return eventTypes.size();
     }
+
     @Nullable
     @Override
     public EventType getItem(int position) {
         return eventTypes.get(position);
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View itemView, @NonNull ViewGroup parent) {
         EventType eventType = getItem(position);
-        if(itemView == null){
-            itemView = LayoutInflater.from(getContext()).inflate(R.layout.event_type_item,
+        if (itemView == null) {
+            itemView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_event_type,
                     parent, false);
         }
 
@@ -75,97 +65,43 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
         TextView tvDescription = itemView.findViewById(R.id.tvDescription);
         TextView tvRecommendedCategories = itemView.findViewById(R.id.tvRecommendedCategories);
         ImageButton btnEdit = itemView.findViewById(R.id.btnEdit);
-        MaterialButton btnActivate = itemView.findViewById(R.id.btnActivate);
+        MaterialButton btnStatus = itemView.findViewById(R.id.btnStatus);
 
-        if(eventType != null){
+        if (eventType != null) {
             tvName.setText(eventType.getName());
             tvDescription.setText(eventType.getDescription());
             tvRecommendedCategories.setText(
                     eventType.getRecommendedCategories().stream()
-                    .map(Category::getName)
-                    .collect(Collectors.joining(", "))
+                            .map(Category::getName)
+                            .collect(Collectors.joining(", "))
             );
 
 
             boolean isActive = eventType.isActive();
-            btnActivate.setText(eventType.isActive() ? "Deactivate" : "Activate");
-            if (isActive) {
-                btnActivate.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.white)));
-                btnActivate.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.red)));
-                btnActivate.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.red));
-            } else {
-                btnActivate.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.white)));
-                btnActivate.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.green)));
-                btnActivate.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.green));
-            }
-            btnEdit.setOnClickListener(v -> {
-                if (onEditClickListener != null) {
-                    onEditClickListener.onEditClick(eventType);
+            updateStatusButton(btnStatus, isActive);
+            btnStatus.setOnClickListener(v -> {
+                if (onStatusClickListener != null) {
+                    onStatusClickListener.onStatusClick(eventType);
                 }
             });
-
-            btnActivate.setOnClickListener(v -> {
-                if (onActivateClickListener != null) {
-                    onActivateClickListener.onActivateClick(eventType);
-                }
-            });
-
         }
-
         return itemView;
+    }
+
+    private void updateStatusButton(MaterialButton button, boolean isActive) {
+        button.setText(isActive ? "Deactivate" : "Activate");
+        if (isActive) {
+            button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
+            button.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.red)));
+            button.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
+        } else {
+            button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
+            button.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.green)));
+            button.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
+        }
     }
     public void setEventTypes(ArrayList<EventType> eventTypes) {
         this.eventTypes = eventTypes;
         notifyDataSetChanged();
     }
-
-//    static class EventTypeViewHolder extends RecyclerView.ViewHolder {
-//
-//
-//        public EventTypeViewHolder(@NonNull View itemView,
-//                                   OnEditClickListener onEditClickListener,
-//                                   OnActivateClickListener onActivateClickListener) {
-//            super(itemView);
-//            tvName = itemView.findViewById(R.id.tvName);
-//            tvDescription = itemView.findViewById(R.id.tvDescription);
-//            tvRecommendedCategories = itemView.findViewById(R.id.tvRecommendedCategories);
-//            btnEdit = itemView.findViewById(R.id.btnEdit);
-//            btnActivate = itemView.findViewById(R.id.btnActivate);
-//
-//            this.onEditClickListener = onEditClickListener;
-//            this.onActivateClickListener = onActivateClickListener;
-//        }
-//
-//        public void bind(EventType eventType) {
-//            this.currentEventType = eventType;
-//            tvName.setText(eventType.getName());
-//            tvDescription.setText(eventType.getDescription());
-//            tvRecommendedCategories.setText(
-//                    String.join(", ", eventType.getRecommendedCategories())
-//            );
-//
-//            boolean isActive = eventType.isActive();
-//            btnActivate.setText(eventType.isActive() ? "Deactivate" : "Activate");
-//            if (isActive) {
-//                btnActivate.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.white)));
-//                btnActivate.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.red)));
-//                btnActivate.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.red));
-//            } else {
-//                btnActivate.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.white)));
-//                btnActivate.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(itemView.getContext(), R.color.green)));
-//                btnActivate.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.green));
-//            }
-//            btnEdit.setOnClickListener(v -> {
-//                if (onEditClickListener != null && currentEventType != null) {
-//                    onEditClickListener.onEditClick(currentEventType);
-//                }
-//            });
-//
-//            btnActivate.setOnClickListener(v -> {
-//                if (onActivateClickListener != null && currentEventType != null) {
-//                    onActivateClickListener.onActivateClick(currentEventType);
-//                }
-//            });
-//        }
-//    }
 }
