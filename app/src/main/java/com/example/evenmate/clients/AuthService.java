@@ -12,6 +12,6 @@ public interface AuthService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @POST("/auth/register")
+    @POST("auth/register")
     Call<User> registerUser(@Body User user);
 }
