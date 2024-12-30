@@ -11,6 +11,7 @@ public class User {
     private String photo;
 
     public User() {
+        this.address = new Address();
     }
 
     public User(String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo) {

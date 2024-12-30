@@ -1,5 +1,6 @@
 package com.example.evenmate.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Company {
@@ -11,6 +12,8 @@ public class Company {
     private List<String> photos;
 
     public Company() {
+        this.address = new Address();
+        this.photos = new ArrayList<>();
     }
 
     public Company(String email, String name, Address address, String description, String phone, List<String> photos) {
