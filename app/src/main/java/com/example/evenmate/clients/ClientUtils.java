@@ -31,6 +31,7 @@ public class ClientUtils {
             .build();
 
     public static EventTypeService eventTypeService = retrofit.create(EventTypeService.class);
+    public static AuthService authService = retrofit.create(AuthService.class);
 }
 
 
