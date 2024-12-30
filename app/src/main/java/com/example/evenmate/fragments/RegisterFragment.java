@@ -27,9 +27,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.example.evenmate.Manifest;
+import android.Manifest;
 import com.example.evenmate.R;
-import com.example.evenmate.clients.AuthService;
+import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentRegisterBinding;
 import com.example.evenmate.models.User;
 import com.example.evenmate.models.Company;
@@ -45,7 +45,6 @@ import android.os.Build;
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
-    private AuthService authService;
     private static final int MAX_COMPANY_IMAGES = 5;
     private String userImageBase64;
     private static final int MAX_IMAGE_SIZE = 800;
@@ -88,9 +87,7 @@ public class RegisterFragment extends Fragment {
         companyImagesContainer = binding.companyImagesContainer;
 
         // Initialize switch and company layout visibility handling
-        binding.switchProvider.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            binding.companyInfoLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
+        binding.switchProvider.setOnCheckedChangeListener((buttonView, isChecked) -> binding.companyInfoLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE));
 
         binding.iconUpload.setOnClickListener(v -> checkPermissionAndPickImage(true, -1));
 
@@ -156,6 +153,7 @@ public class RegisterFragment extends Fragment {
             if (imageUri != null) {
                 Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(
                         requireContext().getContentResolver(), imageUri);
+
                 Bitmap resizedBitmap = resizeImage(originalBitmap);
                 String base64Image = convertBitmapToBase64(resizedBitmap);
 
@@ -163,18 +161,12 @@ public class RegisterFragment extends Fragment {
                     userImageBase64 = base64Image;
                     binding.iconUpload.setImageBitmap(resizedBitmap);
                 } else {
-                    // Handle company image
-                    if (imageIndex < companyImagesBase64.size()) {
+                    if (imageIndex >= 0 && imageIndex < companyImagesBase64.size()) {
                         companyImagesBase64.set(imageIndex, base64Image);
                     } else {
                         companyImagesBase64.add(base64Image);
                     }
                     updateCompanyImagesUI();
-                }
-
-                originalBitmap.recycle();
-                if (resizedBitmap != originalBitmap) {
-                    resizedBitmap.recycle();
                 }
             }
         } catch (IOException e) {
@@ -274,7 +266,7 @@ public class RegisterFragment extends Fragment {
         user.setFirstName(Objects.requireNonNull(binding.txtFirstName.getText()).toString());
         user.setLastName(Objects.requireNonNull(binding.txtLastName.getText()).toString());
         user.getAddress().setCity(Objects.requireNonNull(binding.txtCity.getText()).toString());
-        user.getAddress().setStreet(Objects.requireNonNull(binding.txtStreet.getText()).toString());
+        user.getAddress().setStreetName(Objects.requireNonNull(binding.txtStreet.getText()).toString());
         user.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtStreetNumber.getText()).toString());
         user.setPhone(Objects.requireNonNull(binding.txtPhone.getText()).toString());
         user.setPhoto(userImageBase64);
@@ -284,16 +276,19 @@ public class RegisterFragment extends Fragment {
             company.setEmail(Objects.requireNonNull(binding.txtCompanyEmail.getText()).toString());
             company.setName(Objects.requireNonNull(binding.txtCompanyName.getText()).toString());
             company.getAddress().setCity(Objects.requireNonNull(binding.txtCompanyCity.getText()).toString());
-            company.getAddress().setStreet(Objects.requireNonNull(binding.txtCompanyStreet.getText()).toString());
+            company.getAddress().setStreetName(Objects.requireNonNull(binding.txtCompanyStreet.getText()).toString());
             company.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtCompanyStreetNumber.getText()).toString());
             company.setPhone(Objects.requireNonNull(binding.txtCompanyPhone.getText()).toString());
             company.setDescription(Objects.requireNonNull(binding.txtDescription.getText()).toString());
             company.setPhotos(companyImagesBase64); // Set all company images
             user.setCompany(company);
         }
+        register(user);
+    }
 
-        // Make API call
-        authService.registerUser(user).enqueue(new Callback<User>() {
+    private void register(User user){
+        retrofit2.Call<User> call = ClientUtils.authService.registerUser(user);
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
