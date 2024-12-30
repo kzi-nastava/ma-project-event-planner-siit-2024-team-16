@@ -2,14 +2,14 @@ package com.example.evenmate.models;
 
 public class Address {
     private String city;
-    private String street;
+    private String streetName;
     private String streetNumber;
 
     public Address() {
     }
 
-    public Address(String street, String streetNumber, String city) {
-        this.street = street;
+    public Address(String streetName, String streetNumber, String city) {
+        this.streetName = streetName;
         this.streetNumber = streetNumber;
         this.city = city;
     }
@@ -22,12 +22,12 @@ public class Address {
         this.city = city;
     }
 
-    public String getStreet() {
-        return street;
+    public String getStreetName() {
+        return streetName;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
     }
 
     public String getStreetNumber() {
