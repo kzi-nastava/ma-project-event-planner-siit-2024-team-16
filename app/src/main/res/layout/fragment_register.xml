@@ -464,7 +464,24 @@
                     android:minLines="3"
                     android:scrollbars="vertical" />
             </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:id="@+id/companyImagesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@id/txt_company_info"
+                app:layout_constraintStart_toStartOf="parent"/>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addCompanyImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Company Image"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/companyImagesContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
