@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,10 +36,17 @@ import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentRegisterBinding;
 import com.example.evenmate.models.User;
 import com.example.evenmate.models.Company;
+import com.example.evenmate.validation.ValidationField;
+import com.example.evenmate.validation.ValidationRule;
+import com.example.evenmate.validation.rules.EmailRule;
+import com.example.evenmate.validation.rules.MatchPasswordRule;
+import com.example.evenmate.validation.rules.MinLengthRule;
+import com.example.evenmate.validation.rules.RequiredRule;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,12 +68,14 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(getContext(), "Permission required to select image", Toast.LENGTH_SHORT).show();
                 }
             });
+
     private final ActivityResultLauncher<Intent> userImagePickerLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     handleImageResult(result.getData(), true, -1);
                 }
             });
+
     private final ActivityResultLauncher<String> companyImagePermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -85,6 +93,7 @@ public class RegisterFragment extends Fragment {
                 handleImageResult(result.getData(), false, imageIndex);
             }
         });
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -92,7 +101,6 @@ public class RegisterFragment extends Fragment {
 
         companyImagesContainer = binding.companyImagesContainer;
 
-        // Initialize switch and company layout visibility handling
         binding.switchProvider.setOnCheckedChangeListener((buttonView, isChecked) -> binding.companyInfoLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE));
 
         binding.iconUpload.setOnClickListener(v -> checkPermissionAndPickImage(true, -1));
@@ -105,7 +113,6 @@ public class RegisterFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
             }
         });
-        // Set up register button click listener
         binding.btnRegister.setOnClickListener(v -> attemptRegistration());
 
         return binding.getRoot();
@@ -113,11 +120,9 @@ public class RegisterFragment extends Fragment {
 
     private void checkPermissionAndPickImage(boolean isUserImage, int imageIndex) {
         String permission;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // Android 14+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permission = Manifest.permission.READ_MEDIA_IMAGES;
-        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) { // Android 13
-            permission = Manifest.permission.READ_MEDIA_IMAGES;
-        } else { // Android 12 and below
+        } else {
             permission = Manifest.permission.READ_EXTERNAL_STORAGE;
         }
 
@@ -161,10 +166,8 @@ public class RegisterFragment extends Fragment {
                     binding.iconUpload.setImageBitmap(resizedBitmap);
                 } else {
                     if (imageIndex >= 0 && imageIndex < companyImagesBase64.size()) {
-                        // Replace existing image
                         companyImagesBase64.set(imageIndex, base64Image);
                     } else {
-                        // Add new image
                         companyImagesBase64.add(base64Image);
                     }
                     updateCompanyImagesUI();
@@ -195,20 +198,15 @@ public class RegisterFragment extends Fragment {
     }
     private String convertBitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        // Check if the bitmap has an alpha channel
         boolean hasAlpha = bitmap.hasAlpha();
 
         if (hasAlpha) {
-            // Use PNG for images with transparency
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             String base64String = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
-            Log.d("ImageUpload", "Base64 string start: " + base64String.substring(0, Math.min(base64String.length(), 100)));
             return "data:image/png;base64," + base64String;
         } else {
-            // Use JPEG for images without transparency
             bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
             String base64String = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
-            Log.d("ImageUpload", "Base64 string start: " + base64String.substring(0, Math.min(base64String.length(), 100)));
             return "data:image/jpeg;base64," + base64String;
         }
     }
@@ -219,7 +217,6 @@ public class RegisterFragment extends Fragment {
             final int index = i;
             String base64Image = companyImagesBase64.get(i);
 
-            // Create image container
             LinearLayout imageContainer = new LinearLayout(getContext());
             imageContainer.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
@@ -227,37 +224,32 @@ public class RegisterFragment extends Fragment {
             containerParams.setMargins(dpToPx(8), 0, dpToPx(8), 0);
             imageContainer.setLayoutParams(containerParams);
 
-            // Create ImageView for the company image
             ImageView imageView = new ImageView(getContext());
             LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
                     dpToPx(80), dpToPx(80));
             imageView.setLayoutParams(imageParams);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            // Set the image
             byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
             Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             imageView.setImageBitmap(decodedBitmap);
 
-            // Create delete button
             ImageView deleteButton = new ImageView(getContext());
             LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
                     dpToPx(20), dpToPx(20));
             deleteParams.gravity = Gravity.CENTER;
             deleteButton.setLayoutParams(deleteParams);
-            deleteButton.setImageResource(R.drawable.ic_delete); // Make sure to have this icon
+            deleteButton.setImageResource(R.drawable.ic_delete);
             deleteButton.setOnClickListener(v -> {
                 companyImagesBase64.remove(index);
                 updateCompanyImagesUI();
             });
 
-            // Add views to container
             imageContainer.addView(imageView);
             imageContainer.addView(deleteButton);
             companyImagesContainer.addView(imageContainer);
         }
 
-        // Update add button visibility
         binding.iconCompanyUpload.setVisibility(
                 companyImagesBase64.size() < MAX_COMPANY_IMAGES ? View.VISIBLE : View.GONE);
     }
@@ -268,12 +260,9 @@ public class RegisterFragment extends Fragment {
     }
 
     private void attemptRegistration() {
-        // Validate inputs
         if (!validateInputs()) {
             return;
         }
-
-        // Create user object
         User user = new User();
         user.setEmail(Objects.requireNonNull(binding.txtEmail.getText()).toString());
         user.setPassword(Objects.requireNonNull(binding.txtPassword.getText()).toString());
@@ -284,7 +273,7 @@ public class RegisterFragment extends Fragment {
         user.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtStreetNumber.getText()).toString());
         user.setPhone(Objects.requireNonNull(binding.txtPhone.getText()).toString());
         user.setPhoto(userImageBase64);
-        // Add company info if provider switch is checked
+
         if (binding.switchProvider.isChecked()) {
             Company company = new Company();
             company.setEmail(Objects.requireNonNull(binding.txtCompanyEmail.getText()).toString());
@@ -294,25 +283,21 @@ public class RegisterFragment extends Fragment {
             company.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtCompanyStreetNumber.getText()).toString());
             company.setPhone(Objects.requireNonNull(binding.txtCompanyPhone.getText()).toString());
             company.setDescription(Objects.requireNonNull(binding.txtDescription.getText()).toString());
-            company.setPhotos(companyImagesBase64); // Set all company images
+            company.setPhotos(companyImagesBase64);
             user.setCompany(company);
         }
         register(user);
     }
 
     private void register(User user){
-        if (user.getPhoto() != null) {
-            Log.d("ImageUpload", "User photo length: " + user.getPhoto().length());
-            Log.d("ImageUpload", "Photo starts with: " + user.getPhoto().substring(0, Math.min(user.getPhoto().length(), 100)));
-        }
         retrofit2.Call<User> call = ClientUtils.authService.registerUser(user);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
+                    //TODO: GO TO PAGE FROM WHICH USER CAME AND SHOW DIALOG
                     Toast.makeText(getContext(), "Registration successful! Please check your email to activate your account.",
                             Toast.LENGTH_LONG).show();
-                    // Navigate to login or home screen
                 } else {
                     String errorBody;
                     try (ResponseBody responseBody = response.errorBody()) {
@@ -321,7 +306,6 @@ public class RegisterFragment extends Fragment {
                         throw new RuntimeException(e);
                     }
 
-                    Log.e("ImageUpload", "Registration failed. Error: " + errorBody);
                     Toast.makeText(getContext(), "Registration failed: " + errorBody,
                             Toast.LENGTH_LONG).show();
                 }
@@ -329,47 +313,81 @@ public class RegisterFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                Log.e("ImageUpload", "Network error", t);
                 Toast.makeText(getContext(), "Network error: " + t.getMessage(),
                         Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    private List<ValidationField> getUserValidationFields() {
+        return Arrays.asList(
+                new ValidationField(binding.txtFieldEmail, binding.txtEmail, "Email",
+                        new RequiredRule(), new EmailRule()),
+                new ValidationField(binding.txtFieldPasswordRegister, binding.txtPassword, "Password",
+                        new RequiredRule(), new MinLengthRule(8)),
+                new ValidationField(binding.txtFieldConfirmPasswordRegister, binding.txtConfirmPassword, "Confirm password",
+                        new RequiredRule(), new MatchPasswordRule(binding.txtPassword)),
+                new ValidationField(binding.txtFieldCity, binding.txtCity, "City",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldStreet, binding.txtStreet, "Street",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldStreetNumber, binding.txtStreetNumber, "Street number",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldPhone, binding.txtPhone, "Phone",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldFirstName, binding.txtFirstName, "First name",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldLastName, binding.txtLastName, "Last name",
+                        new RequiredRule())
+        );
+    }
+
+    private List<ValidationField> getCompanyValidationFields() {
+        return Arrays.asList(
+                new ValidationField(binding.txtFieldCompanyEmail, binding.txtCompanyEmail, "Company email",
+                        new RequiredRule(), new EmailRule()),
+                new ValidationField(binding.txtFieldCompanyName, binding.txtCompanyName, "Company name",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldCompanyCity, binding.txtCompanyCity, "Company city",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldCompanyStreet, binding.txtCompanyStreet, "Company street",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldCompanyStreetNumber, binding.txtCompanyStreetNumber, "Company street number",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldCompanyPhone, binding.txtCompanyPhone, "Company phone",
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldDescription, binding.txtDescription, "Company description",
+                        new RequiredRule())
+        );
+    }
+
+    private boolean validateFields(List<ValidationField> fields) {
+        boolean isValid = true;
+
+        for (ValidationField field : fields) {
+            String value = Objects.requireNonNull(field.getInput().getText()).toString();
+            field.getLayout().setError(null);
+
+            for (ValidationRule rule : field.getRules()) {
+                if (!rule.validate(value)) {
+                    field.getLayout().setError(field.getFieldName() + " " + rule.getErrorMessage());
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+
+        return isValid;
+    }
+
     private boolean validateInputs() {
-        // Validate email
-        if (Objects.requireNonNull(binding.txtEmail.getText()).toString().isEmpty()) {
-            binding.txtFieldEmail.setError("Email is required");
-            return false;
-        }
+        boolean isValid = validateFields(getUserValidationFields());
 
-        // Validate password
-        if (Objects.requireNonNull(binding.txtPassword.getText()).toString().isEmpty()) {
-            binding.txtFieldPasswordRegister.setError("Password is required");
-            return false;
-        }
-
-        // Validate password confirmation
-        if (!binding.txtPassword.getText().toString()
-                .equals(Objects.requireNonNull(binding.txtConfirmPassword.getText()).toString())) {
-            binding.txtFieldConfirmPasswordRegister.setError("Passwords do not match");
-            return false;
-        }
-
-        // Validate company fields if provider switch is checked
         if (binding.switchProvider.isChecked()) {
-            if (Objects.requireNonNull(binding.txtCompanyEmail.getText()).toString().isEmpty()) {
-                binding.txtFieldCompanyEmail.setError("Company email is required");
-                return false;
-            }
-            if (Objects.requireNonNull(binding.txtCompanyName.getText()).toString().isEmpty()) {
-                binding.txtFieldCompanyName.setError("Company name is required");
-                return false;
-            }
-            // Add other company field validations as needed
+            isValid = validateFields(getCompanyValidationFields()) && isValid;
         }
 
-        return true;
+        return isValid;
     }
 
     @Override
