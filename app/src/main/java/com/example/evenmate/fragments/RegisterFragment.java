@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +25,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +52,7 @@ public class RegisterFragment extends Fragment {
     private static final int MAX_COMPANY_IMAGES = 5;
     private String userImageBase64;
     private static final int MAX_IMAGE_SIZE = 800;
-    private List<String> companyImagesBase64 = new ArrayList<>();
+    private final List<String> companyImagesBase64 = new ArrayList<>();
     private LinearLayout companyImagesContainer;
     private final ActivityResultLauncher<String> userImagePermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -112,7 +115,7 @@ public class RegisterFragment extends Fragment {
         String permission;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // Android 14+
             permission = Manifest.permission.READ_MEDIA_IMAGES;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) { // Android 13
             permission = Manifest.permission.READ_MEDIA_IMAGES;
         } else { // Android 12 and below
             permission = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -132,7 +135,6 @@ public class RegisterFragment extends Fragment {
 
     private void launchImagePicker(boolean isUserImage, int imageIndex) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
         if (isUserImage) {
             userImagePickerLauncher.launch(intent);
         } else {
@@ -147,8 +149,9 @@ public class RegisterFragment extends Fragment {
         try {
             Uri imageUri = data.getData();
             if (imageUri != null) {
-                Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(
-                        requireContext().getContentResolver(), imageUri);
+                Bitmap originalBitmap = ImageDecoder.decodeBitmap(
+                        ImageDecoder.createSource(requireContext().getContentResolver(), imageUri)
+                );
 
                 Bitmap resizedBitmap = resizeImage(originalBitmap);
                 String base64Image = convertBitmapToBase64(resizedBitmap);
@@ -169,7 +172,6 @@ public class RegisterFragment extends Fragment {
             }
         } catch (IOException e) {
             Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
         }
     }
 
@@ -312,12 +314,13 @@ public class RegisterFragment extends Fragment {
                             Toast.LENGTH_LONG).show();
                     // Navigate to login or home screen
                 } else {
-                    String errorBody = null;
-                    try {
-                        errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                    String errorBody;
+                    try (ResponseBody responseBody = response.errorBody()) {
+                        errorBody = responseBody != null ? responseBody.string() : "No error body";
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+
                     Log.e("ImageUpload", "Registration failed. Error: " + errorBody);
                     Toast.makeText(getContext(), "Registration failed: " + errorBody,
                             Toast.LENGTH_LONG).show();
