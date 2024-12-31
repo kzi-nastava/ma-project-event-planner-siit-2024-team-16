@@ -4,12 +4,14 @@ import java.util.concurrent.TimeUnit;
 import com.example.evenmate.BuildConfig;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ClientUtils {
-    public static final String SERVICE_API_PATH = "http://"+ BuildConfig.IP_ADDR +":8080/api/v1/";
+    public static final String BASE_URL = "http://"+ BuildConfig.IP_ADDR +":8080";
+    public static final String SERVICE_API_PATH = BASE_URL + "/api/v1/";
 
     public static OkHttpClient test(){
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -20,6 +22,14 @@ public class ClientUtils {
                 .readTimeout(120, TimeUnit.SECONDS)
                 .writeTimeout(120, TimeUnit.SECONDS)
                 .addInterceptor(interceptor)
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    // Adding custom header
+                    Request request = original.newBuilder()
+                            .header("X-Base-URL", BASE_URL)
+                            .build();
+                    return chain.proceed(request);
+                })
                 .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
     }
