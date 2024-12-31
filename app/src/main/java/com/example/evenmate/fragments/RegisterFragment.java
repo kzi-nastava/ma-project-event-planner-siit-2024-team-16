@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.Gravity;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -210,6 +214,8 @@ public class RegisterFragment extends Fragment {
             return "data:image/jpeg;base64," + base64String;
         }
     }
+    // ... previous imports and code remain the same ...
+
     private void updateCompanyImagesUI() {
         companyImagesContainer.removeAllViews();
 
@@ -230,16 +236,32 @@ public class RegisterFragment extends Fragment {
             imageView.setLayoutParams(imageParams);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
-            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            imageView.setImageBitmap(decodedBitmap);
+            // Fix: Properly handle the data URL format
+            String base64Data = base64Image;
+            if (base64Image.contains(",")) {
+                base64Data = base64Image.split(",")[1];
+            }
+
+            try {
+                byte[] decodedString = Base64.decode(base64Data, Base64.DEFAULT);
+                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                if (decodedBitmap != null) {
+                    imageView.setImageBitmap(decodedBitmap);
+                } else {
+                    imageView.setImageResource(R.drawable.ic_error);
+                    Toast.makeText(getContext(), "Failed to decode image", Toast.LENGTH_SHORT).show();
+                }
+            } catch (IllegalArgumentException e) {
+                imageView.setImageResource(R.drawable.ic_error);
+                Toast.makeText(getContext(), "Invalid image format", Toast.LENGTH_SHORT).show();
+            }
 
             ImageView deleteButton = new ImageView(getContext());
             LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
                     dpToPx(20), dpToPx(20));
             deleteParams.gravity = Gravity.CENTER;
             deleteButton.setLayoutParams(deleteParams);
-            deleteButton.setImageResource(R.drawable.ic_delete);
+            deleteButton.setImageResource(R.drawable.ic_red_delete);
             deleteButton.setOnClickListener(v -> {
                 companyImagesBase64.remove(index);
                 updateCompanyImagesUI();
@@ -295,19 +317,27 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
-                    //TODO: GO TO PAGE FROM WHICH USER CAME AND SHOW DIALOG
-                    Toast.makeText(getContext(), "Registration successful! Please check your email to activate your account.",
-                            Toast.LENGTH_LONG).show();
+                    handleRegistrationSuccess();
                 } else {
                     String errorBody;
                     try (ResponseBody responseBody = response.errorBody()) {
-                        errorBody = responseBody != null ? responseBody.string() : "No error body";
+                        errorBody = responseBody != null ? responseBody.string() : null;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-
-                    Toast.makeText(getContext(), "Registration failed: " + errorBody,
-                            Toast.LENGTH_LONG).show();
+                    if (errorBody != null) {
+                        if (errorBody.contains("Email already exists")) {
+                            errorBody = "An account with this email address already exists";
+                        } else if (errorBody.contains("Company with the given email or name already exists")) {
+                            errorBody = "A company with this name or email already exists";
+                        } else {
+                            // Default message for other errors
+                            errorBody = "Registration failed. Please check your information and try again";
+                        }
+                    } else {
+                        errorBody = "Registration failed. Please try again later";
+                    }
+                    handleRegistrationError(errorBody);
                 }
             }
 
@@ -319,6 +349,43 @@ public class RegisterFragment extends Fragment {
         });
     }
 
+    private void showCustomToast(String message, boolean isError) {
+        View toastView = getLayoutInflater().inflate(R.layout.custom_toast_layout, null);
+        TextView toastText = toastView.findViewById(R.id.toast_text);
+        ImageView iconView = toastView.findViewById(R.id.toast_icon);
+
+        toastText.setText(message);
+
+        if (isError) {
+            toastText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
+            iconView.setImageResource(R.drawable.ic_error);
+        } else {
+            toastText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
+            iconView.setImageResource(R.drawable.ic_success);
+        }
+
+        Toast toast = new Toast(requireContext());
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(toastView);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 100);
+        toast.show();
+    }
+
+    private void handleRegistrationSuccess() {
+        showCustomToast("Registration successful! Please check your email to activate your account.", false);
+
+        requireActivity().runOnUiThread(() -> {
+            new Handler().postDelayed(() -> {
+                NavController navController = Navigation.findNavController(requireView());
+                navController.popBackStack();
+                navController.popBackStack();
+            }, 1000);
+        });
+    }
+
+    private void handleRegistrationError(String errorMessage) {
+        showCustomToast("Registration failed: " + errorMessage, true);
+    }
     private List<ValidationField> getUserValidationFields() {
         return Arrays.asList(
                 new ValidationField(binding.txtFieldEmail, binding.txtEmail, "Email",

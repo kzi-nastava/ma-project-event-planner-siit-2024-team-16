@@ -46,8 +46,6 @@
     <string name="activate">Activate</string>
     <string name="edit">Edit</string>
     <string name="recommended_ps_categories"><![CDATA[Recommended P&S Categories : ]]></string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save">SAVE</string>
     <string name="name">Name</string>
     <string name="no_event_types">No event types</string>
@@ -57,4 +55,5 @@
     <string name="select_categories">Select Categories</string>
     <string name="image">image</string>
     <string name="company_images">company images</string>
+    <string name="activate_account_message">Registration successful! Please check your email to activate your account.</string>
 </resources>

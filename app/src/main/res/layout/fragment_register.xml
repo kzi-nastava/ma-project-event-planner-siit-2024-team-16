@@ -496,9 +496,8 @@
                 android:src="@drawable/ic_upload_image"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.08"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_upload_company_images"
-                 />
+                app:layout_constraintStart_toEndOf="@+id/txt_upload_company_images"
+                app:layout_constraintTop_toBottomOf="@+id/txt_field_description"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
