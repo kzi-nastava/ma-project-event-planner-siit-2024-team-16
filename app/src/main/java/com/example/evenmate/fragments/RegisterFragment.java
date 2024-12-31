@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,12 +74,14 @@ public class RegisterFragment extends Fragment {
                 }
             });
 
-//    private final ActivityResultLauncher<Intent> companyImagePickerLauncher =
-//            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-//                    handleImageResult(result.getData(), false);
-//                }
-//            });
+    private final ActivityResultLauncher<Intent> companyImagePickerLauncher =
+        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                Bundle extras = result.getData().getExtras();
+                int imageIndex = extras != null ? extras.getInt("image_index", -1) : -1;
+                handleImageResult(result.getData(), false, imageIndex);
+            }
+        });
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -91,7 +94,7 @@ public class RegisterFragment extends Fragment {
 
         binding.iconUpload.setOnClickListener(v -> checkPermissionAndPickImage(true, -1));
 
-        binding.addCompanyImageButton.setOnClickListener(v -> {
+        binding.iconCompanyUpload.setOnClickListener(v -> {
             if (companyImagesBase64.size() < MAX_COMPANY_IMAGES) {
                 checkPermissionAndPickImage(false, companyImagesBase64.size());
             } else {
@@ -104,15 +107,6 @@ public class RegisterFragment extends Fragment {
 
         return binding.getRoot();
     }
-    private final ActivityResultLauncher<Intent> companyImagePickerLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    String imageIndex = result.getData().getStringExtra("image_index");
-                    if (imageIndex != null) {
-                        handleImageResult(result.getData(), false, Integer.parseInt(imageIndex));
-                    }
-                }
-            });
 
     private void checkPermissionAndPickImage(boolean isUserImage, int imageIndex) {
         String permission;
@@ -142,7 +136,9 @@ public class RegisterFragment extends Fragment {
         if (isUserImage) {
             userImagePickerLauncher.launch(intent);
         } else {
-            intent.putExtra("image_index", String.valueOf(imageIndex));
+            Bundle extras = new Bundle();
+            extras.putInt("image_index", imageIndex);
+            intent.putExtras(extras);
             companyImagePickerLauncher.launch(intent);
         }
     }
@@ -162,8 +158,10 @@ public class RegisterFragment extends Fragment {
                     binding.iconUpload.setImageBitmap(resizedBitmap);
                 } else {
                     if (imageIndex >= 0 && imageIndex < companyImagesBase64.size()) {
+                        // Replace existing image
                         companyImagesBase64.set(imageIndex, base64Image);
                     } else {
+                        // Add new image
                         companyImagesBase64.add(base64Image);
                     }
                     updateCompanyImagesUI();
@@ -171,6 +169,7 @@ public class RegisterFragment extends Fragment {
             }
         } catch (IOException e) {
             Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -194,9 +193,22 @@ public class RegisterFragment extends Fragment {
     }
     private String convertBitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
-        byte[] imageBytes = outputStream.toByteArray();
-        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        // Check if the bitmap has an alpha channel
+        boolean hasAlpha = bitmap.hasAlpha();
+
+        if (hasAlpha) {
+            // Use PNG for images with transparency
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            String base64String = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
+            Log.d("ImageUpload", "Base64 string start: " + base64String.substring(0, Math.min(base64String.length(), 100)));
+            return "data:image/png;base64," + base64String;
+        } else {
+            // Use JPEG for images without transparency
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+            String base64String = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
+            Log.d("ImageUpload", "Base64 string start: " + base64String.substring(0, Math.min(base64String.length(), 100)));
+            return "data:image/jpeg;base64," + base64String;
+        }
     }
     private void updateCompanyImagesUI() {
         companyImagesContainer.removeAllViews();
@@ -244,7 +256,7 @@ public class RegisterFragment extends Fragment {
         }
 
         // Update add button visibility
-        binding.addCompanyImageButton.setVisibility(
+        binding.iconCompanyUpload.setVisibility(
                 companyImagesBase64.size() < MAX_COMPANY_IMAGES ? View.VISIBLE : View.GONE);
     }
 
@@ -287,6 +299,10 @@ public class RegisterFragment extends Fragment {
     }
 
     private void register(User user){
+        if (user.getPhoto() != null) {
+            Log.d("ImageUpload", "User photo length: " + user.getPhoto().length());
+            Log.d("ImageUpload", "Photo starts with: " + user.getPhoto().substring(0, Math.min(user.getPhoto().length(), 100)));
+        }
         retrofit2.Call<User> call = ClientUtils.authService.registerUser(user);
         call.enqueue(new Callback<>() {
             @Override
@@ -296,14 +312,21 @@ public class RegisterFragment extends Fragment {
                             Toast.LENGTH_LONG).show();
                     // Navigate to login or home screen
                 } else {
-                    String errorMessage = "Registration failed: " +
-                            (response.errorBody() != null ? response.errorBody().toString() : "Unknown error");
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                    String errorBody = null;
+                    try {
+                        errorBody = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Log.e("ImageUpload", "Registration failed. Error: " + errorBody);
+                    Toast.makeText(getContext(), "Registration failed: " + errorBody,
+                            Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                Log.e("ImageUpload", "Network error", t);
                 Toast.makeText(getContext(), "Network error: " + t.getMessage(),
                         Toast.LENGTH_LONG).show();
             }
