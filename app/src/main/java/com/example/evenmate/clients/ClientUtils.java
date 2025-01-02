@@ -52,6 +52,7 @@ public class ClientUtils {
 
     public static EventTypeService eventTypeService = getRetrofit().create(EventTypeService.class);
     public static AuthService authService = getRetrofit().create(AuthService.class);
+    public static UserService userService = getRetrofit().create(UserService.class);
 }
 
 
