@@ -6,7 +6,7 @@
     android:id="@+id/base_navigation"
     app:startDestination="@+id/homepageContentFragment">
     <fragment
-        android:id="@+id/nav_login"
+        android:id="@+id/nav_auth"
         android:name="com.example.evenmate.fragments.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" >

@@ -1,7 +1,5 @@
 package com.example.evenmate.fragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.evenmate.R;
+import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentLoginBinding;
 import com.example.evenmate.models.user.LoginRequest;
@@ -79,9 +78,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<TokenResponse> call, @NonNull Response<TokenResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    SharedPreferences prefs = ClientUtils.getContext().getSharedPreferences("AUTH_PREFS", Context.MODE_PRIVATE);
-                    prefs.edit().putString("jwt_token", response.body().getAccessToken()).apply();
-
+                    AuthManager authManager = AuthManager.getInstance(getContext());
+                    authManager.saveToken( response.body().getAccessToken());
                     getUserInfo();
                 }else {
                     String errorBody;
@@ -120,7 +118,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    ClientUtils.loggedInUser = response.body();
+                    AuthManager.loggedInUser = response.body();
                     requireActivity().runOnUiThread(() -> {
                         new Handler().postDelayed(() -> {
                             NavController navController = Navigation.findNavController(requireView());

@@ -22,6 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import androidx.fragment.app.Fragment;
 import com.example.evenmate.R;
+import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.fragments.CardCollection;
 import com.example.evenmate.fragments.TopCardSwiper;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -33,6 +34,9 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashSet;
 import java.util.Set;
+import com.example.evenmate.auth.AuthManager;
+import com.example.evenmate.utils.ToastUtils;
+
 
 public class HomepageActivity extends AppCompatActivity {
 
@@ -87,12 +91,12 @@ public class HomepageActivity extends AppCompatActivity {
 
         actionBarDrawerToggle.syncState();
 
-        topLevelDestinations.add(R.id.nav_login);
+        topLevelDestinations.add(R.id.nav_auth);
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
         mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.providerServicesProductsFragment)
+                .Builder(R.id.nav_auth, R.id.homepageContentFragment, R.id.providerServicesProductsFragment)
                 .setOpenableLayout(drawer)
                 .build();
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -140,11 +144,53 @@ public class HomepageActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem authMenuItem = menu.findItem(R.id.nav_auth);
+        if (AuthManager.getInstance(ClientUtils.getContext()).isLoggedIn()) {
+            authMenuItem.setTitle(R.string.logout);
+        } else {
+            authMenuItem.setTitle(R.string.login);
+        }
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.nav_auth) {
+            if (AuthManager.getInstance(this).isLoggedIn()) {
+                handleLogout();
+                return true;
+            } else{
+
+            }
+        }
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
+
+    private void handleLogout() {
+        AuthManager.getInstance(this).logout();
+        ToastUtils.showCustomToast(this, "Successfully logged out", false);
+        invalidateOptionsMenu();
+
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        navController.navigate(R.id.homepageContentFragment);
+
+//        updateUIAfterLogout();
+    }
+
+    private void updateUIAfterLogout() {
+        invalidateOptionsMenu();
+
+        //TODO: REFRESH MENU
+        if (navigationView != null) {
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.nav_menu);
+        }
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
@@ -155,9 +201,6 @@ public class HomepageActivity extends AppCompatActivity {
         super.onDestroy();
 
     }
-
-
-
 
     public void switchedFragments(boolean isChecked) {
         if (isChecked) { //services and products
