@@ -38,8 +38,8 @@ import android.Manifest;
 import com.example.evenmate.R;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentRegisterBinding;
-import com.example.evenmate.models.User;
-import com.example.evenmate.models.Company;
+import com.example.evenmate.models.user.User;
+import com.example.evenmate.models.user.Company;
 import com.example.evenmate.validation.ValidationField;
 import com.example.evenmate.validation.ValidationRule;
 import com.example.evenmate.validation.rules.EmailRule;
@@ -312,7 +312,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void register(User user){
-        retrofit2.Call<User> call = ClientUtils.authService.registerUser(user);
+        retrofit2.Call<User> call = ClientUtils.authService.register(user);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {

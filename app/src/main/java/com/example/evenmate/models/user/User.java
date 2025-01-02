@@ -1,4 +1,6 @@
-package com.example.evenmate.models;
+package com.example.evenmate.models.user;
+
+import com.example.evenmate.models.Address;
 
 public class User {
     private String email;
@@ -9,12 +11,13 @@ public class User {
     private String phone;
     private Company company;
     private String photo;
+    private String role;
 
     public User() {
         this.address = new Address();
     }
 
-    public User(String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo) {
+    public User(String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo, String role) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -23,6 +26,7 @@ public class User {
         this.phone = phone;
         this.company = company;
         this.photo = photo;
+        this.role = role;
     }
 
     public String getEmail() {
@@ -87,5 +91,13 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

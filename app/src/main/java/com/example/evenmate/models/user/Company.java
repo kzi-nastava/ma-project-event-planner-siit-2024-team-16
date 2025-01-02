@@ -1,4 +1,6 @@
-package com.example.evenmate.models;
+package com.example.evenmate.models.user;
+
+import com.example.evenmate.models.Address;
 
 import java.util.ArrayList;
 import java.util.List;
