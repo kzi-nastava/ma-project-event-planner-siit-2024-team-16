@@ -1,10 +1,10 @@
 package com.example.evenmate.clients;
 
 import android.content.Context;
-
 import java.util.concurrent.TimeUnit;
 import com.example.evenmate.BuildConfig;
 import com.example.evenmate.interceptors.AuthInterceptor;
+import com.example.evenmate.models.user.User;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -12,19 +12,32 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ClientUtils {
-    public static final String BASE_URL = "http://"+ BuildConfig.IP_ADDR +":8080";
+    public static final String BASE_URL = "http://" + BuildConfig.IP_ADDR + ":8080";
     public static final String SERVICE_API_PATH = BASE_URL + "/api/v1/";
     private static Context context;
+    private static Retrofit retrofit;
+    public static User loggedInUser = null;
 
-    // Add a method to initialize context
+    public static EventTypeService eventTypeService;
+    public static AuthService authService;
+    public static UserService userService;
+
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
+        initializeServices();
     }
 
-    public static Context getContext(){
+    private static void initializeServices() {
+        eventTypeService = getRetrofit().create(EventTypeService.class);
+        authService = getRetrofit().create(AuthService.class);
+        userService = getRetrofit().create(UserService.class);
+    }
+
+    public static Context getContext() {
         return context;
     }
-    public static OkHttpClient test() {
+
+    private static OkHttpClient createHttpClient() {
         if (context == null) {
             throw new IllegalStateException("Context must be initialized before creating client");
         }
@@ -41,22 +54,14 @@ public class ClientUtils {
                 .build();
     }
 
-    private static Retrofit retrofit;
-
-    public static Retrofit getRetrofit() {
+    private static Retrofit getRetrofit() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(SERVICE_API_PATH)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(test())
+                    .client(createHttpClient())
                     .build();
         }
         return retrofit;
     }
-
-    public static EventTypeService eventTypeService = getRetrofit().create(EventTypeService.class);
-    public static AuthService authService = getRetrofit().create(AuthService.class);
-    public static UserService userService = getRetrofit().create(UserService.class);
 }
-
-

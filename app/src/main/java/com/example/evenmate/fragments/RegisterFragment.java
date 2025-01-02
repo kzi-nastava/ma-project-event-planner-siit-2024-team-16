@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -40,6 +39,7 @@ import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentRegisterBinding;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.models.user.Company;
+import com.example.evenmate.utils.ToastUtils;
 import com.example.evenmate.validation.ValidationField;
 import com.example.evenmate.validation.ValidationRule;
 import com.example.evenmate.validation.rules.EmailRule;
@@ -330,7 +330,6 @@ public class RegisterFragment extends Fragment {
                         } else if (errorBody.contains("Company with the given email or name already exists")) {
                             errorBody = "A company with this name or email already exists";
                         } else {
-                            // Default message for other errors
                             errorBody = "Registration failed. Please check your information and try again";
                         }
                     } else {
@@ -348,42 +347,22 @@ public class RegisterFragment extends Fragment {
         });
     }
 
-    private void showCustomToast(String message, boolean isError) {
-        View toastView = getLayoutInflater().inflate(R.layout.custom_toast_layout, null);
-        TextView toastText = toastView.findViewById(R.id.toast_text);
-        ImageView iconView = toastView.findViewById(R.id.toast_icon);
-
-        toastText.setText(message);
-
-        if (isError) {
-            toastText.setTextColor(ContextCompat.getColor(requireContext(), R.color.red));
-            iconView.setImageResource(R.drawable.ic_error);
-        } else {
-            toastText.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
-            iconView.setImageResource(R.drawable.ic_success);
-        }
-
-        Toast toast = new Toast(requireContext());
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(toastView);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 100);
-        toast.show();
-    }
-
     private void handleRegistrationSuccess() {
-        showCustomToast("Registration successful! Please check your email to activate your account.", false);
+        ToastUtils.showCustomToast(requireContext(),
+                "Registration successful! Please check your email to activate your account.",
+                false);
 
-        requireActivity().runOnUiThread(() -> {
-            new Handler().postDelayed(() -> {
-                NavController navController = Navigation.findNavController(requireView());
-                navController.popBackStack();
-                navController.popBackStack();
-            }, 1000);
-        });
+        requireActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
+            NavController navController = Navigation.findNavController(requireView());
+            navController.popBackStack();
+            navController.popBackStack();
+        }, 1000));
     }
 
     private void handleRegistrationError(String errorMessage) {
-        showCustomToast("Registration failed: " + errorMessage, true);
+        ToastUtils.showCustomToast(requireContext(),
+                "Registration failed: " + errorMessage,
+                true);
     }
     private List<ValidationField> getUserValidationFields() {
         return Arrays.asList(

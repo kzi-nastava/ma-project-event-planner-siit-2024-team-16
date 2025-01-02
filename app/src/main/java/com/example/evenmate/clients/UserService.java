@@ -6,6 +6,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface UserService {
-    @GET("api/v1/users/whoami")
+    @GET("users/whoami")
     Call<User> whoami();
 }
