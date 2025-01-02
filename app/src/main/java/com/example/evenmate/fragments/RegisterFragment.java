@@ -214,7 +214,6 @@ public class RegisterFragment extends Fragment {
             return "data:image/jpeg;base64," + base64String;
         }
     }
-    // ... previous imports and code remain the same ...
 
     private void updateCompanyImagesUI() {
         companyImagesContainer.removeAllViews();

@@ -20,6 +20,10 @@ public class ClientUtils {
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
     }
+
+    public static Context getContext(){
+        return context;
+    }
     public static OkHttpClient test() {
         if (context == null) {
             throw new IllegalStateException("Context must be initialized before creating client");
