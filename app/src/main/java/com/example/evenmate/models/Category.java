@@ -10,21 +10,18 @@ public class Category {
     private Long id;
     private String name;
     private String description;
-    private Boolean isDeleted;
     private List<EventType> types;
 
-    public Category(Long id, String name, String description, Boolean isDeleted, List<EventType> types) {
+    public Category(Long id, String name, String description, List<EventType> types) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.isDeleted = isDeleted;
         this.types = types;
     }
 
-    public Category(Long id, String name, String description, Boolean isDeleted) {
+    public Category(Long id, String name, String description) {
         this.name = name;
         this.description = description;
-        this.isDeleted = isDeleted;
         this.id = id;
         this.types = new ArrayList<>();
     }
@@ -60,14 +57,6 @@ public class Category {
         this.description = description;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
     public List<EventType> getTypes() {
         return types;
     }
@@ -87,11 +76,11 @@ public class Category {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(description, category.description) && Objects.equals(isDeleted, category.isDeleted) && Objects.equals(types, category.types);
+        return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(description, category.description) && Objects.equals(types, category.types);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, isDeleted, types);
+        return Objects.hash(id, name, description, types);
     }
 }
