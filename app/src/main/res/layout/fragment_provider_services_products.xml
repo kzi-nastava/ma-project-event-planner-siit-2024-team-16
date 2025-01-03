@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your Services and Products"
+                android:text="@string/your_services_and_products"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"/>
@@ -59,7 +59,7 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sort"
+                    android:text="@string/sort"
                     android:layout_marginEnd="8dp"
                     app:icon="@drawable/ic_sort"/>
 
@@ -68,7 +68,7 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Filter"
+                    android:text="@string/filter"
                     app:icon="@drawable/ic_filter"/>
 
             </LinearLayout>
@@ -104,14 +104,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No services or products yet"
+            android:text="@string/no_services_or_products_yet"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:layout_marginTop="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Click the + button to add your first service"
+            android:text="@string/click_the_button_to_add_your_first_service"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?android:textColorSecondary"
             android:layout_marginTop="8dp"/>

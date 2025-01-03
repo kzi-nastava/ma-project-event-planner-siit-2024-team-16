@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.example.evenmate.activities.HomepageActivity;
+import com.example.evenmate.activities.PageActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                Intent intent = new Intent(MainActivity.this, PageActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -4,9 +4,9 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/homepageContentFragment"
+        <item android:id="@+id/HomepageFragment"
             android:title="@string/home"
-            android:orderInCategory="100" />
+            android:orderInCategory="200" />
         <item android:id="@+id/providerServicesProductsFragment"
             android:title="@string/providerServicesProductsNavbarItem"
             android:orderInCategory="200" />

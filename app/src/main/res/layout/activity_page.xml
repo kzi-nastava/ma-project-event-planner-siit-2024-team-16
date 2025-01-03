@@ -10,8 +10,8 @@
     android:id="@+id/drawer_layout">
 
     <include
-        android:id="@+id/activity_homepage_base"
-        layout="@layout/activity_homepage_base"
+        android:id="@+id/activity_page_base"
+        layout="@layout/activity_page_base"
         />
 
     <com.google.android.material.navigation.NavigationView

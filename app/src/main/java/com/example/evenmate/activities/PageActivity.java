@@ -1,49 +1,37 @@
 package com.example.evenmate.activities;
 
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-import android.widget.FrameLayout;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import androidx.fragment.app.Fragment;
 import com.example.evenmate.R;
-import com.example.evenmate.fragments.CardCollection;
-import com.example.evenmate.fragments.TopCardSwiper;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.example.evenmate.databinding.ActivityHomepageBinding;
+import com.example.evenmate.databinding.ActivityPageBinding;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-public class HomepageActivity extends AppCompatActivity {
+public class PageActivity extends AppCompatActivity {
 
-    private Fragment top5Events;
-    private Fragment allEvents;
-    private Fragment top5ServicesAndProducts;
-    private Fragment allServicesAndProducts;
-    private SwitchMaterial fragmentSwitch;
-    private SearchView searchView;
-
-    private ActivityHomepageBinding binding;
+    private ActivityPageBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -55,18 +43,13 @@ public class HomepageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            top5Events = getSupportFragmentManager().getFragment(savedInstanceState, "top5EventsFragment");
-        } else {
-            top5Events = new TopCardSwiper(getTop5Events());
-        }
-        getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5Events).commit();
-        binding = ActivityHomepageBinding.inflate(getLayoutInflater());
+
+        binding = ActivityPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         drawer = binding.drawerLayout;
         navigationView = binding.navView;
-        toolbar = binding.activityHomepageBase.toolbar;
+        toolbar = binding.activityPageBase.toolbar;
 
         setSupportActionBar(toolbar);
 
@@ -92,47 +75,12 @@ public class HomepageActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
         mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.nav_login, R.id.homepageContentFragment, R.id.providerServicesProductsFragment)
+                .Builder(R.id.nav_login,R.id.HomepageFragment, R.id.providerServicesProductsFragment)
                 .setOpenableLayout(drawer)
                 .build();
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 
-        fragmentSwitch = findViewById(R.id.fragment_switch);
-
-        this.top5Events = new TopCardSwiper(getTop5Events());
-        this.allEvents = new CardCollection(getTop5Events());
-        this.top5ServicesAndProducts = new TopCardSwiper(getTop5ServicesAndProducts());
-        this.allServicesAndProducts = new CardCollection(getTop5ServicesAndProducts());
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5Events).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.all, allEvents).commit();
-        }
-
-        fragmentSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> switchedFragments(isChecked));
-        updateSwitchColors(false);
-        searchView = findViewById(R.id.search_bar);
-        HomepageActivity that=this;
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (!fragmentSwitch.isChecked()){
-                    // search for events on backend
-                    Toast.makeText(that,"You event searched for: " + query , Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    //search for services and products on backend
-                    Toast.makeText(that, "You s/p searched for: " + query, Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
     }
 
     @Override
@@ -142,7 +90,16 @@ public class HomepageActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.HomepageFragment) {
+                Objects.requireNonNull(fragmentManager.findFragmentById(R.id.providerServicesProductsFragment)).onSaveInstanceState(new Bundle());
+            } else if (destination.getId() == R.id.providerServicesProductsFragment) {
+                Objects.requireNonNull(fragmentManager.findFragmentById(R.id.HomepageFragment)).onSaveInstanceState(new Bundle());
+            }
+        });
+
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
     @Override
@@ -150,51 +107,7 @@ public class HomepageActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
-    }
-
-
-
-
-    public void switchedFragments(boolean isChecked) {
-        if (isChecked) { //services and products
-            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5ServicesAndProducts ).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.all, allServicesAndProducts).commit();
-            Toast.makeText(this, R.string.services_and_products, Toast.LENGTH_SHORT).show();
-            searchView.setQuery("",false);
-        } else { //events
-            getSupportFragmentManager().beginTransaction().replace(R.id.top_5, top5Events).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.all, allEvents).commit();
-            Toast.makeText(this, R.string.events, Toast.LENGTH_SHORT).show();
-            searchView.setQuery("",false);
-        }
-        updateSwitchColors(isChecked);
-    }
-    private void updateSwitchColors(boolean isChecked) {
-        if (isChecked) {
-            fragmentSwitch.setTrackTintList(ContextCompat.getColorStateList(this, R.color.light_purple));
-            fragmentSwitch.setThumbTintList(ContextCompat.getColorStateList(this, R.color.purple));
-            FrameLayout frameLayout = findViewById(R.id.search_bar_frame);
-            GradientDrawable background = (GradientDrawable) frameLayout.getBackground();
-            background.setColor(ContextCompat.getColor(this, R.color.purple));
-            findViewById(R.id.sort).setBackgroundColor(getColor(R.color.purple));
-            findViewById(R.id.filter).setBackgroundColor(getColor(R.color.purple));
-
-
-        } else {
-            fragmentSwitch.setTrackTintList(ContextCompat.getColorStateList(this, R.color.light_green));
-            fragmentSwitch.setThumbTintList(ContextCompat.getColorStateList(this, R.color.green));
-            FrameLayout frameLayout = findViewById(R.id.search_bar_frame);
-            GradientDrawable background = (GradientDrawable) frameLayout.getBackground();
-            background.setColor(ContextCompat.getColor(this, R.color.green));
-            findViewById(R.id.sort).setBackgroundColor(getColor(R.color.green));
-            findViewById(R.id.filter).setBackgroundColor(getColor(R.color.green));
-
-        }
-    }
     public static List<Map<String, String>> getTop5Events(){
         List<Map<String,String>> data=new ArrayList<>();
         data.add(Map.of(
@@ -308,10 +221,6 @@ public class HomepageActivity extends AppCompatActivity {
         ));
         return data;
     }
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        getSupportFragmentManager().putFragment(outState, "top5EventsFragment", top5Events);
-//    }
+
 
 }

@@ -42,4 +42,9 @@
     <string name="company_email">Company email</string>
     <string name="company_name">Name</string>
     <string name="description">Description</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="your_services_and_products">Your Services and Products</string>
+    <string name="no_services_or_products_yet">No services or products yet</string>
+    <string name="click_the_button_to_add_your_first_service">Click the + button to add your first service</string>
 </resources>

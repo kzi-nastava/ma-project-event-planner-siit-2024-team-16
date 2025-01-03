@@ -24,7 +24,7 @@
             android:name=".activities.CreateServiceActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.HomepageActivity"
+            android:name=".activities.PageActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

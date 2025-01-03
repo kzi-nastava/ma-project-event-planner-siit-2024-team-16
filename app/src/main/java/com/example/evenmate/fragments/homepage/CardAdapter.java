@@ -1,4 +1,4 @@
-package com.example.evenmate.fragments;
+package com.example.evenmate.fragments.homepage;
 
 import android.annotation.SuppressLint;
 import android.widget.Toast;
