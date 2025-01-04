@@ -1,5 +1,11 @@
 package com.example.evenmate.models;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Service {
     private String id;
     private String name;
@@ -21,13 +27,4 @@ public class Service {
         this.available = available;
         this.imageResourceId = imageResourceId;
     }
-
-    // Getters
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getCategory() { return category; }
-    public String getType() { return type; }
-    public double getPrice() { return price; }
-    public boolean isAvailable() { return available; }
-    public int getImageResourceId() { return imageResourceId; }
 }
