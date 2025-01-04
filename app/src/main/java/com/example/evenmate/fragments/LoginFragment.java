@@ -89,16 +89,16 @@ public class LoginFragment extends Fragment {
                         throw new RuntimeException(e);
                     }
                     if (errorBody != null) {
-                        if (errorBody.contains("Your account is not activated.")) {
-                            errorBody = "Your account is not activated. Please activate it using the link sent to your email.";
-                        } else if (errorBody.contains("Invalid credentials. Please try again")){
-                            errorBody = "Invalid credentials. Please try again.";
+                        if (errorBody.contains(getString(R.string.your_account_is_not_activated))) {
+                            errorBody = getString(R.string.your_account_is_not_activated_please_activate);
+                        } else if (errorBody.contains(getString(R.string.invalid_credentials))){
+                            errorBody = getString(R.string.invalid_credentials);
                         }
                         else {
-                            errorBody = "Login failed. Please check your information and try again";
+                            errorBody = getString(R.string.login_failed);
                         }
                     } else {
-                        errorBody = "Login failed. Please try again later";
+                        errorBody = getString(R.string.login_failed_please_try_again_later);
                     }
                     ToastUtils.showCustomToast(requireContext(), errorBody, true);
                 }
@@ -106,7 +106,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<TokenResponse> call, @NonNull Throwable t) {
-                ToastUtils.showCustomToast(requireContext(), "Network error: " + t.getMessage(), true);
+                ToastUtils.showCustomToast(requireContext(), getString(R.string.network_error) + t.getMessage(), true);
             }
         });
 
@@ -119,18 +119,16 @@ public class LoginFragment extends Fragment {
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     AuthManager.loggedInUser = response.body();
-                    requireActivity().runOnUiThread(() -> {
-                        new Handler().postDelayed(() -> {
-                            NavController navController = Navigation.findNavController(requireView());
-                            navController.popBackStack();
-                        }, 1000);
-                    });
+                    requireActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        NavController navController = Navigation.findNavController(requireView());
+                        navController.popBackStack();
+                    }, 1000));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                ToastUtils.showCustomToast(requireContext(),"Network error: " + t.getMessage(), true);
+                ToastUtils.showCustomToast(requireContext(),getString(R.string.network_error) + t.getMessage(), true);
             }
         });
     }
