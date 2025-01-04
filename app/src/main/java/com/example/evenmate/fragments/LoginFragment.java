@@ -78,7 +78,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<TokenResponse> call, @NonNull Response<TokenResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    AuthManager authManager = AuthManager.getInstance(getContext());
+                    AuthManager authManager = AuthManager.getInstance(requireContext());
                     authManager.saveToken( response.body().getAccessToken());
                     getUserInfo();
                 }else {

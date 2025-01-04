@@ -22,26 +22,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.Setter;
+
 public class EventTypeAdapter extends ArrayAdapter<EventType> {
     private List<EventType> eventTypes;
+    @Setter
     private OnStatusClickListener onStatusClickListener;
 
     public interface OnStatusClickListener {
         void onStatusClick(EventType eventType);
     }
 
-    public void setOnStatusClickListener(OnStatusClickListener listener) {
-        this.onStatusClickListener = listener;
-    }
+    @Setter
     private OnEditClickListener onEditClickListener;
 
     public interface OnEditClickListener {
         void onEditClick(EventType eventType);
     }
 
-    public void setOnEditClickListener(OnEditClickListener listener) {
-        this.onEditClickListener = listener;
-    }
     public EventTypeAdapter(
             Activity context, List<EventType> eventTypes) {
         super(context, R.layout.event_type_card, eventTypes);

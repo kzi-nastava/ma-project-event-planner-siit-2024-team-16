@@ -69,7 +69,7 @@ public class RegisterFragment extends Fragment {
                 if (isGranted) {
                     launchImagePicker(true, -1);
                 } else {
-                    Toast.makeText(getContext(), "Permission required to select image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Permission required to select image", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -85,7 +85,7 @@ public class RegisterFragment extends Fragment {
                 if (isGranted) {
                     launchImagePicker(false, companyImagesBase64.size());
                 } else {
-                    Toast.makeText(getContext(), "Permission required to select image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Permission required to select image", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -113,7 +113,7 @@ public class RegisterFragment extends Fragment {
             if (companyImagesBase64.size() < MAX_COMPANY_IMAGES) {
                 checkPermissionAndPickImage(false, companyImagesBase64.size());
             } else {
-                Toast.makeText(getContext(), "Maximum " + MAX_COMPANY_IMAGES + " images allowed",
+                Toast.makeText(requireContext(), "Maximum " + MAX_COMPANY_IMAGES + " images allowed",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -178,7 +178,7 @@ public class RegisterFragment extends Fragment {
                 }
             }
         } catch (IOException e) {
-            Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -222,14 +222,14 @@ public class RegisterFragment extends Fragment {
             final int index = i;
             String base64Image = companyImagesBase64.get(i);
 
-            LinearLayout imageContainer = new LinearLayout(getContext());
+            LinearLayout imageContainer = new LinearLayout(requireContext());
             imageContainer.setOrientation(LinearLayout.VERTICAL);
             LinearLayout.LayoutParams containerParams = new LinearLayout.LayoutParams(
                     dpToPx(80), dpToPx(100));
             containerParams.setMargins(dpToPx(8), 0, dpToPx(8), 0);
             imageContainer.setLayoutParams(containerParams);
 
-            ImageView imageView = new ImageView(getContext());
+            ImageView imageView = new ImageView(requireContext());
             LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
                     dpToPx(80), dpToPx(80));
             imageView.setLayoutParams(imageParams);
@@ -248,14 +248,14 @@ public class RegisterFragment extends Fragment {
                     imageView.setImageBitmap(decodedBitmap);
                 } else {
                     imageView.setImageResource(R.drawable.ic_error);
-                    Toast.makeText(getContext(), "Failed to decode image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Failed to decode image", Toast.LENGTH_SHORT).show();
                 }
             } catch (IllegalArgumentException e) {
                 imageView.setImageResource(R.drawable.ic_error);
-                Toast.makeText(getContext(), "Invalid image format", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Invalid image format", Toast.LENGTH_SHORT).show();
             }
 
-            ImageView deleteButton = new ImageView(getContext());
+            ImageView deleteButton = new ImageView(requireContext());
             LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
                     dpToPx(20), dpToPx(20));
             deleteParams.gravity = Gravity.CENTER;
@@ -325,15 +325,15 @@ public class RegisterFragment extends Fragment {
                         throw new RuntimeException(e);
                     }
                     if (errorBody != null) {
-                        if (errorBody.contains("Email already exists")) {
-                            errorBody = "An account with this email address already exists";
-                        } else if (errorBody.contains("Company with the given email or name already exists")) {
-                            errorBody = "A company with this name or email already exists";
+                        if (errorBody.contains(getString(R.string.email_already_exists))) {
+                            errorBody = getString(R.string.account_already_exists_email);
+                        } else if (errorBody.contains(getString(R.string.company_already_exists))) {
+                            errorBody = getString(R.string.company_already_exists);
                         } else {
-                            errorBody = "Registration failed. Please check your information and try again";
+                            errorBody = getString(R.string.registration_failed_check_your_information);
                         }
                     } else {
-                        errorBody = "Registration failed. Please try again later";
+                        errorBody = getString(R.string.registration_failed_try_again);
                     }
                     handleRegistrationError(errorBody);
                 }
@@ -341,7 +341,7 @@ public class RegisterFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                Toast.makeText(getContext(), "Network error: " + t.getMessage(),
+                Toast.makeText(requireContext(), getString(R.string.network_error) + t.getMessage(),
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -349,7 +349,7 @@ public class RegisterFragment extends Fragment {
 
     private void handleRegistrationSuccess() {
         ToastUtils.showCustomToast(requireContext(),
-                "Registration successful! Please check your email to activate your account.",
+                getString(R.string.registration_successful),
                 false);
 
         requireActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
@@ -361,47 +361,47 @@ public class RegisterFragment extends Fragment {
 
     private void handleRegistrationError(String errorMessage) {
         ToastUtils.showCustomToast(requireContext(),
-                "Registration failed: " + errorMessage,
+                getString(R.string.registration_failed) + errorMessage,
                 true);
     }
     private List<ValidationField> getUserValidationFields() {
         return Arrays.asList(
-                new ValidationField(binding.txtFieldEmail, binding.txtEmail, "Email",
+                new ValidationField(binding.txtFieldEmail, binding.txtEmail, getString(R.string.email),
                         new RequiredRule(), new EmailRule()),
-                new ValidationField(binding.txtFieldPasswordRegister, binding.txtPassword, "Password",
+                new ValidationField(binding.txtFieldPasswordRegister, binding.txtPassword, getString(R.string.password),
                         new RequiredRule(), new MinLengthRule(8)),
-                new ValidationField(binding.txtFieldConfirmPasswordRegister, binding.txtConfirmPassword, "Confirm password",
+                new ValidationField(binding.txtFieldConfirmPasswordRegister, binding.txtConfirmPassword, getString(R.string.confirm_password),
                         new RequiredRule(), new MatchPasswordRule(binding.txtPassword)),
-                new ValidationField(binding.txtFieldCity, binding.txtCity, "City",
+                new ValidationField(binding.txtFieldCity, binding.txtCity, getString(R.string.city),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldStreet, binding.txtStreet, "Street",
+                new ValidationField(binding.txtFieldStreet, binding.txtStreet, getString(R.string.street),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldStreetNumber, binding.txtStreetNumber, "Street number",
+                new ValidationField(binding.txtFieldStreetNumber, binding.txtStreetNumber, getString(R.string.street_number),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldPhone, binding.txtPhone, "Phone",
+                new ValidationField(binding.txtFieldPhone, binding.txtPhone, getString(R.string.phone),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldFirstName, binding.txtFirstName, "First name",
+                new ValidationField(binding.txtFieldFirstName, binding.txtFirstName, getString(R.string.first_name),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldLastName, binding.txtLastName, "Last name",
+                new ValidationField(binding.txtFieldLastName, binding.txtLastName, getString(R.string.last_name),
                         new RequiredRule())
         );
     }
 
     private List<ValidationField> getCompanyValidationFields() {
         return Arrays.asList(
-                new ValidationField(binding.txtFieldCompanyEmail, binding.txtCompanyEmail, "Company email",
+                new ValidationField(binding.txtFieldCompanyEmail, binding.txtCompanyEmail, getString(R.string.company_email),
                         new RequiredRule(), new EmailRule()),
-                new ValidationField(binding.txtFieldCompanyName, binding.txtCompanyName, "Company name",
+                new ValidationField(binding.txtFieldCompanyName, binding.txtCompanyName, getString(R.string.company_name),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldCompanyCity, binding.txtCompanyCity, "Company city",
+                new ValidationField(binding.txtFieldCompanyCity, binding.txtCompanyCity, getString(R.string.company_city),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldCompanyStreet, binding.txtCompanyStreet, "Company street",
+                new ValidationField(binding.txtFieldCompanyStreet, binding.txtCompanyStreet, getString(R.string.company_street),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldCompanyStreetNumber, binding.txtCompanyStreetNumber, "Company street number",
+                new ValidationField(binding.txtFieldCompanyStreetNumber, binding.txtCompanyStreetNumber, getString(R.string.company_street_number),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldCompanyPhone, binding.txtCompanyPhone, "Company phone",
+                new ValidationField(binding.txtFieldCompanyPhone, binding.txtCompanyPhone, getString(R.string.company_phone),
                         new RequiredRule()),
-                new ValidationField(binding.txtFieldDescription, binding.txtDescription, "Company description",
+                new ValidationField(binding.txtFieldDescription, binding.txtDescription, getString(R.string.company_description),
                         new RequiredRule())
         );
     }
