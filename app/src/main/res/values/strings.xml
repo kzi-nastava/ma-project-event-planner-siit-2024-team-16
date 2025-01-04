@@ -74,4 +74,7 @@
     <string name="company_street_number">Company street number</string>
     <string name="company_phone">Company phone</string>
     <string name="company_description">Company description</string>
+    <string name="select_items">Select Items</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

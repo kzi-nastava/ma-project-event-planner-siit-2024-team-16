@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import com.example.evenmate.R;
 import com.example.evenmate.models.Category;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class MultiSelectSpinner extends AppCompatSpinner {
         setAdapter(adapter);
         setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                v.performClick();  // Add this line for accessibility
+                v.performClick();
                 showMultiSelectDialog();
                 return true;
             }
@@ -53,7 +54,7 @@ public class MultiSelectSpinner extends AppCompatSpinner {
 
     private void showMultiSelectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Select Items");
+        builder.setTitle(getContext().getString(R.string.select_items));
 
         String[] itemNames = items.stream()
                 .map(Category::getName)
@@ -67,13 +68,13 @@ public class MultiSelectSpinner extends AppCompatSpinner {
                 (dialog, which, isChecked) -> tempSelection[which] = isChecked
         );
 
-        builder.setPositiveButton("OK", (dialog, which) -> {
+        builder.setPositiveButton(R.string.ok, (dialog, which) -> {
             // Update selections and display
             selectedItems = tempSelection;
             updateText();
         });
 
-        builder.setNegativeButton("Cancel", null);
+        builder.setNegativeButton(R.string.cancel, null);
         builder.show();
     }
 
@@ -90,7 +91,7 @@ public class MultiSelectSpinner extends AppCompatSpinner {
                 selectedCount++;
             }
         }
-        String displayText = selectedCount > 0 ? text.toString() : "Select Items";
+        String displayText = selectedCount > 0 ? text.toString() : getContext().getString(R.string.select_items);
         adapter.clear();
         adapter.add(displayText);
         adapter.notifyDataSetChanged();
