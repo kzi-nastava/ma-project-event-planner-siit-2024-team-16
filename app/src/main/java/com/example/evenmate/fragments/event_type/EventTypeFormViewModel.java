@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.evenmate.models.EventType;
+import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.clients.ClientUtils;
 
 
