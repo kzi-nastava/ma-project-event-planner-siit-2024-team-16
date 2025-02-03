@@ -78,4 +78,9 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="description">Description</string>
+    <string name="add_an_event">ADD AN EVENT</string>
+    <string name="no_events">No events</string>
+    <string name="your_events">YOUR EVENTS</string>
+    <string name="address">Address</string>
+    <string name="type">Type:</string>
 </resources>
