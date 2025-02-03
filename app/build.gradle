@@ -55,7 +55,7 @@ dependencies {
     implementation libs.viewpager2
     implementation libs.glide
     annotationProcessor libs.compiler
-
+    annotationProcessor libs.lombok
     implementation libs.navigation.fragment.ktx
     implementation libs.navigation.ui.ktx
     implementation libs.fragment.ktx

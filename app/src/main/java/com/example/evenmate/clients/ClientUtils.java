@@ -6,6 +6,7 @@ import com.example.evenmate.BuildConfig;
 import com.example.evenmate.interceptors.AuthInterceptor;
 import com.example.evenmate.models.user.User;
 
+import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -14,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ClientUtils {
     public static final String BASE_URL = "http://" + BuildConfig.IP_ADDR + ":8080";
     public static final String SERVICE_API_PATH = BASE_URL + "/api/v1/";
+    @Getter
     private static Context context;
     private static Retrofit retrofit;
     public static User loggedInUser = null;
@@ -31,10 +33,6 @@ public class ClientUtils {
         eventTypeService = getRetrofit().create(EventTypeService.class);
         authService = getRetrofit().create(AuthService.class);
         userService = getRetrofit().create(UserService.class);
-    }
-
-    public static Context getContext() {
-        return context;
     }
 
     private static OkHttpClient createHttpClient() {
