@@ -28,14 +28,14 @@ import lombok.Setter;
 public class EventAdapter extends ArrayAdapter<Event> {
     private List<Event> events;
     @Setter
-    private EventAdapter.OnDeleteClickListener onDeleteClickListener;
+    private OnDeleteClickListener onDeleteClickListener;
 
     public interface OnDeleteClickListener {
         void onDeleteClick(Event event);
     }
 
     @Setter
-    private EventAdapter.OnEditClickListener onEditClickListener;
+    private OnEditClickListener onEditClickListener;
 
     public interface OnEditClickListener {
         void onEditClick(Event event);
