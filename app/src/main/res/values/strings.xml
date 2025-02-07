@@ -83,4 +83,6 @@
     <string name="your_events">YOUR EVENTS</string>
     <string name="address">Address</string>
     <string name="type">Type:</string>
+    <string name="max_attendees">Max attendees</string>
+    <string name="country">Country</string>
 </resources>
