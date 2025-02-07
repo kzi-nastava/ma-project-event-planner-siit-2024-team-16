@@ -21,6 +21,7 @@ public class ClientUtils {
     public static User loggedInUser = null;
 
     public static EventTypeService eventTypeService;
+    public static EventService eventService;
     public static AuthService authService;
     public static UserService userService;
 
@@ -31,6 +32,7 @@ public class ClientUtils {
 
     private static void initializeServices() {
         eventTypeService = getRetrofit().create(EventTypeService.class);
+        eventService = getRetrofit().create(EventService.class);
         authService = getRetrofit().create(AuthService.class);
         userService = getRetrofit().create(UserService.class);
     }
