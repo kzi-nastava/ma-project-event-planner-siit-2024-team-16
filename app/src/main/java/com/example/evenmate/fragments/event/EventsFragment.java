@@ -2,65 +2,125 @@ package com.example.evenmate.fragments.event;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.ListFragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.example.evenmate.R;
+import com.example.evenmate.adapters.EventAdapter;
+import com.example.evenmate.databinding.FragmentEventsBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EventsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class EventsFragment extends Fragment {
+import java.util.ArrayList;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class EventsFragment extends ListFragment {
+    private FragmentEventsBinding binding;
+    private EventsViewModel viewModel;
+    private EventAdapter adapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public EventsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EventsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EventsFragment newInstance(String param1, String param2) {
-        EventsFragment fragment = new EventsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = FragmentEventsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        viewModel = new ViewModelProvider(this).get(EventsViewModel.class);
+
+        adapter = new EventAdapter(getActivity(), new ArrayList<>());
+        adapter.setOnFavoriteClickListener(event ->
+                viewModel.updateFavoriteStatus(event)
+        );
+        adapter.setOnEditClickListener(event -> {
+//                    EventFormFragment dialogFragment = new EventFormFragment(event);
+//                    dialogFragment.show(getParentFragmentManager(), "EditEvent");
+                }
+        );
+        adapter.setOnDeleteClickListener(event -> {
+//                    Dele dialogFragment = new EventFormFragment(event);
+//                    dialogFragment.show(getParentFragmentManager(), "EditEvent");
+                }
+        );
+        setListAdapter(adapter);
+        setupPagination();
+
+        setupAddEventButton();
+
+        observeViewModel();
+    }
+
+    private void setupPagination() {
+        binding.btnPrevious.setOnClickListener(v -> viewModel.previousPage());
+        binding.btnNext.setOnClickListener(v -> viewModel.nextPage());
+        viewModel.getCurrentPage().observe(getViewLifecycleOwner(), currentPage ->
+                updatePaginationUI(currentPage, viewModel.getTotalPages().getValue())
+        );
+        viewModel.getTotalPages().observe(getViewLifecycleOwner(), totalPages ->
+                updatePaginationUI(viewModel.getCurrentPage().getValue(), totalPages)
+        );
+    }
+
+    private void updatePaginationUI(Integer currentPage, Integer totalPages) {
+        if (currentPage != null && totalPages != null) {
+            binding.tvPageInfo.setText(String.format("Page %d of %d", currentPage, totalPages));
+            binding.btnPrevious.setEnabled(currentPage > 1);
+            binding.btnNext.setEnabled(currentPage < totalPages);
+            binding.paginationLayout.setVisibility(totalPages > 1 ? View.VISIBLE : View.GONE);
         }
     }
 
+    private void setupAddEventButton() {
+        binding.btnAddEvent.setOnClickListener(v -> {
+//            EventFormFragment dialogFragment = new EventFormFragment();
+//            dialogFragment.show(getParentFragmentManager(), "CreateEvent");
+        });
+    }
+
+    private void observeViewModel() {
+        viewModel.getEvents().observe(getViewLifecycleOwner(), events -> {
+            Log.d("Events", "Received events: " + events.size());
+            assert getActivity() != null;
+            adapter.setEvents(new ArrayList<>(events));
+            setListAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            binding.list.setVisibility(events.isEmpty() ? View.GONE : View.VISIBLE);
+            binding.textViewNoEvents.setVisibility(events.isEmpty() ? View.VISIBLE : View.GONE);
+        });
+
+        viewModel.getCurrentPage().observe(getViewLifecycleOwner(), page -> {
+            Integer totalPages = viewModel.getTotalPages().getValue();
+            if (totalPages != null) {
+                binding.tvPageInfo.setText(String.format("Page %d of %d", page, totalPages));
+            }
+        });
+
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), message -> {
+            if (message != null && !message.isEmpty()) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_events, container, false);
+    public void onResume() {
+        super.onResume();
+        viewModel.fetchEvents();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
