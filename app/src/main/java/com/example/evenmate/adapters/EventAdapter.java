@@ -33,6 +33,12 @@ public class EventAdapter extends ArrayAdapter<Event> {
     public interface OnDeleteClickListener {
         void onDeleteClick(Event event);
     }
+    @Setter
+    private OnFavoriteClickListener onFavoriteClickListener;
+
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(Event event);
+    }
 
     @Setter
     private OnEditClickListener onEditClickListener;
@@ -68,7 +74,6 @@ public class EventAdapter extends ArrayAdapter<Event> {
             itemView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.light_green));
             itemView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.light_green));
             itemView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.green));
-
         }
         TextView title = itemView.findViewById(R.id.title);
         TextView date = itemView.findViewById(R.id.box1);
@@ -78,44 +83,45 @@ public class EventAdapter extends ArrayAdapter<Event> {
         TextView description = itemView.findViewById(R.id.box5);
         ImageView imageView = itemView.findViewById(R.id.image);
         ImageButton btnEdit = itemView.findViewById(R.id.btnEditEvent);
+        ImageButton btnFavorite = itemView.findViewById(R.id.favorite);
         MaterialButton btnDelete = itemView.findViewById(R.id.btnDeleteEvent);
 
-        if(event != null){
+        if(event != null) {
             title.setText(event.getName());
             description.setText(String.format("%s: %s", R.string.description, event.getDescription()));
             date.setText(String.format("%s%s", R.string.date, event.getDate()));
-            address.setText(String.format("%s: %s",R.string.address,event.getAddress()));
-            type.setText(String.format("%s %s",R.string.type,event.getType()));
-            maxAttendees.setText(String.format("%s%s",R.string.max_guests,event.getMaxAttendees()));
+            address.setText(String.format("%s: %s", R.string.address, event.getAddress()));
+            type.setText(String.format("%s %s", R.string.type, event.getType()));
+            maxAttendees.setText(String.format("%s%s", R.string.max_guests, event.getMaxAttendees()));
             if (event.getPhoto() != null) {
                 Glide.with(getContext())
                         .load(Base64.decode(event.getPhoto(), Base64.DEFAULT))
                         .into(imageView);
-            btnEdit.setOnClickListener(v -> {
-                if (onEditClickListener != null) {
-                    onEditClickListener.onEditClick(event);
-                }
-            });
-            btnDelete.setOnClickListener(v -> {
-                if (onDeleteClickListener != null) {
-                    onDeleteClickListener.onDeleteClick(event);
-                }
-            });
-            btnEdit.setVisibility(View.VISIBLE);
-            btnDelete.setVisibility(View.VISIBLE);
+                btnEdit.setOnClickListener(v -> {
+                    if (onEditClickListener != null) {
+                        onEditClickListener.onEditClick(event);
+                    }
+                });
+                btnDelete.setOnClickListener(v -> {
+                    if (onDeleteClickListener != null) {
+                        onDeleteClickListener.onDeleteClick(event);
+                    }
+                });
+                btnFavorite.setOnClickListener(v -> {
+                    if (onFavoriteClickListener != null) {
+                        onFavoriteClickListener.onFavoriteClick(event);
+                    }
+                });
+                btnEdit.setVisibility(View.VISIBLE);
+                btnDelete.setVisibility(View.VISIBLE);
 
-            //TODO: implement
-            //        if (Objects.equals(event.get("isFavorite"), "true")) {
-            //            int filledFavoriteResId = R.drawable.baseline_favorite_24;
-            //            favorite.setImageResource(filledFavoriteResId);
-            //            favorite.setSelected(true);
-            //        }
-        }
-
-
-        ImageButton favorite = itemView.findViewById(R.id.favorite);
-        favorite.setOnClickListener(v -> makeFavorite(favorite, event));
-
+                //TODO: implement
+                //        if (Objects.equals(event.get("isFavorite"), "true")) {
+                //            int filledFavoriteResId = R.drawable.baseline_favorite_24;
+                //            favorite.setImageResource(filledFavoriteResId);
+                //            favorite.setSelected(true);
+                //        }
+            }
         }
         return itemView;
     }
