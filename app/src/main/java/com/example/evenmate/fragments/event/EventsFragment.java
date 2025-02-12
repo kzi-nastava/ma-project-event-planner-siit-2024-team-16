@@ -43,8 +43,8 @@ public class EventsFragment extends ListFragment {
                 viewModel.updateFavoriteStatus(event)
         );
         adapter.setOnEditClickListener(event -> {
-//                    EventFormFragment dialogFragment = new EventFormFragment(event);
-//                    dialogFragment.show(getParentFragmentManager(), "EditEvent");
+                    EventFormFragment dialogFragment = new EventFormFragment(event);
+                    dialogFragment.show(getParentFragmentManager(), "EditEvent");
                 }
         );
         adapter.setOnDeleteClickListener(event -> {
@@ -82,8 +82,8 @@ public class EventsFragment extends ListFragment {
 
     private void setupAddEventButton() {
         binding.btnAddEvent.setOnClickListener(v -> {
-//            EventFormFragment dialogFragment = new EventFormFragment();
-//            dialogFragment.show(getParentFragmentManager(), "CreateEvent");
+            EventFormFragment dialogFragment = new EventFormFragment();
+            dialogFragment.show(getParentFragmentManager(), "CreateEvent");
         });
     }
 
