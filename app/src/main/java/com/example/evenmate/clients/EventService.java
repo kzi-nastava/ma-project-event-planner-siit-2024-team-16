@@ -27,13 +27,13 @@ public interface EventService {
             "Content-Type:application/json"
     })
     @POST("events")
-    Call<Event> createEvent(@Body Event request);
+    Call<Event> create(@Body Event request);
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @PUT("events")
-    Call<Event> updateEvent(@Body Event request);
+    Call<Event> update(@Body Event request);
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
