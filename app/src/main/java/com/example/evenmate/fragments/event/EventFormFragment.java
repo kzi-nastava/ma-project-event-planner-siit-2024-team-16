@@ -1,66 +1,151 @@
 package com.example.evenmate.fragments.event;
 
+
+import android.app.Dialog;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.example.evenmate.databinding.FragmentEventFormBinding;
+import com.example.evenmate.models.event.Event;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import com.example.evenmate.R;
+import java.util.Objects;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EventFormFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class EventFormFragment extends Fragment {
+public class EventFormFragment extends DialogFragment {
+    private FragmentEventFormBinding binding;
+    private EventFormViewModel viewModel;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Event event;
 
     public EventFormFragment() {
-        // Required empty public constructor
+        this.event = null;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EventFormFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EventFormFragment newInstance(String param1, String param2) {
-        EventFormFragment fragment = new EventFormFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public EventFormFragment(Event event) {
+        this.event = event;
     }
 
+    @NonNull
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        binding = FragmentEventFormBinding.inflate(getLayoutInflater());
+        viewModel = new ViewModelProvider(requireActivity()).get(EventFormViewModel.class);
+
+        setupSaveButton();
+        setupFormFields();
+        observeViewModel();
+        String title = event == null ? "Add Event " : "Edit Event ";
+
+        return new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(title)
+                .setView(binding.getRoot())
+                .setNegativeButton("Cancel", (dialog, which) -> dismiss())
+                .create();
+    }
+
+
+    private void setupSaveButton() {
+        if(event == null) {
+            binding.btnSaveEvent.setOnClickListener(v -> {
+                if (validateInput()) {
+                    getEventValues();
+                    viewModel.addEvent(event);
+                }
+            });
+        } else{
+            binding.btnSaveEvent.setOnClickListener(v -> {
+                if (validateInput()) {
+                    getEventValues();
+                    viewModel.updateEvent(event);
+                }
+            });
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_event_form, container, false);
+    private boolean validateInput() {
+        boolean isValid = true;
+
+        String name = Objects.requireNonNull(binding.eName.getText()).toString().trim();
+        String description = Objects.requireNonNull(binding.eDescription.getText()).toString().trim();
+
+        if (TextUtils.isEmpty(name)) {
+            binding.tilEventName.setError("Name is required");
+            isValid = false;
+        } else {
+            binding.tilEventName.setError(null);
+        }
+
+        if (TextUtils.isEmpty(description)) {
+            binding.tilEventDescription.setError("Description is required");
+            isValid = false;
+        } else {
+            binding.tilEventDescription.setError(null);
+        }
+
+        return isValid;
     }
+
+    private void getEventValues() {
+        String description = Objects.requireNonNull(binding.eDescription.getText()).toString().trim();
+
+        if(event == null) {
+            event = new Event();
+        }
+        event.setDescription(description);
+    }
+
+    private void setupFormFields() {
+        if(event != null){
+            binding.eName.setText(event.getName());
+            binding.eName.setEnabled(false);
+            binding.eDescription.setText(event.getDescription());
+        }
+    }
+    private void observeViewModel() {
+        viewModel.getSuccess().observe(this, success -> {
+            if (success) {
+                Toast.makeText(requireContext(), "Action successful", Toast.LENGTH_SHORT).show();
+                dismissAllowingStateLoss();
+            }
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        event = null;
+    }
+//    private fun showDatePicker() {
+//        val datePicker = MaterialDatePicker.Builder.datePicker()
+//                .setTitleText("Select event date")
+//                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+//                .build()
+//
+//        datePicker.addOnPositiveButtonClickListener { timeInMillis ->
+//                // Format the date as needed
+//                val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+//                .format(timeInMillis)
+//            // You can store the date or update UI here
+//        }
+//
+//        datePicker.show(supportFragmentManager, "DATE_PICKER")
+//    }
+//
+//// In your onCreate or wherever you setup views:
+//binding.showDatePickerButton.setOnClickListener {
+//        showDatePicker()
+//    }
 }
