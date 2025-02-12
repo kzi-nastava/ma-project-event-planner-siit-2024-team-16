@@ -86,7 +86,7 @@
     <string name="type">Type:</string>
     <string name="max_attendees">Max attendees</string>
     <string name="country">Country</string>
-    <string name="switch_on_if_the_event_is_private">Switch on if the event is private    </string>
+    <string name="switch_on_if_the_event_is_private"><![CDATA[Switch on if the event is private        ]]></string>
     <string name="choose_a_type">Choose a type</string>
     <string name="select_date">Select Date</string>
 </resources>
