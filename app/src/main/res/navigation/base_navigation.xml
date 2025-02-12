@@ -45,4 +45,9 @@
         android:id="@+id/createEventTypeFragment"
         android:name="com.example.evenmate.fragments.event_type.EventTypeFormFragment"
         android:label="CreateEventTypeFragment" />
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="fragment_events"
+        tools:layout="@layout/fragment_events" />
 </navigation>
