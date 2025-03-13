@@ -1,18 +1,22 @@
 plugins {
     alias(libs.plugins.android.application)
 }
-
+def getIpAddress() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("ip_addr")
+}
 android {
     namespace 'com.example.evenmate'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.evenmate"
         minSdk 30
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
-
+        buildConfigField "String", "IP_ADDR", "\""+getIpAddress()+"\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -28,6 +32,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
@@ -50,6 +55,12 @@ dependencies {
     annotationProcessor libs.compiler
 
     implementation libs.navigation.fragment.ktx
-    implementation libs.navigation.ui.ktx        // or latest version
-    implementation libs.fragment.ktx                // or latest version
+    implementation libs.navigation.ui.ktx
+    implementation libs.fragment.ktx
+    implementation libs.retrofit
+    implementation libs.retrofit2.converter.gson
+    implementation libs.logging.interceptor
+
+    implementation libs.lombok
+    annotationProcessor libs.lombok
 }
