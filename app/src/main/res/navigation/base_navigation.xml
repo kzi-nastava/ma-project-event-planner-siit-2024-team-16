@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/base_navigation"
-    app:startDestination="@+id/homepageContentFragment">
+    app:startDestination="@+id/HomepageFragment">
     <fragment
-        android:id="@+id/nav_auth"
+        android:id="@+id/nav_login"
         android:name="com.example.evenmate.fragments.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" >
@@ -19,12 +19,7 @@
         android:name="com.example.evenmate.fragments.RegisterFragment"
         android:label="Registration"
         tools:layout="@layout/fragment_register" />
-    <fragment
-        android:id="@+id/homepageContentFragment"
-        android:name="com.example.evenmate.fragments.HomepageContentFragment"
-        android:label="Evenmate"
-        tools:layout="@layout/fragment_homepage_content"
-        />
+
     <fragment
         android:id="@+id/providerServicesProductsFragment"
         android:name="com.example.evenmate.fragments.ProviderServicesProductsFragment"
@@ -33,16 +28,11 @@
         app:popUpToInclusive="true"
         tools:layout="@layout/fragment_provider_services_products" />
     <fragment
-        android:id="@+id/eventTypesFragment"
-        android:name="com.example.evenmate.fragments.event_type.EventTypesFragment"
-        android:label="Event types"
-        tools:layout="@layout/fragment_event_types" >
-        <action
-            android:id="@+id/action_eventTypesFragment_to_createEventTypeFragment"
-            app:destination="@id/createEventTypeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/createEventTypeFragment"
-        android:name="com.example.evenmate.fragments.event_type.EventTypeFormFragment"
-        android:label="CreateEventTypeFragment" />
+        android:id="@+id/HomepageFragment"
+        android:name="com.example.evenmate.fragments.homepage.HomepageFragment"
+        android:label="Home"
+        app:popUpTo="@+id/home"
+        app:popUpToInclusive="true"
+        tools:layout="@layout/fragment_homepage" />
+
 </navigation>
