@@ -1,5 +1,6 @@
 package com.example.evenmate.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,36 +56,29 @@ public class PageActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
-        // Ensure consistency with AppBarConfiguration
-        Set<Integer> topLevelDestinations = new HashSet<>(Arrays.asList(
-                R.id.nav_login, R.id.HomepageFragment, R.id.providerServicesProductsFragment
-        ));
+        Set<Integer> topLevelDestinations = new HashSet<>(Arrays.asList(R.id.nav_login, R.id.HomepageFragment, R.id.providerServicesProductsFragment));
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations)
-                .setOpenableLayout(drawer)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).setOpenableLayout(drawer).build();
 
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 
-        // Move Destination Changed Listener Here
         FragmentManager fragmentManager = getSupportFragmentManager();
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (destination.getId() == R.id.HomepageFragment) {
                 Fragment fragment = fragmentManager.findFragmentById(R.id.providerServicesProductsFragment);
-                if (fragment != null) {
+                if (fragment != null && fragment.isAdded()) {
                     fragment.onSaveInstanceState(new Bundle());
                 }
             } else if (destination.getId() == R.id.providerServicesProductsFragment) {
                 Fragment fragment = fragmentManager.findFragmentById(R.id.HomepageFragment);
-                if (fragment != null) {
+                if (fragment != null && fragment.isAdded()) {
                     fragment.onSaveInstanceState(new Bundle());
                 }
             }
@@ -93,13 +87,15 @@ public class PageActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_logged_in, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_notifications) {
+            Intent intent = new Intent(this, NotificationsActivity.class);
+            startActivity(intent);
             Toast.makeText(this, "Notifications clicked!", Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -120,7 +116,6 @@ public class PageActivity extends AppCompatActivity {
                 Map.of("id", "5", "title", "Event5", "date", "15.12.2025.", "location", "Loc5", "category", "Cat5", "max_guests", "150", "rating", "4.3", "image", "@drawable/event", "isFavorite", "false")
         );
     }
-
     public static List<Map<String, String>> getTop5ServicesAndProducts() {
         return Arrays.asList(
                 Map.of("id", "1", "title", "Maya's Catering", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/service", "isFavorite", "false"),

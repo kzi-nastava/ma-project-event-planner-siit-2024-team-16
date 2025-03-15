@@ -84,4 +84,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="notifications">Notifications</string>
+    <string name="all">All</string>
+    <string name="read">Read</string>
+    <string name="unread">Unread</string>
 </resources>

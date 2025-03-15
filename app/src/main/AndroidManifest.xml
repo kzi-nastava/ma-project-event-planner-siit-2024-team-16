@@ -31,6 +31,8 @@
         <activity
             android:name=".activities.CreateServiceActivity"
             android:exported="false" />
+        <activity android:name=".activities.NotificationsActivity"
+            android:exported="false"/>
         <activity
             android:name=".activities.PageActivity"
             android:exported="false" />
