@@ -35,12 +35,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.itemView.setAlpha(notification.isRead() ? 0.5f : 1f);
 
         holder.itemView.setOnClickListener(v -> {
-            // call BE
+            //TODO call BE
             Toast.makeText(v.getContext(), "(Un)Read notification", Toast.LENGTH_SHORT).show();
         });
 
         holder.deleteButton.setOnClickListener(v -> {
-            // call BE
+            //TODO call BE
             Toast.makeText(v.getContext(), "Deleted notification", Toast.LENGTH_SHORT).show();
         });
     }

@@ -89,9 +89,15 @@ public class PageActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu_logged_in, menu);
+        updateNotificationIcon(menu);
         return true;
     }
-
+    public static void updateNotificationIcon(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_notifications);
+        if (item != null) {
+            item.setIcon(NotificationsActivity.getUnreadNotifications().isEmpty() ? R.drawable.ic_notification : R.drawable.ic_new_notification);
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_notifications) {
@@ -110,20 +116,20 @@ public class PageActivity extends AppCompatActivity {
 
     public static List<Map<String, String>> getTop5Events() {
         return Arrays.asList(
-                Map.of("id", "1", "title", "Miguel and Athena's Wedding", "date", "15.12.2025.", "location", "California", "category", "Wedding", "max_guests", "150", "rating", "4.3", "image", "@drawable/event", "isFavorite", "true"),
-                Map.of("id", "2", "title", "Event2", "date", "15.12.2025.", "location", "Loc2", "category", "Cat2", "max_guests", "150", "rating", "4.3", "image", "@drawable/event", "isFavorite", "true"),
-                Map.of("id", "3", "title", "Event3", "date", "15.12.2025.", "location", "Loc3", "category", "Cat3", "max_guests", "150", "rating", "4.3", "image", "@drawable/event", "isFavorite", "false"),
-                Map.of("id", "4", "title", "Event4", "date", "15.12.2025.", "location", "Loc4", "category", "Cat4", "max_guests", "150", "rating", "4.3", "image", "@drawable/event", "isFavorite", "false"),
-                Map.of("id", "5", "title", "Event5", "date", "15.12.2025.", "location", "Loc5", "category", "Cat5", "max_guests", "150", "rating", "4.3", "image", "@drawable/event", "isFavorite", "false")
+                Map.of("id", "1", "title", "Miguel and Athena's Wedding", "date", "15.12.2025.", "location", "California", "category", "Wedding", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "true"),
+                Map.of("id", "2", "title", "Event2", "date", "15.12.2025.", "location", "Loc2", "category", "Cat2", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "true"),
+                Map.of("id", "3", "title", "Event3", "date", "15.12.2025.", "location", "Loc3", "category", "Cat3", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false"),
+                Map.of("id", "4", "title", "Event4", "date", "15.12.2025.", "location", "Loc4", "category", "Cat4", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false"),
+                Map.of("id", "5", "title", "Event5", "date", "15.12.2025.", "location", "Loc5", "category", "Cat5", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false")
         );
     }
     public static List<Map<String, String>> getTop5ServicesAndProducts() {
         return Arrays.asList(
-                Map.of("id", "1", "title", "Maya's Catering", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/service", "isFavorite", "false"),
-                Map.of("id", "2", "title", "Lilly Bloom's Flower Arrangements", "location", "California", "category", "Decoration", "price", "350", "rating", "4.3", "image", "@drawable/product", "isFavorite", "true"),
-                Map.of("id", "3", "title", "Service 3", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/service", "isFavorite", "false"),
-                Map.of("id", "4", "title", "Product 4", "location", "California", "category", "Decoration", "price", "350", "rating", "4.3", "image", "@drawable/product", "isFavorite", "false"),
-                Map.of("id", "5", "title", "Service 5", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/service", "isFavorite", "false")
+                Map.of("id", "1", "title", "Maya's Catering", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false"),
+                Map.of("id", "2", "title", "Lilly Bloom's Flower Arrangements", "location", "California", "category", "Decoration", "price", "350", "rating", "4.3", "image", "@drawable/img_product", "isFavorite", "true"),
+                Map.of("id", "3", "title", "Service 3", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false"),
+                Map.of("id", "4", "title", "Product 4", "location", "California", "category", "Decoration", "price", "350", "rating", "4.3", "image", "@drawable/img_product", "isFavorite", "false"),
+                Map.of("id", "5", "title", "Service 5", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false")
         );
     }
 }

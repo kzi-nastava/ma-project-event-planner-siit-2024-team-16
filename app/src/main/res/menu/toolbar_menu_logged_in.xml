@@ -9,7 +9,6 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_notifications"
-        android:icon="@drawable/ic_notification"
         android:title="@string/notifications"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />

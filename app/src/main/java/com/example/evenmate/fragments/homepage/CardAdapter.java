@@ -54,7 +54,7 @@ public class CardAdapter {
 
 
         if (Objects.equals(item.get("isFavorite"), "true")) {
-            int filledFavoriteResId = R.drawable.baseline_favorite_24;
+            int filledFavoriteResId = R.drawable.ic_favorite_filled;
             favorite.setImageResource(filledFavoriteResId);
             favorite.setSelected(true);
         }
@@ -85,15 +85,15 @@ public class CardAdapter {
         favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
 
         if (Objects.equals(item.get("isFavorite"), "true")) {
-            int filledFavoriteId= R.drawable.baseline_favorite_24;
+            int filledFavoriteId= R.drawable.ic_favorite_filled;
             favorite.setImageResource(filledFavoriteId);
             favorite.setSelected(true);
         }
     }
 
     public void makeFavorite(Fragment fragment, ImageButton favorite) {
-        int filledFavoriteResId = R.drawable.baseline_favorite_24;
-        int notFilledFavoriteResId = R.drawable.baseline_favorite_border_24;
+        int filledFavoriteResId = R.drawable.ic_favorite_filled;
+        int notFilledFavoriteResId = R.drawable.ic_favorite;
 
         if (favorite.isSelected()) {
             favorite.setImageResource(notFilledFavoriteResId);

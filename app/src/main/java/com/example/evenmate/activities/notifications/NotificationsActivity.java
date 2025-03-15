@@ -16,6 +16,8 @@ import com.example.evenmate.R;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.evenmate.activities.PageActivity;
 import com.example.evenmate.models.user.Notification;
 
 
@@ -62,6 +64,7 @@ public class NotificationsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu_logged_in, menu);
+        PageActivity.updateNotificationIcon(menu);
         return true;
     }
 
@@ -76,7 +79,7 @@ public class NotificationsActivity extends AppCompatActivity {
 
 
 
-    private List<Notification> getAllNotifications() {
+    public static List<Notification> getAllNotifications() {
         List<Notification> notifications = new ArrayList<>();
         for (int i = 1; i <= 20; i++) {
             notifications.add(new Notification(
@@ -88,7 +91,7 @@ public class NotificationsActivity extends AppCompatActivity {
         }
         return notifications;
     }
-    private List<Notification> getReadNotifications() {
+    public static  List<Notification> getReadNotifications() {
         List<Notification> notifications = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             notifications.add(new Notification(
@@ -100,7 +103,7 @@ public class NotificationsActivity extends AppCompatActivity {
         }
         return notifications;
     }
-    private List<Notification> getUnreadNotifications() {
+    public static  List<Notification> getUnreadNotifications() {
         List<Notification> notifications = new ArrayList<>();
         for (int i = 11; i <= 20; i++) {
             notifications.add(new Notification(
