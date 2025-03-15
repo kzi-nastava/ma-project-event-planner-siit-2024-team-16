@@ -64,7 +64,7 @@ public class NotificationsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu_logged_in, menu);
-        PageActivity.updateNotificationIcon(menu);
+        PageActivity.updateNotificationIcon(menu,this);
         return true;
     }
 
