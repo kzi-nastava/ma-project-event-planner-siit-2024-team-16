@@ -20,6 +20,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.evenmate.R;
+import com.example.evenmate.activities.notifications.NotificationsActivity;
 import com.example.evenmate.databinding.ActivityPageBinding;
 import com.google.android.material.navigation.NavigationView;
 

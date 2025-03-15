@@ -21,6 +21,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <RadioGroup
+        android:id="@+id/radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -40,19 +41,6 @@
             android:textStyle="bold"
             android:button="@android:color/transparent"
             android:text="@string/all" />
-
-        <RadioButton
-            android:id="@+id/read"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:paddingHorizontal="16dp"
-            android:textColor="@drawable/changeable_text_color"
-            android:background="@drawable/radio_selector"
-            android:button="@android:color/transparent"
-            android:textStyle="bold"
-            android:text="@string/read"/>
-
         <RadioButton
             android:id="@+id/unread"
             android:layout_width="match_parent"
@@ -64,7 +52,26 @@
             android:textStyle="bold"
             android:button="@android:color/transparent"
             android:text="@string/unread"/>
+        <RadioButton
+            android:id="@+id/read"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:paddingHorizontal="16dp"
+            android:textColor="@drawable/changeable_text_color"
+            android:background="@drawable/radio_selector"
+            android:button="@android:color/transparent"
+            android:textStyle="bold"
+            android:text="@string/read"/>
     </RadioGroup>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

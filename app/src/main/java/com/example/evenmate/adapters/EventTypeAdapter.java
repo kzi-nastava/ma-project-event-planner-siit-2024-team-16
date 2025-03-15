@@ -42,7 +42,7 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
 
     public EventTypeAdapter(
             Activity context, List<EventType> eventTypes) {
-        super(context, R.layout.event_type_card, eventTypes);
+        super(context, R.layout.item_event_type, eventTypes);
         this.eventTypes = eventTypes;
     }
 
@@ -63,7 +63,7 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
     public View getView(int position, @Nullable View itemView, @NonNull ViewGroup parent) {
         EventType eventType = getItem(position);
         if (itemView == null) {
-            itemView = LayoutInflater.from(getContext()).inflate(R.layout.event_type_card,
+            itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_event_type,
                     parent, false);
         }
 
