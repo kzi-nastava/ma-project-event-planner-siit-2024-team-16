@@ -1,16 +1,24 @@
 package com.example.evenmate.activities;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -18,209 +26,124 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.evenmate.R;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.example.evenmate.activities.notifications.NotificationsActivity;
 import com.example.evenmate.databinding.ActivityPageBinding;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.HashSet;
+import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 public class PageActivity extends AppCompatActivity {
 
-    private ActivityPageBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
-    private DrawerLayout drawer;
-    private NavigationView navigationView;
-    private Toolbar toolbar;
     private NavController navController;
-    private ActionBar actionBar;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
-    private Set<Integer> topLevelDestinations = new HashSet<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityPageBinding.inflate(getLayoutInflater());
+        com.example.evenmate.databinding.ActivityPageBinding binding = ActivityPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        drawer = binding.drawerLayout;
-        navigationView = binding.navView;
-        toolbar = binding.activityPageBase.toolbar;
+        DrawerLayout drawer = binding.drawerLayout;
+        NavigationView navigationView = binding.navView;
+        Toolbar toolbar = binding.activityPageBase.toolbar;
 
         setSupportActionBar(toolbar);
 
-        actionBar = getSupportActionBar();
-        if(actionBar != null){
-
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
-
             actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
-
             actionBar.setHomeButtonEnabled(true);
         }
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(actionBarDrawerToggle);
-
         actionBarDrawerToggle.syncState();
-
-        topLevelDestinations.add(R.id.nav_login);
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
-        mAppBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.nav_login,R.id.HomepageFragment, R.id.providerServicesProductsFragment)
-                .setOpenableLayout(drawer)
-                .build();
+        Set<Integer> topLevelDestinations = new HashSet<>(Arrays.asList(R.id.nav_login, R.id.HomepageFragment, R.id.providerServicesProductsFragment));
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).setOpenableLayout(drawer).build();
+
         NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.HomepageFragment) {
+                Fragment fragment = fragmentManager.findFragmentById(R.id.providerServicesProductsFragment);
+                if (fragment != null && fragment.isAdded()) {
+                    fragment.onSaveInstanceState(new Bundle());
+                }
+            } else if (destination.getId() == R.id.providerServicesProductsFragment) {
+                Fragment fragment = fragmentManager.findFragmentById(R.id.HomepageFragment);
+                if (fragment != null && fragment.isAdded()) {
+                    fragment.onSaveInstanceState(new Bundle());
+                }
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_logged_in, menu);
+        updateNotificationIcon(menu,this);
         return true;
     }
+    public static void updateNotificationIcon(Menu menu, Context context) {
+        MenuItem item = menu.findItem(R.id.action_notifications);
+        if (item == null) return;
+        int iconRes = NotificationsActivity.getUnreadNotifications().isEmpty() ? R.drawable.ic_notification : R.drawable.ic_new_notification;
+        item.setIcon(resizeIcon(Objects.requireNonNull(ContextCompat.getDrawable(context, iconRes)), context));
+    }
+
+    private static Drawable resizeIcon(Drawable drawable, Context context) {
+        Bitmap bitmap = Bitmap.createBitmap(48, 48, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, 48, 48);
+        drawable.draw(canvas);
+        return new BitmapDrawable(context.getResources(), bitmap);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.HomepageFragment) {
-                Objects.requireNonNull(fragmentManager.findFragmentById(R.id.providerServicesProductsFragment)).onSaveInstanceState(new Bundle());
-            } else if (destination.getId() == R.id.providerServicesProductsFragment) {
-                Objects.requireNonNull(fragmentManager.findFragmentById(R.id.HomepageFragment)).onSaveInstanceState(new Bundle());
-            }
-        });
-
+        if (item.getItemId() == R.id.action_notifications) {
+            Intent intent = new Intent(this, NotificationsActivity.class);
+            startActivity(intent);
+            Toast.makeText(this, "Notifications clicked!", Toast.LENGTH_SHORT).show();
+            return true;
+        }
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
+
     @Override
     public boolean onSupportNavigateUp() {
-        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
-    public static List<Map<String, String>> getTop5Events(){
-        List<Map<String,String>> data=new ArrayList<>();
-        data.add(Map.of(
-                "id","1",
-                "title","miguel and athena's wedding",
-                "date","15.12.2025.",
-                "location", "california",
-                "category","wedding",
-                "max_guests","150",
-                "rating","4.3",
-                "image","@drawable/event",
-                "isFavorite","true"
-        ));
-        data.add(Map.of(
-                "id","2",
-                "title","event2",
-                "date","15.12.2025.",
-                "location", "loc2",
-                "category","cat2",
-                "max_guests","150",
-                "rating","4.3",
-                "image","@drawable/event",
-                "isFavorite","true"
-        ));
-        data.add(Map.of(
-                "id","3",
-                "title","event3",
-                "date","15.12.2025.",
-                "location", "loc3",
-                "category","cat3",
-                "max_guests","150",
-                "rating","4.3",
-                "image","@drawable/event",
-                "isFavorite","false"
-        ));
-        data.add(Map.of(
-                "id","4",
-                "title","event4",
-                "date","15.12.2025.",
-                "location", "loc4",
-                "category","cat4",
-                "max_guests","150",
-                "rating","4.3",
-                "image","@drawable/event",
-                "isFavorite","false"
-        ));
-        data.add(Map.of(
-                "id","5",
-                "title","event5",
-                "date","15.12.2025.",
-                "location", "loc5",
-                "category","cat5",
-                "max_guests","150",
-                "rating","4.3",
-                "image","@drawable/event",
-                "isFavorite","false"
-        ));
-        return data;
+    public static List<Map<String, String>> getTop5Events() {
+        return Arrays.asList(
+                Map.of("id", "1", "title", "Miguel and Athena's Wedding", "date", "15.12.2025.", "location", "California", "category", "Wedding", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "true"),
+                Map.of("id", "2", "title", "Event2", "date", "15.12.2025.", "location", "Loc2", "category", "Cat2", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "true"),
+                Map.of("id", "3", "title", "Event3", "date", "15.12.2025.", "location", "Loc3", "category", "Cat3", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false"),
+                Map.of("id", "4", "title", "Event4", "date", "15.12.2025.", "location", "Loc4", "category", "Cat4", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false"),
+                Map.of("id", "5", "title", "Event5", "date", "15.12.2025.", "location", "Loc5", "category", "Cat5", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false")
+        );
     }
-    public static List<Map<String, String>> getTop5ServicesAndProducts(){
-        List<Map<String,String>> data=new ArrayList<>();
-        data.add(Map.of(
-                "id","1",
-                "title","Maya's catering",
-                "location", "california",
-                "category","food",
-                "price","500",
-                "rating","4.3",
-                "image","@drawable/service",
-                "isFavorite","false"
-        ));
-        data.add(Map.of(
-                "id","2",
-                "title","Lilly Bloom's flower arrangements",
-                "location", "california",
-                "category","decoration",
-                "price","350",
-                "rating","4.3",
-                "image","@drawable/product",
-                "isFavorite","true"
-        ));
-        data.add(Map.of(
-                "id","3",
-                "title","service 3",
-                "location", "california",
-                "category","food",
-                "price","500",
-                "rating","4.3",
-                "image","@drawable/service",
-                "isFavorite","false"
-        ));
-        data.add(Map.of(
-                "id","4",
-                "title","product 4",
-                "location", "california",
-                "category","decoration",
-                "price","350",
-                "rating","4.3",
-                "image","@drawable/product",
-                "isFavorite","false"
-        ));
-        data.add(Map.of(
-                "id","5",
-                "title","service 5",
-                "location", "california",
-                "category","food",
-                "price","500",
-                "rating","4.3",
-                "image","@drawable/service",
-                "isFavorite","false"
-        ));
-        return data;
+    public static List<Map<String, String>> getTop5ServicesAndProducts() {
+        return Arrays.asList(
+                Map.of("id", "1", "title", "Maya's Catering", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false"),
+                Map.of("id", "2", "title", "Lilly Bloom's Flower Arrangements", "location", "California", "category", "Decoration", "price", "350", "rating", "4.3", "image", "@drawable/img_product", "isFavorite", "true"),
+                Map.of("id", "3", "title", "Service 3", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false"),
+                Map.of("id", "4", "title", "Product 4", "location", "California", "category", "Decoration", "price", "350", "rating", "4.3", "image", "@drawable/img_product", "isFavorite", "false"),
+                Map.of("id", "5", "title", "Service 5", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false")
+        );
     }
-
-
 }

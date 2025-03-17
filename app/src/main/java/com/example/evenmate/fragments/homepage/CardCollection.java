@@ -93,7 +93,7 @@ public class CardCollection extends Fragment {
     private void loadCards() {
         cardCollectionHolder.removeAllViews();
         for (Map<String, String> item : data) {
-            View cardView = getLayoutInflater().inflate(R.layout.card_item, cardCollectionHolder, false);
+            View cardView = getLayoutInflater().inflate(R.layout.item_card_general, cardCollectionHolder, false);
             new CardAdapter(cardView, this, item);
             cardCollectionHolder.addView(cardView);
         }

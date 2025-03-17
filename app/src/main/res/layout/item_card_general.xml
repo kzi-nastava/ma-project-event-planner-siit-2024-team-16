@@ -89,7 +89,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="end"
-                        app:srcCompat="@drawable/baseline_favorite_border_24" />
+                        app:srcCompat="@drawable/ic_favorite" />
 
                 </LinearLayout>
 

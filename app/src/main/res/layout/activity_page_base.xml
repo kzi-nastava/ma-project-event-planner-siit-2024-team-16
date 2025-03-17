@@ -23,7 +23,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:menu="@menu/toolbar_menu">
+            app:menu="@menu/toolbar_menu_logged_in">
 
 
         </androidx.appcompat.widget.Toolbar>
