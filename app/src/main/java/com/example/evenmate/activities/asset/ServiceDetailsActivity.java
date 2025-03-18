@@ -1,10 +1,12 @@
-package com.example.evenmate.activities;
+package com.example.evenmate.activities.asset;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,19 +14,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
+import com.example.evenmate.activities.EditServiceActivity;
+import com.example.evenmate.activities.PageActivity;
+import com.example.evenmate.activities.notifications.NotificationsActivity;
+import com.example.evenmate.models.asset.AssetType;
+import com.example.evenmate.models.asset.Service;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceDetailsActivity extends AppCompatActivity {
@@ -45,17 +54,56 @@ public class ServiceDetailsActivity extends AppCompatActivity {
     private MaterialButton editButton;
     private MaterialButton deleteButton;
     private ChipGroup eventTypesChipGroup;
+    private Service service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_details);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        long serviceId = getIntent().getLongExtra("SERVICE_ID", -1);
+
+        if (serviceId == -1) {
+            Toast.makeText(this, "Service not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        service = getServiceById(serviceId);
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back_arrow);
+            actionBar.setTitle("Service Detail Page");
+        }
+
         initializeViews();
         setupListeners();
-        loadMockData();
+        loadData();
     }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu_logged_in, menu);
+        PageActivity.updateNotificationIcon(menu,this);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        if (item.getItemId() == R.id.action_notifications) {
+            Intent intent = new Intent(this, NotificationsActivity.class);
+            startActivity(intent);
+            Toast.makeText(this, "Notifications clicked!", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     private void initializeViews() {
         imageViewPager = findViewById(R.id.imageViewPager);
         serviceName = findViewById(R.id.serviceName);
@@ -74,53 +122,42 @@ public class ServiceDetailsActivity extends AppCompatActivity {
         deleteButton = findViewById(R.id.deleteButton);
         eventTypesChipGroup = findViewById(R.id.eventTypesChipGroup);
     }
-
     private void setupListeners() {
         editButton.setOnClickListener(v ->
                 startActivity(new Intent(this, EditServiceActivity.class)));
 
         deleteButton.setOnClickListener(v -> showDeleteConfirmation());
     }
-
-    private void loadMockData() {
-        List<String> mockImages = Arrays.asList(
-                "https://picsum.photos/400/300",
-                "https://picsum.photos/400/301",
-                "https://picsum.photos/400/302"
-        );
-        ImageSliderAdapter imageAdapter = new ImageSliderAdapter(mockImages);
+    private void loadData() {
+        ImageSliderAdapter imageAdapter = new ImageSliderAdapter(service.getImage());
         imageViewPager.setAdapter(imageAdapter);
-
-        serviceName.setText("Professional Photography Session");
-        categoryChip.setText("Photography");
-        priceText.setText("$199.99");
+        serviceName.setText(service.getTitle());
+        categoryChip.setText(service.getCategory());
+        priceText.setText(String.format("$%s",service.getNewPrice()));
 
         discountChip.setVisibility(View.VISIBLE);
-        discountChip.setText("-20%");
+        discountChip.setText(String.format("%s%%",service.getDiscount()));
 
-        descriptionText.setText("Professional photography session with an experienced photographer. " +
-                "Perfect for family portraits, engagement photos, or professional headshots.");
+        descriptionText.setText(service.getDescription());
+        distinctivenessText.setText(service.getDistinctiveness());
 
-        distinctivenessText.setText("Includes professional editing, 20 digital photos, " +
-                "and one printed album. Shot with top-of-the-line Canon equipment.");
-
-        durationText.setText("Duration: 2h");
-        reservationDeadlineText.setText("Book at least 48 hours in advance");
-        cancellationText.setText("Cancel up to 24 hours before");
-        reservationTypeText.setText("Manual confirmation");
+        durationText.setText(getDuration());
+        reservationDeadlineText.setText(service.getReservationDeadline());
+        cancellationText.setText(service.getCancellationDeadline());
+        reservationTypeText.setText(service.getReservationConformation());
 
         setupStatusChips();
-
-        List<String> eventTypes = Arrays.asList(
-                "Wedding",
-                "Birthday",
-                "Corporate Event",
-                "Family Gathering"
-        );
-
-        setupEventTypesChips(eventTypes);
+        setupEventTypesChips(service.getEventTypes());
     }
-
+    private String getDuration(){
+        if (service.getLength()!=null){
+            return String.format("%sh",service.getLength());
+        }
+        else if(service.getMaxLength()!=null&&service.getMinLength()!=null){
+            return String.format("min: %sh, max: %sh ",service.getMinLength(),service.getMaxLength());
+        }
+        return "No data";
+    }
     private void setupStatusChips() {
         visibilityChip.setText("Visible");
         visibilityChip.setChipBackgroundColor(ColorStateList.valueOf(
@@ -130,7 +167,6 @@ public class ServiceDetailsActivity extends AppCompatActivity {
         availabilityChip.setChipBackgroundColor(ColorStateList.valueOf(
                 getResources().getColor(R.color.chip_success)));
     }
-
     private void setupEventTypesChips(List<String> eventTypes) {
         eventTypesChipGroup.removeAllViews();
 
@@ -146,20 +182,21 @@ public class ServiceDetailsActivity extends AppCompatActivity {
             eventTypesChipGroup.addView(chip);
         }
     }
-
     private void showDeleteConfirmation() {
         new MaterialAlertDialogBuilder(this)
-                .setTitle("Delete Service")
-                .setMessage("Are you sure you want to delete this service? This action cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) ->
-                        Toast.makeText(this, "Delete clicked", Toast.LENGTH_SHORT).show())
-                .setNegativeButton("Cancel", null)
-                .show();
+            .setTitle("Delete Service")
+            .setMessage("Are you sure you want to delete this service? This action cannot be undone.")
+            .setPositiveButton("Delete", (dialog, which) ->
+                    Toast.makeText(this, "Delete clicked", Toast.LENGTH_SHORT).show())
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
+    public static Service getServiceById(Long id){
+        return new Service(id, "Maya's Catering", new ArrayList<>(List.of("https://picsum.photos/400/300", "https://picsum.photos/400/301", "https://picsum.photos/400/302")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true,"distinct.",11,null,null,"Book at least 48 hours in advance","Manual confirmation","Cancel at least 24 hours before the date.",new ArrayList<>(List.of("Wedding","Birthday","Corporate Event","Family gathering")));
     }
 }
-
 class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder> {
-    private List<String> imageUrls;
+    private final List<String> imageUrls;
 
     public ImageSliderAdapter(List<String> imageUrls) {
         this.imageUrls = imageUrls;

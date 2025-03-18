@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
 import com.example.evenmate.activities.PageActivity;
+import com.example.evenmate.models.asset.Asset;
+import com.example.evenmate.models.event.Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,48 +25,19 @@ import java.util.Map;
 public class CardCollection extends Fragment {
 
     private LinearLayout cardCollectionHolder;
-    private List<Map<String, String>> data = new ArrayList<>();
+    @Nullable
+    private List<Event> events;
+    @Nullable
+    private List<Asset> assets;
     private Button loadMoreButton; // not local because int the future it will have more functionality
     private Button loadLessButton; // not local because int the future it will have more functionality
 
     public CardCollection() {}
-    public CardCollection(List<Map<String, String>> initialData) {
-        this.data.addAll(initialData);
+    public CardCollection(@Nullable List<Asset> assets,@Nullable List<Event>events) {
+        this.events=events;
+        this.assets=assets;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        ArrayList<Bundle> dataBundles = new ArrayList<>();
-        for (Map<String, String> item : data) {
-            Bundle bundle = new Bundle();
-            for (Map.Entry<String, String> entry : item.entrySet()) {
-                bundle.putString(entry.getKey(), entry.getValue());
-            }
-            dataBundles.add(bundle);
-        }
-        outState.putParcelableArrayList("data", dataBundles);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            List<Bundle> dataBundles = savedInstanceState.getParcelableArrayList("data");
-            if (dataBundles != null) {
-                data.clear();
-                for (Bundle bundle : dataBundles) {
-                    Map<String, String> item = new HashMap<>();
-                    for (String key : bundle.keySet()) {
-                        item.put(key, bundle.getString(key));
-                    }
-                    data.add(item);
-                }
-            }
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,12 +48,12 @@ public class CardCollection extends Fragment {
 
         loadCards();
 
-        if (!data.isEmpty()&&data.get(0).containsKey("date")) {
+        if (events!=null) {
             loadMoreButton.setOnClickListener(v -> loadNewEvents());
             loadLessButton.setOnClickListener(v -> loadNewEvents());
             loadLessButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.green));
             loadMoreButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.green));
-        } else {
+        } else if (assets!=null){
             loadMoreButton.setOnClickListener(v -> loadNewAssets());
             loadLessButton.setOnClickListener(v -> loadNewAssets());
             loadLessButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.purple));
@@ -92,20 +65,29 @@ public class CardCollection extends Fragment {
 
     private void loadCards() {
         cardCollectionHolder.removeAllViews();
-        for (Map<String, String> item : data) {
-            View cardView = getLayoutInflater().inflate(R.layout.item_card_general, cardCollectionHolder, false);
-            new CardAdapter(cardView, this, item);
-            cardCollectionHolder.addView(cardView);
+        if (events!=null){
+            for (Event item : events) {
+                View cardView = getLayoutInflater().inflate(R.layout.item_card_general, cardCollectionHolder, false);
+                new CardAdapter(cardView, this, item);
+                cardCollectionHolder.addView(cardView);
+            }
+        }
+        else if(assets!=null){
+            for (Asset item: assets){
+                View cardView = getLayoutInflater().inflate(R.layout.item_card_general,cardCollectionHolder,false);
+                new CardAdapter(cardView,this,item);
+                cardCollectionHolder.addView(cardView);
+            }
         }
     }
 
     private void loadNewEvents() {
-        data= PageActivity.getTop5Events();
+        events = HomepageFragment.getTop5Events();
         loadCards();
         Toast.makeText(this.getContext(),R.string.new_page,Toast.LENGTH_SHORT).show();
     }
     private void loadNewAssets() {
-        data= PageActivity.getTop5ServicesAndProducts();
+        assets = HomepageFragment.getTop5ServicesAndProducts();
         loadCards();
         Toast.makeText(this.getContext(),R.string.new_page,Toast.LENGTH_SHORT).show();
 

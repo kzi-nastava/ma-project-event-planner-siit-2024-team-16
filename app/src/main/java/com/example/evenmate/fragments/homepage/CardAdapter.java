@@ -1,6 +1,7 @@
 package com.example.evenmate.fragments.homepage;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.widget.Toast;
 import android.view.View;
 import android.widget.ImageButton;
@@ -11,86 +12,94 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
-import java.util.Map;
-import java.util.Objects;
+import com.example.evenmate.activities.asset.ProductDetailsActivity;
+import com.example.evenmate.activities.asset.ServiceDetailsActivity;
+import com.example.evenmate.activities.event.EventDetailsActivity;
+import com.example.evenmate.models.asset.Asset;
+import com.example.evenmate.models.asset.AssetType;
+import com.example.evenmate.models.event.Event;
 
 public class CardAdapter {
-    public String id;
-
-    public CardAdapter(View cardView, Fragment fragment, Map<String,String> item){
-        if (item.containsKey("date")){
-            fillEvent(cardView, fragment, item);
-        }
-        else{
-            fillAsset(cardView,fragment,item);
-        }
-    }
-
-    public void fillEvent(View cardView, Fragment fragment, Map<String,String> item) {
-        cardView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_green));
-        cardView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_green));
-        cardView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.green));
-        this.id = item.get("id");
-
-        TextView title = cardView.findViewById(R.id.title);
-        title.setText(item.get("title"));
-        TextView box1 = cardView.findViewById(R.id.box1);
-        box1.setText(String.format("%s%s", fragment.getString(R.string.date), item.get("date")));
-        TextView box2 = cardView.findViewById(R.id.box2);
-        box2.setText(String.format("%s%s", fragment.getString(R.string.location),item.get("location")));
-        TextView box3 = cardView.findViewById(R.id.box3);
-        box3.setText(String.format("%s%s", fragment.getString(R.string.category), item.get("category")));
-        TextView box4 = cardView.findViewById(R.id.box4);
-        box4.setText(String.format("%s%s", fragment.getString(R.string.max_guests), item.get("max_guests")));
-        TextView box5 = cardView.findViewById(R.id.box5);
-        box5.setText(String.format("%s%s", fragment.getString(R.string.rating), item.get("rating")));
-
-        ImageView imageView = cardView.findViewById(R.id.image);
-        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(item.get("image"), "drawable", fragment.requireContext().getPackageName());
-        imageView.setImageResource(imageResId);
-
-        ImageButton favorite = cardView.findViewById(R.id.favorite);
-        favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
-
-
-        if (Objects.equals(item.get("isFavorite"), "true")) {
-            int filledFavoriteResId = R.drawable.ic_favorite_filled;
-            favorite.setImageResource(filledFavoriteResId);
-            favorite.setSelected(true);
-        }
-    }
-
-    public void fillAsset(View cardView, Fragment fragment, Map<String,String> item) {
+    public CardAdapter(View cardView, Fragment fragment, Asset asset){
+        // right colors
         cardView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_purple));
         cardView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_purple));
         cardView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.purple));
-        this.id = item.get("id");
-
+        // text
         TextView title = cardView.findViewById(R.id.title);
-        title.setText(item.get("title"));
+        title.setText(asset.getTitle());
         TextView box1 = cardView.findViewById(R.id.box1);
-        box1.setText(String.format("%s%s", fragment.getString(R.string.location), item.get("location")));
+        box1.setText(String.format("%s%s, %s", fragment.getString(R.string.location), asset.getCountry(),asset.getCity()));
         TextView box2 = cardView.findViewById(R.id.box2);
-        box2.setText(String.format("%s%s", fragment.getString(R.string.category), item.get("category")));
+        box2.setText(String.format("%s%s", fragment.getString(R.string.category), asset.getCategory()));
         TextView box3 = cardView.findViewById(R.id.box3);
-        box3.setText(String.format("%s%s", fragment.getString(R.string.price), item.get("price")));
+        box3.setText(String.format("%s%s", fragment.getString(R.string.price), asset.getPrice()));
         TextView box4 = cardView.findViewById(R.id.box4);
-        box4.setText(String.format("%s%s", fragment.getString(R.string.rating), item.get("rating")));
-
+        box4.setText(String.format("%s%s", fragment.getString(R.string.rating), asset.getRating()));
+        // image
         ImageView imageView = cardView.findViewById(R.id.image);
-        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(item.get("image"), "drawable", fragment.requireContext().getPackageName());
+        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(asset.getImage().get(0), "drawable", fragment.requireContext().getPackageName());
         imageView.setImageResource(imageResId);
-
+        // favorite
         ImageButton favorite = cardView.findViewById(R.id.favorite);
         favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
-
-        if (Objects.equals(item.get("isFavorite"), "true")) {
+        if (Boolean.TRUE.equals(asset.getIsFavorite())) {
             int filledFavoriteId= R.drawable.ic_favorite_filled;
             favorite.setImageResource(filledFavoriteId);
             favorite.setSelected(true);
         }
+        // click
+        if (asset.getType().equals(AssetType.SERVICE)){
+            cardView.setOnClickListener(v -> {
+                Intent intent = new Intent(fragment.requireContext(), ServiceDetailsActivity.class);
+                intent.putExtra("SERVICE_ID", asset.getId());
+                fragment.startActivity(intent);
+            });
+        }
+        else if(asset.getType().equals(AssetType.PRODUCT)){
+            cardView.setOnClickListener(v -> {
+                Intent intent = new Intent(fragment.getContext(), ProductDetailsActivity.class);
+                intent.putExtra("PRODUCT_ID", asset.getId());
+                fragment.startActivity(intent);
+            });
+        }    }
+    public CardAdapter(View cardView, Fragment fragment, Event event){
+        // right colors
+        cardView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_green));
+        cardView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_green));
+        cardView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.green));
+        // text
+        TextView title = cardView.findViewById(R.id.title);
+        title.setText(event.getName());
+        TextView box1 = cardView.findViewById(R.id.box1);
+        box1.setText(String.format("%s%s", fragment.getString(R.string.date), event.getDate()));
+        TextView box2 = cardView.findViewById(R.id.box2);
+        box2.setText(String.format("%s%s, %s", fragment.getString(R.string.location),event.getCountry(),event.getCity()));
+        TextView box3 = cardView.findViewById(R.id.box3);
+        box3.setText(String.format("%s%s", fragment.getString(R.string.category), event.getType()));
+        TextView box4 = cardView.findViewById(R.id.box4);
+        box4.setText(String.format("%s%s", fragment.getString(R.string.max_guests), event.getMaxAttendants()));
+        TextView box5 = cardView.findViewById(R.id.box5);
+        box5.setText(String.format("%s%s", fragment.getString(R.string.rating), event.getRating()));
+        // image
+        ImageView imageView = cardView.findViewById(R.id.image);
+        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(event.getImage(), "drawable", fragment.requireContext().getPackageName());
+        imageView.setImageResource(imageResId);
+        // favorite
+        ImageButton favorite = cardView.findViewById(R.id.favorite);
+        favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
+        if (Boolean.TRUE.equals(event.getIsFavorite())) {
+            int filledFavoriteResId = R.drawable.ic_favorite_filled;
+            favorite.setImageResource(filledFavoriteResId);
+            favorite.setSelected(true);
+        }
+        // click
+        cardView.setOnClickListener(v -> {
+            Intent intent = new Intent(fragment.requireContext(), EventDetailsActivity.class);
+            intent.putExtra("EVENT_ID", event.getId());
+            fragment.startActivity(intent);
+        });
     }
-
     public void makeFavorite(Fragment fragment, ImageButton favorite) {
         int filledFavoriteResId = R.drawable.ic_favorite_filled;
         int notFilledFavoriteResId = R.drawable.ic_favorite;
