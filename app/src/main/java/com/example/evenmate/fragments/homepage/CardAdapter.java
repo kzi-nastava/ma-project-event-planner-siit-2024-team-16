@@ -2,6 +2,7 @@ package com.example.evenmate.fragments.homepage;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.widget.Button;
 import android.widget.Toast;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,7 +24,7 @@ public class CardAdapter {
     public CardAdapter(View cardView, Fragment fragment, Asset asset){
         // right colors
         cardView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_purple));
-        cardView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_purple));
+        cardView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.red));
         cardView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.purple));
         // text
         TextView title = cardView.findViewById(R.id.title);
@@ -41,13 +42,8 @@ public class CardAdapter {
         @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(asset.getImage().get(0), "drawable", fragment.requireContext().getPackageName());
         imageView.setImageResource(imageResId);
         // favorite
-        ImageButton favorite = cardView.findViewById(R.id.favorite);
+        Button favorite = cardView.findViewById(R.id.favorite);
         favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
-        if (Boolean.TRUE.equals(asset.getIsFavorite())) {
-            int filledFavoriteId= R.drawable.ic_favorite_filled;
-            favorite.setImageResource(filledFavoriteId);
-            favorite.setSelected(true);
-        }
         // click
         if (asset.getType().equals(AssetType.SERVICE)){
             cardView.setOnClickListener(v -> {
@@ -66,8 +62,9 @@ public class CardAdapter {
     public CardAdapter(View cardView, Fragment fragment, Event event){
         // right colors
         cardView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_green));
-        cardView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_green));
+        cardView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.red));
         cardView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.green));
+
         // text
         TextView title = cardView.findViewById(R.id.title);
         title.setText(event.getName());
@@ -86,13 +83,8 @@ public class CardAdapter {
         @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(event.getImage(), "drawable", fragment.requireContext().getPackageName());
         imageView.setImageResource(imageResId);
         // favorite
-        ImageButton favorite = cardView.findViewById(R.id.favorite);
+        Button favorite = cardView.findViewById(R.id.favorite);
         favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
-        if (Boolean.TRUE.equals(event.getIsFavorite())) {
-            int filledFavoriteResId = R.drawable.ic_favorite_filled;
-            favorite.setImageResource(filledFavoriteResId);
-            favorite.setSelected(true);
-        }
         // click
         cardView.setOnClickListener(v -> {
             Intent intent = new Intent(fragment.requireContext(), EventDetailsActivity.class);
@@ -100,18 +92,9 @@ public class CardAdapter {
             fragment.startActivity(intent);
         });
     }
-    public void makeFavorite(Fragment fragment, ImageButton favorite) {
-        int filledFavoriteResId = R.drawable.ic_favorite_filled;
-        int notFilledFavoriteResId = R.drawable.ic_favorite;
-
-        if (favorite.isSelected()) {
-            favorite.setImageResource(notFilledFavoriteResId);
-            favorite.setSelected(false);
-            Toast.makeText(fragment.getContext(), "UN-SELECTED A FAVORITE", Toast.LENGTH_SHORT).show();
-        } else {
-            favorite.setImageResource(filledFavoriteResId);
-            favorite.setSelected(true);
-            Toast.makeText(fragment.getContext(), "SELECTED A FAVORITE", Toast.LENGTH_SHORT).show();
-        }
+    public void makeFavorite(Fragment fragment, Button favorite) {
+        favorite.setSelected(!favorite.isSelected());
+        String message = favorite.isSelected() ? "SELECTED A FAVORITE" : "UN-SELECTED A FAVORITE";
+        Toast.makeText(fragment.getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,16 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.evenmate.R;
 import com.example.evenmate.activities.PageActivity;
 import com.example.evenmate.activities.notifications.NotificationsActivity;
+import com.example.evenmate.fragments.event.InvitationsFragment;
 import com.example.evenmate.models.event.Event;
 
 import java.time.LocalDateTime;
@@ -45,8 +48,17 @@ public class EventDetailsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_back_arrow);
-            actionBar.setTitle(event.getName());
+            actionBar.setTitle("Event Details Page");
         }
+
+        TextView title = findViewById(R.id.title);
+        title.setText(event.getName());
+
+        // invitations
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.invitations_fragment, new InvitationsFragment());
+        transaction.commit();
+
     }
 
     @Override
