@@ -37,13 +37,6 @@ public class HomepageFragment extends Fragment {
     private SearchView searchView;
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState){
-//        top5ServicesAndProducts.onSaveInstanceState(outState);
-//        allServicesAndProducts.onSaveInstanceState(outState);
-//        top5Events.onSaveInstanceState(outState);
-//        allEvents.onSaveInstanceState(outState);
-    }
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_homepage, container, false);
     }
