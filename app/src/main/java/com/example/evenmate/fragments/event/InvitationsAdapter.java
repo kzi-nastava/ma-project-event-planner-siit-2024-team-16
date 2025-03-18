@@ -12,7 +12,7 @@ import java.util.List;
 
 public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.InvitationViewHolder> {
 
-    private List<String> contacts;
+    private final List<String> contacts;
     private final OnContactRemovedListener removeListener;
 
     public InvitationsAdapter(List<String> contacts, OnContactRemovedListener removeListener) {
@@ -31,17 +31,10 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
     public void onBindViewHolder(@NonNull InvitationViewHolder holder, int position) {
         String contact = contacts.get(position);
         holder.contactName.setText(contact);
-
-        holder.deleteButton.setOnClickListener(v -> {
-            removeListener.onContactRemoved(contact);
-        });
+        holder.deleteButton.setOnClickListener(v -> {removeListener.onContactRemoved(contact);});
     }
-
     @Override
-    public int getItemCount() {
-        return contacts.size();
-    }
-
+    public int getItemCount() {return contacts.size();}
     public static class InvitationViewHolder extends RecyclerView.ViewHolder {
         TextView contactName;
         Button deleteButton;

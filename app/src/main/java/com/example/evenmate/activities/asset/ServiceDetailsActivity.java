@@ -39,20 +39,9 @@ import java.util.List;
 public class ServiceDetailsActivity extends AppCompatActivity {
 
     private ViewPager2 imageViewPager;
-    private TextView serviceName;
-    private Chip categoryChip;
-    private TextView priceText;
-    private Chip discountChip;
-    private TextView descriptionText;
-    private TextView distinctivenessText;
-    private TextView durationText;
-    private TextView reservationDeadlineText;
-    private TextView cancellationText;
-    private TextView reservationTypeText;
-    private Chip visibilityChip;
-    private Chip availabilityChip;
-    private MaterialButton editButton;
-    private MaterialButton deleteButton;
+    private TextView serviceName,priceText,descriptionText,distinctivenessText,durationText, reservationDeadlineText, cancellationText,reservationTypeText;
+    private Chip categoryChip, discountChip, visibilityChip, availabilityChip;
+    private MaterialButton editButton, deleteButton;
     private ChipGroup eventTypesChipGroup;
     private Service service;
 

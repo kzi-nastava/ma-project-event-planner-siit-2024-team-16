@@ -88,4 +88,7 @@
     <string name="read">Read</string>
     <string name="unread">Unread</string>
     <string name="delete_notification">Delete notification</string>
+    <string name="invitations">Invitations</string>
+    <string name="add_invite">Add Invite</string>
+    <string name="enter_contact_email">Enter contact email</string>
 </resources>
