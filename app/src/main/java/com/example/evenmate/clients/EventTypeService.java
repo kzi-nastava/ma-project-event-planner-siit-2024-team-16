@@ -1,6 +1,6 @@
 package com.example.evenmate.clients;
 
-import com.example.evenmate.models.EventType;
+import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.models.PaginatedResponse;
 
 import retrofit2.Call;

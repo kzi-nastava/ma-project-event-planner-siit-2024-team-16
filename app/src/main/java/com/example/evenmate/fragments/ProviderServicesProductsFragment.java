@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
 import com.example.evenmate.activities.CreateServiceActivity;
-import com.example.evenmate.activities.ServiceDetailsActivity;
+import com.example.evenmate.activities.asset.ServiceDetailsActivity;
 import com.example.evenmate.adapters.ServiceAdapter;
 import com.example.evenmate.models.Service;
 import java.util.ArrayList;

@@ -30,8 +30,6 @@ import com.example.evenmate.activities.notifications.NotificationsActivity;
 import com.example.evenmate.databinding.ActivityPageBinding;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.Map;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
@@ -46,7 +44,7 @@ public class PageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        com.example.evenmate.databinding.ActivityPageBinding binding = ActivityPageBinding.inflate(getLayoutInflater());
+        ActivityPageBinding binding = ActivityPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         DrawerLayout drawer = binding.drawerLayout;
@@ -126,24 +124,5 @@ public class PageActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
-    }
-
-    public static List<Map<String, String>> getTop5Events() {
-        return Arrays.asList(
-                Map.of("id", "1", "title", "Miguel and Athena's Wedding", "date", "15.12.2025.", "location", "California", "category", "Wedding", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "true"),
-                Map.of("id", "2", "title", "Event2", "date", "15.12.2025.", "location", "Loc2", "category", "Cat2", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "true"),
-                Map.of("id", "3", "title", "Event3", "date", "15.12.2025.", "location", "Loc3", "category", "Cat3", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false"),
-                Map.of("id", "4", "title", "Event4", "date", "15.12.2025.", "location", "Loc4", "category", "Cat4", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false"),
-                Map.of("id", "5", "title", "Event5", "date", "15.12.2025.", "location", "Loc5", "category", "Cat5", "max_guests", "150", "rating", "4.3", "image", "@drawable/img_event", "isFavorite", "false")
-        );
-    }
-    public static List<Map<String, String>> getTop5ServicesAndProducts() {
-        return Arrays.asList(
-                Map.of("id", "1", "title", "Maya's Catering", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false"),
-                Map.of("id", "2", "title", "Lilly Bloom's Flower Arrangements", "location", "California", "category", "Decoration", "price", "350", "rating", "4.3", "image", "@drawable/img_product", "isFavorite", "true"),
-                Map.of("id", "3", "title", "Service 3", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false"),
-                Map.of("id", "4", "title", "Product 4", "location", "California", "category", "Decoration", "price", "350", "rating", "4.3", "image", "@drawable/img_product", "isFavorite", "false"),
-                Map.of("id", "5", "title", "Service 5", "location", "California", "category", "Food", "price", "500", "rating", "4.3", "image", "@drawable/img_service", "isFavorite", "false")
-        );
     }
 }

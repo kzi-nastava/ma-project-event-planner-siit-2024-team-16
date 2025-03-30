@@ -1,5 +1,7 @@
 package com.example.evenmate.activities.notifications;
 
+import static com.example.evenmate.utils.DialogUtils.showDeleteConfirmation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +42,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         });
 
         holder.deleteButton.setOnClickListener(v -> {
-            //TODO call BE
-            Toast.makeText(v.getContext(), "Deleted notification", Toast.LENGTH_SHORT).show();
+            showDeleteConfirmation(v.getContext(), confirmed -> {
+                if (confirmed) {
+                    // TODO call BE
+                    Toast.makeText(v.getContext(), "Notification deleted", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+
     }
 
     @Override

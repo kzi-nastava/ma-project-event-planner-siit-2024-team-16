@@ -16,9 +16,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.evenmate.R;
+import com.example.evenmate.models.asset.Asset;
+import com.example.evenmate.models.asset.AssetType;
+import com.example.evenmate.models.event.Event;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -31,13 +36,6 @@ public class HomepageFragment extends Fragment {
     private SwitchMaterial fragmentSwitch;
     private SearchView searchView;
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState){
-        top5ServicesAndProducts.onSaveInstanceState(outState);
-        allServicesAndProducts.onSaveInstanceState(outState);
-        top5Events.onSaveInstanceState(outState);
-        allEvents.onSaveInstanceState(outState);
-    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_homepage, container, false);
@@ -52,10 +50,10 @@ public class HomepageFragment extends Fragment {
         FragmentManager manager = getChildFragmentManager();
 
         if (savedInstanceState == null) {
-            top5Events = new TopCardSwiper(getTop5Events());
-            allEvents = new CardCollection(getTop5Events());
-            top5ServicesAndProducts = new TopCardSwiper(getTop5ServicesAndProducts());
-            allServicesAndProducts = new CardCollection(getTop5ServicesAndProducts());
+            top5Events = new TopCardSwiper(null,getTop5Events());
+            allEvents = new CardCollection(null,getTop5Events());
+            top5ServicesAndProducts = new TopCardSwiper(getTop5ServicesAndProducts(),null);
+            allServicesAndProducts = new CardCollection(getTop5ServicesAndProducts(),null);
 
             manager.beginTransaction().replace(R.id.top_5, top5Events, "top5Events").commit();
             manager.beginTransaction().replace(R.id.all, allEvents,"allEvents").commit();
@@ -118,22 +116,23 @@ public class HomepageFragment extends Fragment {
         requireView().findViewById(R.id.filter).setBackgroundColor(requireContext().getColor(backgroundColor));
     }
 
-    public static List<Map<String, String>> getTop5Events(){
-        List<Map<String,String>> data=new ArrayList<>();
-        data.add(Map.of("id","1", "title","miguel and athena's wedding", "date","15.12.2025.", "location", "california", "category","wedding", "max_guests","150", "rating","4.3", "image","@drawable/img_event", "isFavorite","true"));
-        data.add(Map.of("id","2", "title","event2", "date","15.12.2025.", "location", "loc2", "category","cat2", "max_guests","150", "rating","4.3", "image","@drawable/img_event", "isFavorite","true"));
-        data.add(Map.of("id","3", "title","event3", "date","15.12.2025.", "location", "loc3", "category","cat3", "max_guests","150", "rating","4.3", "image","@drawable/img_event", "isFavorite","false"));
-        data.add(Map.of("id","4", "title","event4", "date","15.12.2025.", "location", "loc4", "category","cat4", "max_guests","150", "rating","4.3", "image","@drawable/img_event", "isFavorite","false"));
-        data.add(Map.of("id","5", "title","event5", "date","15.12.2025.", "location", "loc5", "category","cat5", "max_guests","150", "rating","4.3", "image","@drawable/img_event", "isFavorite","false"));
-        return data;
+    public static List<Event> getTop5Events() {
+        List<Event> events = new ArrayList<>();
+        events.add(new Event(1L, "wedding", "Miguel and Athena's Wedding", "A beautiful wedding event", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "California", "", "", "@drawable/img_event", 4.3, true));
+        events.add(new Event(2L, "category2", "Event 2", "Description for Event 2", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc2", "", "", "@drawable/img_event", 4.3, true));
+        events.add(new Event(3L, "category3", "Event 3", "Description for Event 3", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc3", "", "", "@drawable/img_event", 4.3, false));
+        events.add(new Event(4L, "category4", "Event 4", "Description for Event 4", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc4", "", "", "@drawable/img_event", 4.3, false));
+        events.add(new Event(5L, "category5", "Event 5", "Description for Event 5", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc5", "", "", "@drawable/img_event", 4.3, false));
+        return events;
     }
-    public static List<Map<String, String>> getTop5ServicesAndProducts(){
-        List<Map<String,String>> data=new ArrayList<>();
-        data.add(Map.of("id","1", "title","Maya's catering", "location", "california", "category","food", "price","500", "rating","4.3", "image","@drawable/img_service", "isFavorite","false"));
-        data.add(Map.of("id","2", "title","Lilly Bloom's flower arrangements", "location", "california", "category","decoration", "price","350", "rating","4.3", "image","@drawable/img_product", "isFavorite","true"));
-        data.add(Map.of("id","3", "title","service 3", "location", "california", "category","food", "price","500", "rating","4.3", "image","@drawable/img_service", "isFavorite","false"));
-        data.add(Map.of("id","4", "title","product 4", "location", "california", "category","decoration", "price","350", "rating","4.3", "image","@drawable/img_product", "isFavorite","false"));
-        data.add(Map.of("id","5", "title","service 5", "location", "california", "category","food", "price","500", "rating","4.3", "image","@drawable/img_service", "isFavorite","false"));
-        return data;
+
+    public static List<Asset> getTop5ServicesAndProducts() {
+        List<Asset> assets = new ArrayList<>();
+        assets.add(new Asset(1L, "Maya's Catering", new ArrayList<>(List.of("@drawable/img_service")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true));
+        assets.add(new Asset(2L, "Lilly Bloom's Flower Arrangements", new ArrayList<>(List.of("@drawable/img_product")), "Beautiful flower arrangements", 350, "decoration", 0, "USA", "California", "", "", 4.3, AssetType.PRODUCT,false));
+        assets.add(new Asset(3L, "Service 3", new ArrayList<>(List.of("@drawable/img_service")), "Description for service 3", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,false));
+        assets.add(new Asset(4L, "Product 4", new ArrayList<>(List.of("@drawable/img_product")), "Description for product 4", 350, "decoration", 0, "USA", "California", "", "", 4.3, AssetType.PRODUCT,false));
+        assets.add(new Asset(5L, "Service 5", new ArrayList<>(List.of("@drawable/img_service")), "Description for service 5", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,false));
+        return assets;
     }
 }

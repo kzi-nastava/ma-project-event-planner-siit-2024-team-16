@@ -1,4 +1,6 @@
-package com.example.evenmate.models;
+package com.example.evenmate.models.event;
+
+import com.example.evenmate.models.Category;
 
 import java.util.List;
 import java.util.Objects;

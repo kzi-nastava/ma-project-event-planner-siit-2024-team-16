@@ -2,6 +2,8 @@ package com.example.evenmate.models;
 
 import androidx.annotation.NonNull;
 
+import com.example.evenmate.models.event.EventType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
