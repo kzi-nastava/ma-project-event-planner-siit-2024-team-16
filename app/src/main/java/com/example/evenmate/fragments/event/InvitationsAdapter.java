@@ -1,10 +1,14 @@
 package com.example.evenmate.fragments.event;
 
+import static com.example.evenmate.utils.DialogUtils.showDeleteConfirmation;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
@@ -31,7 +35,16 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
     public void onBindViewHolder(@NonNull InvitationViewHolder holder, int position) {
         String contact = contacts.get(position);
         holder.contactName.setText(contact);
-        holder.deleteButton.setOnClickListener(v -> {removeListener.onContactRemoved(contact);});
+        holder.deleteButton.setOnClickListener(v -> {
+            showDeleteConfirmation(v.getContext(), confirmed -> {
+                if (confirmed) {
+                    // TODO call BE
+                    removeListener.onContactRemoved(contact);
+                    Toast.makeText(v.getContext(), "Invitation deleted", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
     }
     @Override
     public int getItemCount() {return contacts.size();}

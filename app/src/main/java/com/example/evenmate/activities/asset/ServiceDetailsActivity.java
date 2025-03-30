@@ -1,5 +1,7 @@
 package com.example.evenmate.activities.asset;
 
+import static com.example.evenmate.utils.DialogUtils.showDeleteConfirmation;
+
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -114,8 +116,15 @@ public class ServiceDetailsActivity extends AppCompatActivity {
     private void setupListeners() {
         editButton.setOnClickListener(v ->
                 startActivity(new Intent(this, EditServiceActivity.class)));
+        deleteButton.setOnClickListener(v -> {
+            showDeleteConfirmation(v.getContext(), confirmed -> {
+                if (confirmed) {
+                    // TODO call BE
+                    Toast.makeText(v.getContext(), "Service deleted", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
 
-        deleteButton.setOnClickListener(v -> showDeleteConfirmation());
     }
     private void loadData() {
         ImageSliderAdapter imageAdapter = new ImageSliderAdapter(service.getImage());
@@ -171,15 +180,7 @@ public class ServiceDetailsActivity extends AppCompatActivity {
             eventTypesChipGroup.addView(chip);
         }
     }
-    private void showDeleteConfirmation() {
-        new MaterialAlertDialogBuilder(this)
-            .setTitle("Delete Service")
-            .setMessage("Are you sure you want to delete this service? This action cannot be undone.")
-            .setPositiveButton("Delete", (dialog, which) ->
-                    Toast.makeText(this, "Delete clicked", Toast.LENGTH_SHORT).show())
-            .setNegativeButton("Cancel", null)
-            .show();
-    }
+
     public static Service getServiceById(Long id){
         return new Service(id, "Maya's Catering", new ArrayList<>(List.of("https://picsum.photos/400/300", "https://picsum.photos/400/301", "https://picsum.photos/400/302")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true,"distinct.",11,null,null,"Book at least 48 hours in advance","Manual confirmation","Cancel at least 24 hours before the date.",new ArrayList<>(List.of("Wedding","Birthday","Corporate Event","Family gathering")));
     }
