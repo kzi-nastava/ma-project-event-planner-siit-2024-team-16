@@ -1,10 +1,15 @@
 package com.example.evenmate.clients;
 
 import android.content.Context;
+
+import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 import com.example.evenmate.BuildConfig;
+import com.example.evenmate.adapters.LocalDateTypeAdapter;
 import com.example.evenmate.interceptors.AuthInterceptor;
 import com.example.evenmate.models.user.User;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import lombok.Getter;
 import okhttp3.OkHttpClient;
@@ -54,11 +59,14 @@ public class ClientUtils {
                 .build();
     }
 
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
+            .create();
     private static Retrofit getRetrofit() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(SERVICE_API_PATH)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(createHttpClient())
                     .build();
         }
