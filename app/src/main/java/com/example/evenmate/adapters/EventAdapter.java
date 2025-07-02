@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.models.event.Event;
-import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,15 +83,15 @@ public class EventAdapter extends ArrayAdapter<Event> {
         ImageView imageView = itemView.findViewById(R.id.image);
         ImageButton btnEdit = itemView.findViewById(R.id.btnEditEvent);
         ImageButton btnFavorite = itemView.findViewById(R.id.favorite);
-        MaterialButton btnDelete = itemView.findViewById(R.id.btnDeleteEvent);
+        ImageButton btnDelete = itemView.findViewById(R.id.btnDeleteEvent);
 
         if(event != null) {
             title.setText(event.getName());
-            description.setText(String.format("%s: %s", R.string.description, event.getDescription()));
-            date.setText(String.format("%s%s", R.string.date, event.getDate()));
-            address.setText(String.format("%s: %s", R.string.address, event.getAddress()));
-            type.setText(String.format("%s %s", R.string.type, event.getType()));
-            maxAttendees.setText(String.format("%s%s", R.string.max_guests, event.getMaxAttendees()));
+            description.setText(String.format("%s: %s", getContext().getString(R.string.description), event.getDescription()));
+            date.setText(String.format("%s%s", getContext().getString(R.string.date), event.getDate()));
+            address.setText(String.format("%s: %s", getContext().getString(R.string.address), String.format("%s %s, %s, %s", event.getAddress().getStreetName(), event.getAddress().getStreetNumber(), event.getAddress().getCity(), event.getAddress().getCountry())));
+            type.setText(String.format("%s %s", getContext().getString(R.string.type), event.getType().getName()));
+            maxAttendees.setText(String.format("%s%s", getContext().getString(R.string.max_guests), event.getMaxAttendees()));
             if (event.getPhoto() != null) {
                 Glide.with(getContext())
                         .load(Base64.decode(event.getPhoto(), Base64.DEFAULT))
