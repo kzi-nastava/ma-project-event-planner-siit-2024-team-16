@@ -76,11 +76,13 @@ public class EventTypeAdapter extends ArrayAdapter<EventType> {
         if (eventType != null) {
             tvName.setText(eventType.getName());
             tvDescription.setText(eventType.getDescription());
-            tvRecommendedCategories.setText(
-                    eventType.getRecommendedCategories().stream()
-                            .map(Category::getName)
-                            .collect(Collectors.joining(", "))
-            );
+            if (eventType.getRecommendedCategories() != null){
+                tvRecommendedCategories.setText(
+                        eventType.getRecommendedCategories().stream()
+                                .map(Category::getName)
+                                .collect(Collectors.joining(", "))
+                );
+            }
 
 
             boolean isActive = eventType.isActive();
