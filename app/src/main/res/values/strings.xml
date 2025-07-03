@@ -90,4 +90,5 @@
     <string name="choose_a_type">Choose a type</string>
     <string name="select_date">Select Date</string>
     <string name="blank" />
+    <string name="selected_date">Selected date</string>
 </resources>

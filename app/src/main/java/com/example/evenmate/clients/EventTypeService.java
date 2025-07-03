@@ -19,7 +19,8 @@ public interface EventTypeService {
     @GET("types")
     Call<PaginatedResponse<EventType>> getTypes(
             @Query("page") int page,
-            @Query("size") int size
+            @Query("size") int size,
+            @Query("active") boolean activeOnly
     );
     @Headers({
             "User-Agent: Mobile-Android",

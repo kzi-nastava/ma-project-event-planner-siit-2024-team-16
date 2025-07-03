@@ -36,7 +36,7 @@ public class EventTypesViewModel extends ViewModel {
 
     public void fetchEventTypes() {
         int apiPage = currentPage.getValue() != null ? currentPage.getValue() - 1 : 0;
-        Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getTypes(apiPage, PAGE_SIZE);
+        Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getTypes(apiPage, PAGE_SIZE, false);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<PaginatedResponse<EventType>> call, @NonNull Response<PaginatedResponse<EventType>> response) {
