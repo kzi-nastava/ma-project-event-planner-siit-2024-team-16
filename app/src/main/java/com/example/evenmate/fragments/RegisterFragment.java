@@ -289,6 +289,7 @@ public class RegisterFragment extends Fragment {
         user.setPassword(Objects.requireNonNull(binding.txtPassword.getText()).toString());
         user.setFirstName(Objects.requireNonNull(binding.txtFirstName.getText()).toString());
         user.setLastName(Objects.requireNonNull(binding.txtLastName.getText()).toString());
+        user.getAddress().setCountry(Objects.requireNonNull(binding.txtCountry.getText()).toString());
         user.getAddress().setCity(Objects.requireNonNull(binding.txtCity.getText()).toString());
         user.getAddress().setStreetName(Objects.requireNonNull(binding.txtStreet.getText()).toString());
         user.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtStreetNumber.getText()).toString());
@@ -299,6 +300,7 @@ public class RegisterFragment extends Fragment {
             Company company = new Company();
             company.setEmail(Objects.requireNonNull(binding.txtCompanyEmail.getText()).toString());
             company.setName(Objects.requireNonNull(binding.txtCompanyName.getText()).toString());
+            company.getAddress().setCountry(Objects.requireNonNull(binding.txtCountry.getText()).toString());
             company.getAddress().setCity(Objects.requireNonNull(binding.txtCompanyCity.getText()).toString());
             company.getAddress().setStreetName(Objects.requireNonNull(binding.txtCompanyStreet.getText()).toString());
             company.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtCompanyStreetNumber.getText()).toString());
@@ -374,6 +376,8 @@ public class RegisterFragment extends Fragment {
                         new RequiredRule(), new MatchPasswordRule(binding.txtPassword)),
                 new ValidationField(binding.txtFieldCity, binding.txtCity, getString(R.string.city),
                         new RequiredRule()),
+                new ValidationField(binding.txtFieldCountry, binding.txtCountry, getString(R.string.country),
+                        new RequiredRule()),
                 new ValidationField(binding.txtFieldStreet, binding.txtStreet, getString(R.string.street),
                         new RequiredRule()),
                 new ValidationField(binding.txtFieldStreetNumber, binding.txtStreetNumber, getString(R.string.street_number),
@@ -394,6 +398,8 @@ public class RegisterFragment extends Fragment {
                 new ValidationField(binding.txtFieldCompanyName, binding.txtCompanyName, getString(R.string.company_name),
                         new RequiredRule()),
                 new ValidationField(binding.txtFieldCompanyCity, binding.txtCompanyCity, getString(R.string.company_city),
+                        new RequiredRule()),
+                new ValidationField(binding.txtFieldCompanyCountry, binding.txtCompanyCountry, getString(R.string.company_country),
                         new RequiredRule()),
                 new ValidationField(binding.txtFieldCompanyStreet, binding.txtCompanyStreet, getString(R.string.company_street),
                         new RequiredRule()),

@@ -91,4 +91,6 @@
     <string name="select_date">Select Date</string>
     <string name="blank" />
     <string name="selected_date">Selected date</string>
+    <string name="choose_an_event_type">Choose an event type</string>
+    <string name="company_country">Company country</string>
 </resources>

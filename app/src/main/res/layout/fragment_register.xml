@@ -133,6 +133,28 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txt_field_country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="@string/country"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_field_last_name"
+            app:layout_constraintVertical_bias="0.025">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:importantForAccessibility="yes"
+                android:inputType="text"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/txt_field_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -142,7 +164,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_field_last_name"
+            app:layout_constraintTop_toBottomOf="@id/txt_field_country"
             app:layout_constraintVertical_bias="0.025">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -349,6 +371,29 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_field_company_country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/company_country"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_field_company_name"
+                app:layout_constraintVertical_bias="0.025">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txt_company_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:importantForAccessibility="yes"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txt_field_company_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -358,7 +403,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_field_company_name"
+                app:layout_constraintTop_toBottomOf="@id/txt_field_company_country"
                 app:layout_constraintVertical_bias="0.025">
 
                 <com.google.android.material.textfield.TextInputEditText

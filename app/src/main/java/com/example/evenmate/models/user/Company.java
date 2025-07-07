@@ -18,6 +18,7 @@ public class Company implements Parcelable {
     private List<String> photos;
 
     public Company() {
+        address = new Address();
     }
 
     protected Company(Parcel in) {
