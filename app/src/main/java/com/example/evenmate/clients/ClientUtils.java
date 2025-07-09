@@ -26,6 +26,7 @@ public class ClientUtils {
     public static EventService eventService;
     public static AuthService authService;
     public static UserService userService;
+    public static CategoryService categoryService;
 
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
@@ -37,6 +38,7 @@ public class ClientUtils {
         eventService = getRetrofit().create(EventService.class);
         authService = getRetrofit().create(AuthService.class);
         userService = getRetrofit().create(UserService.class);
+        categoryService = getRetrofit().create(CategoryService.class);
     }
 
     private static OkHttpClient createHttpClient() {
