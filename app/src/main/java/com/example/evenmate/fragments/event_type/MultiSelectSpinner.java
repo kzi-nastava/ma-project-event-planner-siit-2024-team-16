@@ -108,7 +108,7 @@ public class MultiSelectSpinner extends AppCompatSpinner {
     }
 
     public void setPreselectedItems(List<Category> preselectedItems) {
-        if (items == null || items.isEmpty() || preselectedItems.isEmpty()) {
+        if (items == null || preselectedItems == null || items.isEmpty() || preselectedItems.isEmpty()) {
             return;
         }
         //TODO: use this after categories update
