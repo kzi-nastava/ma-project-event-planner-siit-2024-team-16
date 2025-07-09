@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:padding="16dp">
-
+    android:padding="16dp"
+    android:id="@+id/event_form_fragment"
+    >
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
@@ -204,27 +205,6 @@
                 app:layout_constraintWidth_percent="0.4" />
 
             <TextView
-                android:id="@+id/txt_event_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/choose_a_type"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/show_date_picker_button" />
-
-            <Spinner
-                android:id="@+id/spinner_type"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_event_type"/>
-
-            <TextView
                 android:id="@+id/txt_upload_image_event"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -232,7 +212,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/upload_image"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_type" />
+                app:layout_constraintTop_toBottomOf="@+id/tilEventDate" />
 
             <ImageView
                 android:id="@+id/iconUploadEvent"
@@ -258,14 +238,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_upload_image_event" />
 
-            <Button
-                android:id="@+id/btn_save_event"
-                style="@style/GreenFilledButton"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_next"
+                style="@style/PurpleFilledButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
-                android:text="@string/save"
+                android:text="@string/next"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import com.example.evenmate.BuildConfig;
 import com.example.evenmate.adapters.LocalDateTypeAdapter;
 import com.example.evenmate.interceptors.AuthInterceptor;
-import com.example.evenmate.models.user.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -23,8 +22,6 @@ public class ClientUtils {
     @Getter
     private static Context context;
     private static Retrofit retrofit;
-    public static User loggedInUser = null;
-
     public static EventTypeService eventTypeService;
     public static EventService eventService;
     public static AuthService authService;
@@ -59,7 +56,7 @@ public class ClientUtils {
                 .build();
     }
 
-    private static final Gson gson = new GsonBuilder()
+    public static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
             .create();
     private static Retrofit getRetrofit() {

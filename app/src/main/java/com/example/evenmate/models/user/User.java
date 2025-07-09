@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class User implements Parcelable {
+    private Long id;
     private String email;
     private String password;
     private String firstName;
@@ -24,7 +25,8 @@ public class User implements Parcelable {
         this.address = new Address();
     }
 
-    public User(String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo, String role) {
+    public User(Long id, String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo, String role) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -37,6 +39,11 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
         email = in.readString();
         password = in.readString();
         firstName = in.readString();
@@ -67,6 +74,12 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
+        }
         dest.writeString(email);
         dest.writeString(password);
         dest.writeString(firstName);

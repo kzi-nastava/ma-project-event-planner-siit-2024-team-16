@@ -1,16 +1,8 @@
 package com.example.evenmate.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -33,12 +22,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import android.Manifest;
 import com.example.evenmate.R;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentRegisterBinding;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.models.user.Company;
+import com.example.evenmate.utils.ImageUtils;
 import com.example.evenmate.utils.ToastUtils;
 import com.example.evenmate.validation.ValidationField;
 import com.example.evenmate.validation.ValidationRule;
@@ -47,172 +36,72 @@ import com.example.evenmate.validation.rules.MatchPasswordRule;
 import com.example.evenmate.validation.rules.MinLengthRule;
 import com.example.evenmate.validation.rules.RequiredRule;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import android.os.Build;
-
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends Fragment implements ImageUtils.ImageHandlerCallback {
 
     private FragmentRegisterBinding binding;
     private static final int MAX_COMPANY_IMAGES = 5;
     private String userImageBase64;
-    private static final int MAX_IMAGE_SIZE = 800;
     private final List<String> companyImagesBase64 = new ArrayList<>();
     private LinearLayout companyImagesContainer;
-    private final ActivityResultLauncher<String> userImagePermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    launchImagePicker(true, -1);
-                } else {
-                    Toast.makeText(requireContext(), "Permission required to select image", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-    private final ActivityResultLauncher<Intent> userImagePickerLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    handleImageResult(result.getData(), true, -1);
-                }
-            });
-
-    private final ActivityResultLauncher<String> companyImagePermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    launchImagePicker(false, companyImagesBase64.size());
-                } else {
-                    Toast.makeText(requireContext(), "Permission required to select image", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-    private final ActivityResultLauncher<Intent> companyImagePickerLauncher =
-        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                Bundle extras = result.getData().getExtras();
-                int imageIndex = extras != null ? extras.getInt("image_index", -1) : -1;
-                handleImageResult(result.getData(), false, imageIndex);
-            }
-        });
+    private ImageUtils userImageUtils;
+    private ImageUtils companyImageUtils;
+    private boolean isUserImageSelection = true;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentRegisterBinding.inflate(inflater, container, false);
 
+        // Initialize image handlers
+        userImageUtils = new ImageUtils(this, this);
+        companyImageUtils = new ImageUtils(this, this);
+
         companyImagesContainer = binding.companyImagesContainer;
 
-        binding.switchProvider.setOnCheckedChangeListener((buttonView, isChecked) -> binding.companyInfoLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE));
+        binding.switchProvider.setOnCheckedChangeListener((buttonView, isChecked) ->
+                binding.companyInfoLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE));
 
-        binding.iconUpload.setOnClickListener(v -> checkPermissionAndPickImage(true, -1));
+        binding.iconUpload.setOnClickListener(v -> {
+            isUserImageSelection = true;
+            userImageUtils.selectImage();
+        });
 
         binding.iconCompanyUpload.setOnClickListener(v -> {
             if (companyImagesBase64.size() < MAX_COMPANY_IMAGES) {
-                checkPermissionAndPickImage(false, companyImagesBase64.size());
+                isUserImageSelection = false;
+                companyImageUtils.selectImage();
             } else {
                 Toast.makeText(requireContext(), "Maximum " + MAX_COMPANY_IMAGES + " images allowed",
                         Toast.LENGTH_SHORT).show();
             }
         });
+
         binding.btnRegister.setOnClickListener(v -> attemptRegistration());
 
         return binding.getRoot();
     }
 
-    private void checkPermissionAndPickImage(boolean isUserImage, int imageIndex) {
-        String permission;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permission = Manifest.permission.READ_MEDIA_IMAGES;
+    // ImageUtils.ImageUtilsCallback implementation
+    @Override
+    public void onImageSelected(String base64Image, Bitmap bitmap) {
+        if (isUserImageSelection) {
+            userImageBase64 = base64Image;
+            binding.iconUpload.setImageBitmap(bitmap);
         } else {
-            permission = Manifest.permission.READ_EXTERNAL_STORAGE;
-        }
-
-        if (ContextCompat.checkSelfPermission(requireContext(), permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (isUserImage) {
-                userImagePermissionLauncher.launch(permission);
-            } else {
-                companyImagePermissionLauncher.launch(permission);
-            }
-        } else {
-            launchImagePicker(isUserImage, imageIndex);
+            companyImagesBase64.add(base64Image);
+            updateCompanyImagesUI();
         }
     }
 
-    private void launchImagePicker(boolean isUserImage, int imageIndex) {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if (isUserImage) {
-            userImagePickerLauncher.launch(intent);
-        } else {
-            Bundle extras = new Bundle();
-            extras.putInt("image_index", imageIndex);
-            intent.putExtras(extras);
-            companyImagePickerLauncher.launch(intent);
-        }
-    }
-
-    private void handleImageResult(Intent data, boolean isUserImage, int imageIndex) {
-        try {
-            Uri imageUri = data.getData();
-            if (imageUri != null) {
-                Bitmap originalBitmap = ImageDecoder.decodeBitmap(
-                        ImageDecoder.createSource(requireContext().getContentResolver(), imageUri)
-                );
-
-                Bitmap resizedBitmap = resizeImage(originalBitmap);
-                String base64Image = convertBitmapToBase64(resizedBitmap);
-
-                if (isUserImage) {
-                    userImageBase64 = base64Image;
-                    binding.iconUpload.setImageBitmap(resizedBitmap);
-                } else {
-                    if (imageIndex >= 0 && imageIndex < companyImagesBase64.size()) {
-                        companyImagesBase64.set(imageIndex, base64Image);
-                    } else {
-                        companyImagesBase64.add(base64Image);
-                    }
-                    updateCompanyImagesUI();
-                }
-            }
-        } catch (IOException e) {
-            Toast.makeText(requireContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private Bitmap resizeImage(Bitmap original) {
-        int width = original.getWidth();
-        int height = original.getHeight();
-
-        if (width <= MAX_IMAGE_SIZE && height <= MAX_IMAGE_SIZE) {
-            return original;
-        }
-
-        float ratio = Math.min(
-                (float) MAX_IMAGE_SIZE / width,
-                (float) MAX_IMAGE_SIZE / height
-        );
-
-        int finalWidth = Math.round(width * ratio);
-        int finalHeight = Math.round(height * ratio);
-
-        return Bitmap.createScaledBitmap(original, finalWidth, finalHeight, true);
-    }
-    private String convertBitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        boolean hasAlpha = bitmap.hasAlpha();
-
-        if (hasAlpha) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            String base64String = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
-            return "data:image/png;base64," + base64String;
-        } else {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
-            String base64String = Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
-            return "data:image/jpeg;base64," + base64String;
-        }
+    @Override
+    public void onImageError(String error) {
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     private void updateCompanyImagesUI() {
@@ -235,25 +124,8 @@ public class RegisterFragment extends Fragment {
             imageView.setLayoutParams(imageParams);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            // Fix: Properly handle the data URL format
-            String base64Data = base64Image;
-            if (base64Image.contains(",")) {
-                base64Data = base64Image.split(",")[1];
-            }
-
-            try {
-                byte[] decodedString = Base64.decode(base64Data, Base64.DEFAULT);
-                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                if (decodedBitmap != null) {
-                    imageView.setImageBitmap(decodedBitmap);
-                } else {
-                    imageView.setImageResource(R.drawable.ic_error);
-                    Toast.makeText(requireContext(), "Failed to decode image", Toast.LENGTH_SHORT).show();
-                }
-            } catch (IllegalArgumentException e) {
-                imageView.setImageResource(R.drawable.ic_error);
-                Toast.makeText(requireContext(), "Invalid image format", Toast.LENGTH_SHORT).show();
-            }
+            // Use the utility method to set image
+            ImageUtils.setImageFromBase64(imageView, base64Image);
 
             ImageView deleteButton = new ImageView(requireContext());
             LinearLayout.LayoutParams deleteParams = new LinearLayout.LayoutParams(
@@ -312,7 +184,7 @@ public class RegisterFragment extends Fragment {
         register(user);
     }
 
-    private void register(User user){
+    private void register(User user) {
         retrofit2.Call<User> call = ClientUtils.authService.register(user);
         call.enqueue(new Callback<>() {
             @Override
@@ -366,6 +238,7 @@ public class RegisterFragment extends Fragment {
                 getString(R.string.registration_failed) + errorMessage,
                 true);
     }
+
     private List<ValidationField> getUserValidationFields() {
         return Arrays.asList(
                 new ValidationField(binding.txtFieldEmail, binding.txtEmail, getString(R.string.email),

@@ -1,28 +1,26 @@
 package com.example.evenmate.fragments.event;
 
-
 import static com.example.evenmate.adapters.LocalDateTypeAdapter.DATE_FORMAT;
 import static com.example.evenmate.adapters.LocalDateTypeAdapter.FORMATTER;
 
 import android.app.Dialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.evenmate.databinding.FragmentEventFormBinding;
 import com.example.evenmate.models.Address;
 import com.example.evenmate.models.event.Event;
-import com.example.evenmate.models.event.EventType;
+import com.example.evenmate.models.event.EventRequest;
+import com.example.evenmate.utils.ImageUtils;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -30,50 +28,62 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
 import lombok.val;
 
-public class EventFormFragment extends DialogFragment {
+public class EventFormFragment extends DialogFragment implements ImageUtils.ImageHandlerCallback {
     private FragmentEventFormBinding binding;
     private EventFormViewModel viewModel;
-    private EventType selectedEventType = null;
-    private Event event;
-    private Spinner spinner;
-    private ArrayAdapter<EventType> spinnerAdapter;
+    private Long selectedEventTypeId = (long) -1;
+    private EventRequest event;
+    private String title;
+    private ImageUtils imageHandler;
+    private String eventImageBase64;
 
     public EventFormFragment() {
-        this.event = null;
     }
 
-    public EventFormFragment(Event event) {
-        this.event = event;
+    public static EventFormFragment newInstance(Event event) {
+        EventFormFragment fragment = new EventFormFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("event", event);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        imageHandler = new ImageUtils(this, this);
+
         if (getArguments() != null) {
-            if (event != null) {
-                selectedEventType = event.getType();
+            Event receivedEvent = getArguments().getParcelable("event");
+            if (receivedEvent != null) {
+                event = receivedEvent.toRequest();
+                if (event != null) {
+                    selectedEventTypeId = event.getTypeId();
+                    eventImageBase64 = event.getPhoto(); // Assuming EventRequest has getPhoto() method
+                }
             }
         }
     }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         binding = FragmentEventFormBinding.inflate(getLayoutInflater());
         viewModel = new ViewModelProvider(requireActivity()).get(EventFormViewModel.class);
 
-        setupSaveButton();
+        setupNextButton();
         setupFormFields();
         setupDatePicker();
-        setupSpinner();
+        setupImageUpload();
         observeViewModel();
-        String title = event == null ? "Add Event " : "Edit Event ";
+        title = event == null ? "Add Event" : "Edit Event";
 
         return new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(title)
@@ -82,46 +92,39 @@ public class EventFormFragment extends DialogFragment {
                 .create();
     }
 
-    private void setupSpinner() {
-        spinner = binding.spinnerType;
-        spinnerAdapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                new ArrayList<>()
-        );
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapter);
+    private void setupImageUpload() {
+        binding.iconUploadEvent.setOnClickListener(v -> imageHandler.selectImage());
 
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedEventType = spinnerAdapter.getItem(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                selectedEventType = null;
-            }
-        });
+        if (eventImageBase64 != null && !eventImageBase64.isEmpty()) {
+            ImageUtils.setImageFromBase64(binding.iconUploadEvent, eventImageBase64);
+        }
     }
 
     private void setupDatePicker() {
-        binding.showDatePickerButton.setOnClickListener(v ->{
+        binding.showDatePickerButton.setOnClickListener(v -> {
             showDatePicker();
         });
     }
 
-
-    private void setupSaveButton() {
-        binding.btnSaveEvent.setOnClickListener(v -> {
+    private void setupNextButton() {
+        binding.btnNext.setOnClickListener(v -> {
             if (validateInput()) {
                 getEventValues();
-                if (event == null) {
-                    viewModel.addEvent(event);
-                } else {
-                    viewModel.updateEvent(event);
-                }
+                EventTypeGroup targetFragment = new EventTypeGroup();
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("event", event);
+                bundle.putString("title", title);
+                targetFragment.setArguments(bundle);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+                dismiss();
+
+                new Handler().postDelayed(() -> {
+                    EventTypeGroup nextDialog = new EventTypeGroup();
+                    nextDialog.setArguments(bundle);
+                    nextDialog.show(fragmentManager, "eventTypeGroup");
+                }, 100);
             }
         });
     }
@@ -138,7 +141,6 @@ public class EventFormFragment extends DialogFragment {
         String streetNumber = Objects.requireNonNull(binding.eStreetNumber.getText()).toString().trim();
         String maxAttendees = Objects.requireNonNull(binding.eMaxAttendees.getText()).toString().trim();
         String date = Objects.requireNonNull(binding.eDate.getText()).toString().trim();
-        //TODO IMAGE VALIDATION
 
         if (TextUtils.isEmpty(name)) {
             binding.tilEventName.setError("Name is required");
@@ -205,8 +207,14 @@ public class EventFormFragment extends DialogFragment {
             binding.tilEventDate.setError(null);
         }
 
+         if (eventImageBase64 == null || eventImageBase64.isEmpty()) {
+             Toast.makeText(requireContext(), "Please select a photo", Toast.LENGTH_SHORT).show();
+             isValid = false;
+         }
+
         return isValid;
     }
+
     private void clearAllErrors() {
         binding.tilEventName.setError(null);
         binding.tilEventDescription.setError(null);
@@ -221,6 +229,7 @@ public class EventFormFragment extends DialogFragment {
     private String getTextFromField(android.widget.EditText editText) {
         return Objects.requireNonNull(editText.getText()).toString().trim();
     }
+
     private void getEventValues() {
         String name = getTextFromField(binding.eName);
         String description = getTextFromField(binding.eDescription);
@@ -230,21 +239,23 @@ public class EventFormFragment extends DialogFragment {
         String streetNumber = getTextFromField(binding.eStreetNumber);
         String maxAttendees = getTextFromField(binding.eMaxAttendees);
         String date = getTextFromField(binding.eDate);
+        Boolean isPrivate = binding.switchPrivate.isChecked();
 
-        if(event == null) {
-            event = new Event();
+        if (event == null) {
+            event = new EventRequest();
         }
         event.setDescription(description);
         event.setName(name);
         event.setAddress(new Address(street, streetNumber, city, country));
         event.setMaxAttendees(Integer.valueOf(maxAttendees));
         event.setDate(LocalDate.parse(date, FORMATTER));
-        event.setType(selectedEventType);
-//        event.setPhoto(name);
+        event.setTypeId(selectedEventTypeId);
+        event.setIsPrivate(isPrivate);
+        event.setPhoto(eventImageBase64);
     }
 
     private void setupFormFields() {
-        if(event != null){
+        if (event != null) {
             binding.eName.setText(event.getName());
             binding.eName.setEnabled(false);
             binding.eDescription.setText(event.getDescription());
@@ -252,35 +263,20 @@ public class EventFormFragment extends DialogFragment {
             binding.eCity.setText(event.getAddress().getCity());
             binding.eStreet.setText(event.getAddress().getStreetName());
             binding.eStreetNumber.setText(event.getAddress().getStreetNumber());
-            binding.eMaxAttendees.setText(event.getMaxAttendees());
+            binding.eMaxAttendees.setText(Integer.toString(event.getMaxAttendees()));
             binding.eDate.setText(event.getDate().format(FORMATTER));
-//            binding.spinnerType.set
+            binding.switchPrivate.setChecked(event.getIsPrivate());
+
+            if (event.getPhoto() != null && !event.getPhoto().isEmpty()) {
+                eventImageBase64 = event.getPhoto();
+                ImageUtils.setImageFromBase64(binding.iconUploadEvent, eventImageBase64);
+            }
         }
     }
+
     private void observeViewModel() {
-        viewModel.getTypes().observe(this, types -> {
-            Log.d("Types", "Received types: " + types.size());
-            spinnerAdapter.clear();
-            spinnerAdapter.addAll(types);
-            spinnerAdapter.notifyDataSetChanged();
-
-            // Set selected type if in edit mode
-            if (event != null && selectedEventType != null) {
-                int position = types.indexOf(selectedEventType);
-                if (position >= 0) {
-                    spinner.setSelection(position);
-                }
-            }
-        });
-
-        viewModel.getErrorMessage().observe(this, message -> {
-            if (message != null && !message.isEmpty()) {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
-
         viewModel.getSuccess().observe(this, success -> {
-            if (success) {
+            if (success != null) {
                 Toast.makeText(requireContext(), "Action successful", Toast.LENGTH_SHORT).show();
                 dismissAllowingStateLoss();
             }
@@ -293,12 +289,6 @@ public class EventFormFragment extends DialogFragment {
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-        event = null;
-    }
     private void showDatePicker() {
         val constraintsBuilder =
                 new CalendarConstraints.Builder()
@@ -310,7 +300,6 @@ public class EventFormFragment extends DialogFragment {
                 .setCalendarConstraints(constraintsBuilder.build())
                 .build();
 
-
         datePicker.addOnPositiveButtonClickListener(selection -> {
             Date date = new Date(selection);
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
@@ -318,5 +307,25 @@ public class EventFormFragment extends DialogFragment {
         });
 
         datePicker.show(getParentFragmentManager(), "DATE_PICKER");
+    }
+
+    @Override
+    public void onImageSelected(String base64Image, Bitmap bitmap) {
+        eventImageBase64 = base64Image;
+        binding.iconUploadEvent.setImageBitmap(bitmap);
+        Toast.makeText(requireContext(), "Photo selected successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onImageError(String error) {
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        event = null;
+        eventImageBase64 = null;
     }
 }

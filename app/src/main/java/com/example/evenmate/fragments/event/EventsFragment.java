@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
-
+import androidx.fragment.app.FragmentResultListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +43,7 @@ public class EventsFragment extends ListFragment {
                 viewModel.updateFavoriteStatus(event)
         );
         adapter.setOnEditClickListener(event -> {
-                    EventFormFragment dialogFragment = new EventFormFragment(event);
+                    EventFormFragment dialogFragment = EventFormFragment.newInstance(event);
                     dialogFragment.show(getParentFragmentManager(), "EditEvent");
                 }
         );
@@ -56,7 +56,7 @@ public class EventsFragment extends ListFragment {
         setupPagination();
 
         setupAddEventButton();
-
+        setupFragmentResultListener();
         observeViewModel();
     }
 
@@ -82,7 +82,7 @@ public class EventsFragment extends ListFragment {
 
     private void setupAddEventButton() {
         binding.btnAddEvent.setOnClickListener(v -> {
-            EventFormFragment dialogFragment = new EventFormFragment();
+            EventFormFragment dialogFragment = EventFormFragment.newInstance(null);
             dialogFragment.show(getParentFragmentManager(), "CreateEvent");
         });
     }
@@ -108,6 +108,18 @@ public class EventsFragment extends ListFragment {
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), message -> {
             if (message != null && !message.isEmpty()) {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setupFragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener("event_form_result", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                boolean shouldRefresh = result.getBoolean("refresh_events", false);
+                if (shouldRefresh) {
+                    viewModel.fetchEvents();
+                }
             }
         });
     }

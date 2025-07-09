@@ -1,5 +1,6 @@
 package com.example.evenmate.fragments.event;
 
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.Event;
+import com.example.evenmate.models.event.EventRequest;
 import com.example.evenmate.models.event.EventType;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import retrofit2.Response;
 
 public class EventFormViewModel extends ViewModel {
     private final MutableLiveData<Event> eventLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> success = new MutableLiveData<>();
+    private final MutableLiveData<String> success = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<List<EventType>> types = new MutableLiveData<>();
 
@@ -33,7 +35,7 @@ public class EventFormViewModel extends ViewModel {
         return types;
     }
 
-    public LiveData<Boolean> getSuccess() {
+    public LiveData<String> getSuccess() {
         return success;
     }
 
@@ -47,7 +49,7 @@ public class EventFormViewModel extends ViewModel {
 
     public void fetchTypes() {
         //TODO change pagination
-        Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getTypes(0,20, false);
+        Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getTypes(0,20, true);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<PaginatedResponse<EventType>> call, @NonNull Response<PaginatedResponse<EventType>> response) {
@@ -64,13 +66,14 @@ public class EventFormViewModel extends ViewModel {
             }
         });
     }
-    public void addEvent(Event newEvent) {
+    //todo photo, organizerId, isPrivate
+    public void addEvent(EventRequest newEvent) {
         retrofit2.Call<Event> call = ClientUtils.eventService.create(newEvent);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                 if (response.isSuccessful()) {
-                    success.postValue(true);
+                    success.postValue("Event successfully created.");
                 } else {
                     errorMessage.postValue("Failed to add event. Code: " + response.code());
                 }
@@ -83,13 +86,13 @@ public class EventFormViewModel extends ViewModel {
         });
     }
 
-    public void updateEvent(Event event) {
+    public void updateEvent(EventRequest event) {
         Call<Event> call = ClientUtils.eventService.update(event);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
                 if (response.isSuccessful()) {
-                    success.postValue(true);
+                    success.postValue("Event successfully updated.");
                 } else {
                     errorMessage.postValue("Failed to update event. Code: " + response.code());
                 }

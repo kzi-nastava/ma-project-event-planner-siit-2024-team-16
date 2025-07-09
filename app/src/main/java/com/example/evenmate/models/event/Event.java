@@ -110,4 +110,19 @@ public class Event implements Parcelable {
 
         dest.writeString(photo);
     }
+    public EventRequest toRequest() {
+        return new EventRequest(
+                id,
+                name,
+                description,
+                isPrivate,
+                photo,
+                maxAttendees,
+                address,
+                type != null ? type.getId() : null,
+                date,
+                organizer != null ? organizer.getId() : null
+        );
+    }
+
 }
