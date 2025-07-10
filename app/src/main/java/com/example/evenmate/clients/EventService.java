@@ -40,7 +40,7 @@ public interface EventService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @DELETE("events")
+    @DELETE("events/{id}")
     Call<Object> delete(@Path("id") Long id);
 }
 

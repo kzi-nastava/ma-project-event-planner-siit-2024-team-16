@@ -65,7 +65,6 @@ public class EventFormViewModel extends ViewModel {
             }
         });
     }
-    //todo photo, organizerId, isPrivate
     public void addEvent(EventRequest newEvent) {
         retrofit2.Call<Event> call = ClientUtils.eventService.create(newEvent);
         call.enqueue(new Callback<>() {

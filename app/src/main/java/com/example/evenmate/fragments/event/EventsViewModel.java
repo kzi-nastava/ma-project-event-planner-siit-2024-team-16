@@ -24,7 +24,10 @@ public class EventsViewModel extends ViewModel {
     private final MutableLiveData<Integer> currentPage = new MutableLiveData<>(1);
     private final MutableLiveData<Integer> totalPages = new MutableLiveData<>(1);
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> deleteFailed = new MutableLiveData<>(false);
     public LiveData<List<Event>> getEvents() { return events; }
+    public Boolean getDeleteFailed() { return deleteFailed.getValue(); }
+    public void resetDeleteFailed() { deleteFailed.setValue(false); }
 
     public LiveData<Integer> getCurrentPage() { return currentPage; }
 
@@ -50,6 +53,23 @@ public class EventsViewModel extends ViewModel {
                 Log.e("API_ERROR", "Error fetching events: " + t.getMessage());
             }
         });
+    }
+
+    public void deleteEvent(Long id) {
+        Call<Object> call = ClientUtils.eventService.delete(id);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                Log.d("delete", "deleted");
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Error deleting event: " + t.getMessage());
+                deleteFailed.setValue(true);
+            }
+        });
+        refreshEvents();
     }
 
     public void refreshEvents() {

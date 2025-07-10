@@ -1,12 +1,13 @@
 package com.example.evenmate.fragments.event;
 
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.fragment.app.FragmentResultListener;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 
 import com.example.evenmate.adapters.EventAdapter;
 import com.example.evenmate.databinding.FragmentEventsBinding;
+import com.example.evenmate.utils.ToastUtils;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
@@ -47,10 +50,23 @@ public class EventsFragment extends ListFragment {
                     dialogFragment.show(getParentFragmentManager(), "EditEvent");
                 }
         );
-        adapter.setOnDeleteClickListener(event -> {
-//                    Dele dialogFragment = new EventFormFragment(event);
-//                    dialogFragment.show(getParentFragmentManager(), "EditEvent");
-                }
+        adapter.setOnDeleteClickListener(event -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Delete Event")
+                .setMessage(String.format("Are you sure you want to delete %s? This action cannot be undone.", event.getName()))
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    viewModel.deleteEvent(event.getId());
+                    if(viewModel.getDeleteFailed())
+                        ToastUtils.showCustomToast(requireContext(),
+                            viewModel.getDeleteFailed().toString(),
+                            true);
+                    else
+                        ToastUtils.showCustomToast(requireContext(),
+                                String.format("%s successfully deleted", event.getName()),
+                                false);
+                    viewModel.resetDeleteFailed();
+                })
+                .show()
         );
         setListAdapter(adapter);
         setupPagination();
@@ -113,13 +129,10 @@ public class EventsFragment extends ListFragment {
     }
 
     private void setupFragmentResultListener() {
-        getParentFragmentManager().setFragmentResultListener("event_form_result", this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                boolean shouldRefresh = result.getBoolean("refresh_events", false);
-                if (shouldRefresh) {
-                    viewModel.fetchEvents();
-                }
+        getParentFragmentManager().setFragmentResultListener("event_form_result", this, (requestKey, result) -> {
+            boolean shouldRefresh = result.getBoolean("refresh_events", false);
+            if (shouldRefresh) {
+                viewModel.fetchEvents();
             }
         });
     }
