@@ -2,6 +2,7 @@ package com.example.evenmate.clients;
 
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.models.PaginatedResponse;
+import com.example.evenmate.models.event.EventTypeRequest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -26,13 +27,21 @@ public interface EventTypeService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+    @GET("types")
+    Call<PaginatedResponse<EventType>> getActiveTypes(
+            @Query("active") boolean activeOnly
+    );
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
     @POST("types")
-    Call<EventType> createType(@Body EventType request);
+    Call<EventType> createType(@Body EventTypeRequest request);
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @PUT("types")
-    Call<EventType> updateType(@Body EventType request);
+    Call<EventType> updateType(@Body EventTypeRequest request);
 }
 

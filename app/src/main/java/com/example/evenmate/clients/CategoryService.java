@@ -1,6 +1,6 @@
 package com.example.evenmate.clients;
 
-import com.example.evenmate.models.event.CategoryDTO;
+import com.example.evenmate.models.Category;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface CategoryService {
             "Content-Type:application/json"
     })
     @GET("categories")
-    Call<List<CategoryDTO>> getCategories();
+    Call<List<Category>> getCategories();
 }

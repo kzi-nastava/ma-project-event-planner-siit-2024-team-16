@@ -48,8 +48,7 @@ public class EventFormViewModel extends ViewModel {
     }
 
     public void fetchTypes() {
-        //TODO change pagination
-        Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getTypes(0,20, true);
+        Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getActiveTypes(true);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<PaginatedResponse<EventType>> call, @NonNull Response<PaginatedResponse<EventType>> response) {

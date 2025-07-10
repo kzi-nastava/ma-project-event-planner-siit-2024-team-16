@@ -7,6 +7,8 @@ import com.example.evenmate.models.Category;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -95,5 +97,31 @@ public class EventType implements Parcelable {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, recommendedCategories, isActive);
+    }
+
+    public EventTypeRequest toRequest() {
+        return new EventTypeRequest(
+                id,
+                name,
+                description,
+                recommendedCategories != null ?
+                        recommendedCategories.stream()
+                                .filter(Objects::nonNull)
+                                .map(Category::getId)
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toList()) : null,
+                isActive
+        );
+    }
+
+    @Override
+    public String toString() {
+        return "EventType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", recommendedCategories=" + recommendedCategories +
+                ", isActive=" + isActive +
+                '}';
     }
 }

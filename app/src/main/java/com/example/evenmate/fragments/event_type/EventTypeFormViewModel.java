@@ -1,5 +1,7 @@
 package com.example.evenmate.fragments.event_type;
 
+import android.util.Log;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -9,17 +11,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.evenmate.models.Category;
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.models.event.EventTypeRequest;
+
+import java.util.List;
 
 
 public class EventTypeFormViewModel extends ViewModel {
-    private final MutableLiveData<EventType> eventTypeLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Category>> categories = new MutableLiveData<>();
     private final MutableLiveData<Boolean> success = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-    public LiveData<EventType> getEventType() {
-        return eventTypeLiveData;
+    public LiveData<List<Category>> getCategories() {
+        return categories;
     }
 
     public LiveData<Boolean> getSuccess() {
@@ -30,11 +36,29 @@ public class EventTypeFormViewModel extends ViewModel {
         return errorMessage;
     }
 
-    public void setEventType(EventType eventType) {
-        eventTypeLiveData.setValue(eventType);
+    public void resetState() {
+        success.setValue(false);
+        errorMessage.setValue(null);
     }
+    public void fetchCategories() {
+        Call<List<Category>> call = ClientUtils.categoryService.getCategories();
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Category>> call, @NonNull Response<List<Category>> response) {
+                Log.d("API_DEBUG", "Response code: " + response.code());
+                Log.d("API_DEBUG", "Response body: " + response.body());
+                if (response.isSuccessful() && response.body() != null) {
+                    categories.setValue(response.body());
+                }
+            }
 
-    public void addEventType(EventType newEventType) {
+            @Override
+            public void onFailure(@NonNull Call<List<Category>> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Error fetching categories: " + t.getMessage());
+            }
+        });
+    }
+    public void addEventType(EventTypeRequest newEventType) {
         retrofit2.Call<EventType> call = ClientUtils.eventTypeService.createType(newEventType);
         call.enqueue(new Callback<>() {
             @Override
@@ -53,7 +77,9 @@ public class EventTypeFormViewModel extends ViewModel {
         });
     }
 
-    public void updateEventType(EventType eventType) {
+    public void updateEventType(EventTypeRequest eventType) {
+        Log.d("update", eventType.toString());
+
         Call<EventType> call = ClientUtils.eventTypeService.updateType(eventType);
         call.enqueue(new Callback<>() {
             @Override

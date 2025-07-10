@@ -80,8 +80,7 @@ public class EventTypesViewModel extends ViewModel {
     public void updateEventTypeStatus(EventType eventType) {
         boolean newStatus = !eventType.isActive();
         eventType.setActive(newStatus);
-
-        Call<EventType> call = ClientUtils.eventTypeService.updateType(eventType);
+        Call<EventType> call = ClientUtils.eventTypeService.updateType(eventType.toRequest());
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
