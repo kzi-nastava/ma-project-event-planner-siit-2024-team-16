@@ -42,6 +42,9 @@
     <string name="company_info">COMPANY INFO</string>
     <string name="company_email">Company email</string>
     <string name="company_name">Company name</string>
+    <string name="your_services_and_products">Your Services and Products</string>
+    <string name="no_services_or_products_yet">No services or products yet</string>
+    <string name="click_the_button_to_add_your_first_service">Click the + button to add your first service</string>
     <string name="event_types">Event types</string>
     <string name="activate">Activate</string>
     <string name="edit">Edit</string>
@@ -93,4 +96,15 @@
     <string name="selected_date">Selected date</string>
     <string name="choose_an_event_type">Choose an event type</string>
     <string name="company_country">Company country</string>
+    <string name="notifications">Notifications</string>
+    <string name="all">All</string>
+    <string name="read">Read</string>
+    <string name="unread">Unread</string>
+    <string name="delete">Delete</string>
+    <string name="delete_notification">Delete notification</string>
+    <string name="invitations">Invitations</string>
+    <string name="add_invite">Add Invite</string>
+    <string name="enter_contact_email">Enter contact email</string>
+    <string name="delete_dialog_title">Delete Confirmation</string>
+    <string name="delete_dialog_text">Are you sure you want to delete this? This action cannot be undone.</string>
 </resources>

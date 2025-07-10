@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.HomepageActivity">
+    tools:context=".activities.PageActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
@@ -23,7 +23,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurface"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:menu="@menu/toolbar_menu">
+            app:menu="@menu/toolbar_menu_logged_in">
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -31,7 +31,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        layout="@layout/activity_homepage_content"
+        layout="@layout/activity_page_content"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
         app:layout_constraintVertical_bias="0"/>
 

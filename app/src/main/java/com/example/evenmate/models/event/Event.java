@@ -9,6 +9,7 @@ import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,9 @@ public class Event implements Parcelable {
     private LocalDate date;
     private User organizer;
     private String photo;
-
+    private Double rating;
+    private Boolean isFavorite;
+    private ArrayList<String> invited;
     public Event(){}
 
     protected Event(Parcel in) {

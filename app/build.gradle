@@ -8,16 +8,15 @@ def getIpAddress() {
 }
 android {
     namespace 'com.example.evenmate'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.evenmate"
         minSdk 30
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "IP_ADDR", "\""+getIpAddress()+"\""
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -47,7 +46,6 @@ dependencies {
     implementation libs.lifecycle.viewmodel.ktx
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
-    implementation libs.lombok
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
@@ -62,4 +60,7 @@ dependencies {
     implementation libs.retrofit
     implementation libs.retrofit2.converter.gson
     implementation libs.logging.interceptor
+
+    implementation libs.lombok
+    annotationProcessor libs.lombok
 }

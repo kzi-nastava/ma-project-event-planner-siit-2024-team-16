@@ -1,4 +1,4 @@
-package com.example.evenmate.fragments;
+package com.example.evenmate.fragments.filters;
 
 import android.os.Bundle;
 

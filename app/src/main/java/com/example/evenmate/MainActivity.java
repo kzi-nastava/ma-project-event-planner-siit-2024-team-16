@@ -9,22 +9,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.example.evenmate.activities.HomepageActivity;
-import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.activities.PageActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ClientUtils.init(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         int SPLASH_TIME_OUT = 500;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
+                Intent intent = new Intent(MainActivity.this, PageActivity.class);
                 startActivity(intent);
                 finish();
             }

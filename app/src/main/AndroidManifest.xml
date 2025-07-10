@@ -26,13 +26,20 @@
             android:name=".activities.EditServiceActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ServiceDetailsActivity"
+            android:name=".activities.asset.ServiceDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.asset.ProductDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.CreateServiceActivity"
             android:exported="false" />
+        <activity android:name=".activities.notifications.NotificationsActivity"
+            android:exported="false"/>
+        <activity android:name=".activities.event.EventDetailsActivity"
+            android:exported="false"/>
         <activity
-            android:name=".activities.HomepageActivity"
+            android:name=".activities.PageActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
 import com.example.evenmate.activities.CreateServiceActivity;
-import com.example.evenmate.activities.ServiceDetailsActivity;
+import com.example.evenmate.activities.asset.ServiceDetailsActivity;
 import com.example.evenmate.adapters.ServiceAdapter;
 import com.example.evenmate.models.Service;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class ProviderServicesProductsFragment extends Fragment {
                 199.99,
                 true,
                 true,
-                R.drawable.service
+                R.drawable.img_service
         ));
 
         services.add(new Service(
@@ -69,7 +69,7 @@ public class ProviderServicesProductsFragment extends Fragment {
                 1499.99,
                 true,
                 true,
-                R.drawable.service
+                R.drawable.img_service
         ));
 
         services.add(new Service(
@@ -80,7 +80,7 @@ public class ProviderServicesProductsFragment extends Fragment {
                 299.99,
                 false,
                 true,
-                R.drawable.service
+                R.drawable.img_service
         ));
 
         services.add(new Service(
@@ -91,7 +91,7 @@ public class ProviderServicesProductsFragment extends Fragment {
                 399.99,
                 true,
                 true,
-                R.drawable.service
+                R.drawable.img_service
         ));
 
         services.add(new Service(
@@ -102,7 +102,7 @@ public class ProviderServicesProductsFragment extends Fragment {
                 199.99,
                 true,
                 true,
-                R.drawable.service
+                R.drawable.img_service
         ));
 
         return services;
