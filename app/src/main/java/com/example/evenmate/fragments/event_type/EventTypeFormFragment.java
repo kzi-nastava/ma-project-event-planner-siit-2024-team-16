@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.evenmate.databinding.FragmentEventTypeFormBinding;
@@ -39,6 +40,7 @@ public class EventTypeFormFragment extends DialogFragment {
         binding = FragmentEventTypeFormBinding.inflate(getLayoutInflater());
         viewModel = new ViewModelProvider(requireActivity()).get(EventTypeFormViewModel.class);
 
+        viewModel.resetState();
         setupCategoriesSpinner();
         setupSaveButton();
         setupFormFields();
@@ -53,12 +55,21 @@ public class EventTypeFormFragment extends DialogFragment {
     }
 
     private void setupCategoriesSpinner() {
-        //TODO: update for categories
-        List<Category> categories = List.of(new Category("food"), new Category("balloons"));
-        binding.multiSelectSpinner.setItems(categories);
-        if(eventType != null){
-            binding.multiSelectSpinner.setPreselectedItems(eventType.getRecommendedCategories());
-        }
+        viewModel.fetchCategories();
+        viewModel.getCategories().observe(this, categories -> {
+            Log.d("Categories", "Received categories: " + categories.size());
+            binding.multiSelectSpinner.setItems(categories);
+            if(eventType != null){
+                binding.multiSelectSpinner.setPreselectedItems(eventType.getRecommendedCategories());
+            }
+        });
+
+        viewModel.getErrorMessage().observe(this, message -> {
+            if (message != null && !message.isEmpty()) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void setupSaveButton() {
@@ -66,14 +77,14 @@ public class EventTypeFormFragment extends DialogFragment {
             binding.btnSave.setOnClickListener(v -> {
                 if (validateInput()) {
                     getEventTypeValues();
-                    viewModel.addEventType(eventType);
+                    viewModel.addEventType(eventType.toRequest());
                 }
             });
         } else{
             binding.btnSave.setOnClickListener(v -> {
                 if (validateInput()) {
                     getEventTypeValues();
-                    viewModel.updateEventType(eventType);
+                    viewModel.updateEventType(eventType.toRequest());
                 }
             });
         }
@@ -103,11 +114,13 @@ public class EventTypeFormFragment extends DialogFragment {
     }
 
     private void getEventTypeValues() {
+        String name = Objects.requireNonNull(binding.etName.getText()).toString().trim();
         String description = Objects.requireNonNull(binding.etDescription.getText()).toString().trim();
         List<Category> selectedCategories = binding.multiSelectSpinner.getSelectedItems();
 
         if(eventType == null) {
             eventType = new EventType();
+            eventType.setName(name);
         }
         eventType.setDescription(description);
         eventType.setRecommendedCategories(selectedCategories);
@@ -120,6 +133,8 @@ public class EventTypeFormFragment extends DialogFragment {
             binding.etDescription.setText(eventType.getDescription());
         }
     }
+
+    //todo fix refresh
     private void observeViewModel() {
         viewModel.getSuccess().observe(this, success -> {
             if (success) {

@@ -118,11 +118,12 @@ public class HomepageFragment extends Fragment {
 
     public static List<Event> getTop5Events() {
         List<Event> events = new ArrayList<>();
-        events.add(new Event(1L, "wedding", "Miguel and Athena's Wedding", "A beautiful wedding event", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "California", "", "", "@drawable/img_event", 4.3, true));
-        events.add(new Event(2L, "category2", "Event 2", "Description for Event 2", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc2", "", "", "@drawable/img_event", 4.3, true));
-        events.add(new Event(3L, "category3", "Event 3", "Description for Event 3", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc3", "", "", "@drawable/img_event", 4.3, false));
-        events.add(new Event(4L, "category4", "Event 4", "Description for Event 4", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc4", "", "", "@drawable/img_event", 4.3, false));
-        events.add(new Event(5L, "category5", "Event 5", "Description for Event 5", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc5", "", "", "@drawable/img_event", 4.3, false));
+        //after merging, errors appeared here, since this will be changed, I just put it as a comment
+//        events.add(new Event(1L, "wedding", "Miguel and Athena's Wedding", "A beautiful wedding event", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "California", "", "", "@drawable/img_event", 4.3, true));
+//        events.add(new Event(2L, "category2", "Event 2", "Description for Event 2", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc2", "", "", "@drawable/img_event", 4.3, true));
+//        events.add(new Event(3L, "category3", "Event 3", "Description for Event 3", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc3", "", "", "@drawable/img_event", 4.3, false));
+//        events.add(new Event(4L, "category4", "Event 4", "Description for Event 4", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc4", "", "", "@drawable/img_event", 4.3, false));
+//        events.add(new Event(5L, "category5", "Event 5", "Description for Event 5", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc5", "", "", "@drawable/img_event", 4.3, false));
         return events;
     }
 

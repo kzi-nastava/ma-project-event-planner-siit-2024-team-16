@@ -71,16 +71,16 @@ public class CardAdapter {
         TextView box1 = cardView.findViewById(R.id.box1);
         box1.setText(String.format("%s%s", fragment.getString(R.string.date), event.getDate()));
         TextView box2 = cardView.findViewById(R.id.box2);
-        box2.setText(String.format("%s%s, %s", fragment.getString(R.string.location),event.getCountry(),event.getCity()));
+        box2.setText(String.format("%s%s, %s", fragment.getString(R.string.location),event.getAddress().getCountry(),event.getAddress().getCity()));
         TextView box3 = cardView.findViewById(R.id.box3);
         box3.setText(String.format("%s%s", fragment.getString(R.string.category), event.getType()));
         TextView box4 = cardView.findViewById(R.id.box4);
-        box4.setText(String.format("%s%s", fragment.getString(R.string.max_guests), event.getMaxAttendants()));
+        box4.setText(String.format("%s%s", fragment.getString(R.string.max_guests), event.getMaxAttendees()));
         TextView box5 = cardView.findViewById(R.id.box5);
         box5.setText(String.format("%s%s", fragment.getString(R.string.rating), event.getRating()));
         // image
         ImageView imageView = cardView.findViewById(R.id.image);
-        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(event.getImage(), "drawable", fragment.requireContext().getPackageName());
+        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(event.getPhoto(), "drawable", fragment.requireContext().getPackageName());
         imageView.setImageResource(imageResId);
         // favorite
         Button favorite = cardView.findViewById(R.id.favorite);

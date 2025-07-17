@@ -8,20 +8,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
-import com.example.evenmate.activities.PageActivity;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.event.Event;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 public class CardCollection extends Fragment {
 
     private LinearLayout cardCollectionHolder;

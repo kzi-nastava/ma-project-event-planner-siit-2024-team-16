@@ -69,7 +69,6 @@ public class MultiSelectSpinner extends AppCompatSpinner {
         );
 
         builder.setPositiveButton(R.string.ok, (dialog, which) -> {
-            // Update selections and display
             selectedItems = tempSelection;
             updateText();
         });
@@ -108,18 +107,17 @@ public class MultiSelectSpinner extends AppCompatSpinner {
     }
 
     public void setPreselectedItems(List<Category> preselectedItems) {
-        if (items == null || items.isEmpty() || preselectedItems.isEmpty()) {
+        if (items == null || preselectedItems == null || items.isEmpty() || preselectedItems.isEmpty()) {
             return;
         }
-        //TODO: use this after categories update
-//        for (int i = 0; i < items.size(); i++) {
-//            selectedItems[i] = preselectedItems.contains(items.get(i));
-//        }
         for (int i = 0; i < items.size(); i++) {
-            String itemName = items.get(i).getName();
-            selectedItems[i] = preselectedItems.stream()
-                    .anyMatch(preselected -> preselected.getName().equals(itemName));
+            selectedItems[i] = preselectedItems.contains(items.get(i));
         }
+//        for (int i = 0; i < items.size(); i++) {
+//            String itemName = items.get(i).getName();
+//            selectedItems[i] = preselectedItems.stream()
+//                    .anyMatch(preselected -> preselected.getName().equals(itemName));
+//        }
         updateText();
     }
 

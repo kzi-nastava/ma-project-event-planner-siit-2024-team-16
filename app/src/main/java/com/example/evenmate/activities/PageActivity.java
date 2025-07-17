@@ -66,7 +66,7 @@ public class PageActivity extends AppCompatActivity {
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
-        Set<Integer> topLevelDestinations = new HashSet<>(Arrays.asList(R.id.nav_login, R.id.HomepageFragment, R.id.providerServicesProductsFragment));
+        Set<Integer> topLevelDestinations = new HashSet<>(Arrays.asList(R.id.nav_auth, R.id.HomepageFragment, R.id.providerServicesProductsFragment));
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).setOpenableLayout(drawer).build();
 

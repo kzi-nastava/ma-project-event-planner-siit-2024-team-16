@@ -83,6 +83,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     public static Event getEventById(Long id){
-        return new Event(id, "wedding", "Miguel and Athena's Wedding", "A beautiful wedding event", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "California", "", "", "@drawable/img_event", 4.3, true);
+       // after merging, errors appeared here, since this will be changed, I just put it as a comment
+//        return new Event(id, "wedding", "Miguel and Athena's Wedding", "A beautiful wedding event", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "California", "", "", "@drawable/img_event", 4.3, true);
+        return new Event();
     }
 }

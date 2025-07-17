@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginStart="15dp"
-            android:text="@string/recommended_ps_categories"
+            android:text="@string/blank"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/RecommendedCategories"
             app:layout_constraintWidth_percent="0.25" />

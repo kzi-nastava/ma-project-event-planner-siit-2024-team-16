@@ -1,13 +1,16 @@
 package com.example.evenmate.models.user;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import androidx.annotation.NonNull;
 import com.example.evenmate.models.Address;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class User {
+public class User implements Parcelable {
+    private Long id;
     private String email;
     private String password;
     private String firstName;
@@ -22,7 +25,8 @@ public class User {
         this.address = new Address();
     }
 
-    public User(String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo, String role) {
+    public User(Long id, String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo, String role) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -34,4 +38,56 @@ public class User {
         this.role = role;
     }
 
+    protected User(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        email = in.readString();
+        password = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
+        address = in.readParcelable(Address.class.getClassLoader());
+        phone = in.readString();
+        company = in.readParcelable(Company.class.getClassLoader());
+        photo = in.readString();
+        role = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
+        }
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeParcelable(address, flags);
+        dest.writeString(phone);
+        dest.writeParcelable(company, flags);
+        dest.writeString(photo);
+        dest.writeString(role);
+    }
 }

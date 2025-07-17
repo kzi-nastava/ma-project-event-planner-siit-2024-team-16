@@ -69,7 +69,7 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             Event event= this.events.get(position);
             // text and image holder
             String rating=event.getRating() != null? event.getRating().toString() : "0.0";
-            holder.setAll(event.getName(),event.getDate().toString(),event.getCountry(),event.getType(),String.format("%s",event.getMaxAttendants()),rating,event.getImage());
+            holder.setAll(event.getName(),event.getDate().toString(),event.getAddress().getCountry(),event.getType().getName(),String.format("%s",event.getMaxAttendees()),rating,event.getPhoto());
             // click
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(holder.itemView.getContext(), EventDetailsActivity.class);

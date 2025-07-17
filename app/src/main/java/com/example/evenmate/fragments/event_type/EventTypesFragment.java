@@ -87,7 +87,8 @@ public class EventTypesFragment extends ListFragment {
         viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             Log.d("EventTypes", "Received event types: " + eventTypes.size());
             assert getActivity() != null;
-            adapter.setEventTypes(new ArrayList<>(eventTypes));            setListAdapter(adapter);
+            adapter.setEventTypes(new ArrayList<>(eventTypes));
+            setListAdapter(adapter);
             adapter.notifyDataSetChanged();
             binding.list.setVisibility(eventTypes.isEmpty() ? View.GONE : View.VISIBLE);
             binding.textViewNoEventTypes.setVisibility(eventTypes.isEmpty() ? View.VISIBLE : View.GONE);
