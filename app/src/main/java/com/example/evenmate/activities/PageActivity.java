@@ -27,7 +27,10 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.evenmate.R;
 import com.example.evenmate.activities.notifications.NotificationsActivity;
+import com.example.evenmate.auth.AuthManager;
+import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.ActivityPageBinding;
+import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
@@ -39,6 +42,7 @@ public class PageActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private NavController navController;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public class PageActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+        navigationView = binding.navView;
         Toolbar toolbar = binding.activityPageBase.toolbar;
 
         setSupportActionBar(toolbar);
@@ -95,6 +99,55 @@ public class PageActivity extends AppCompatActivity {
         updateNotificationIcon(menu,this);
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem authMenuItem = menu.findItem(R.id.nav_auth);
+        if (AuthManager.getInstance(ClientUtils.getContext()).isLoggedIn()) {
+            authMenuItem.setTitle(R.string.logout);
+        } else {
+            authMenuItem.setTitle(R.string.login);
+        }
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.nav_auth) {
+            if (AuthManager.getInstance(this).isLoggedIn()) {
+                handleLogout();
+                return true;
+            }
+        }
+        if (item.getItemId() == R.id.action_notifications) {
+            Intent intent = new Intent(this, NotificationsActivity.class);
+            startActivity(intent);
+            Toast.makeText(this, "Notifications clicked!", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
+    }
+
+    private void handleLogout() {
+        AuthManager.getInstance(this).logout();
+        ToastUtils.showCustomToast(this, "Successfully logged out", false);
+        invalidateOptionsMenu();
+
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        navController.navigate(R.id.HomepageFragment);
+
+//        updateUIAfterLogout();
+    }
+
+    private void updateUIAfterLogout() {
+        invalidateOptionsMenu();
+
+        //TODO: REFRESH MENU
+        if (navigationView != null) {
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.nav_menu);
+        }
+    }
     public static void updateNotificationIcon(Menu menu, Context context) {
         MenuItem item = menu.findItem(R.id.action_notifications);
         if (item == null) return;
@@ -108,17 +161,6 @@ public class PageActivity extends AppCompatActivity {
         drawable.setBounds(0, 0, 48, 48);
         drawable.draw(canvas);
         return new BitmapDrawable(context.getResources(), bitmap);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_notifications) {
-            Intent intent = new Intent(this, NotificationsActivity.class);
-            startActivity(intent);
-            Toast.makeText(this, "Notifications clicked!", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
 
     @Override

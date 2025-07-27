@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.models.event.Event;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
 
     public EventAdapter(Activity context, List<Event> events){
-        super(context, R.layout.card_item, events);
+        super(context, R.layout.item_card_general, events);
         this.events = events;
     }
     @Override
@@ -68,7 +69,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
     public View getView(int position, @Nullable View itemView, @NonNull ViewGroup parent) {
         Event event = getItem(position);
         if (itemView == null) {
-            itemView = LayoutInflater.from(getContext()).inflate(R.layout.card_item,
+            itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_card_general,
                     parent, false);
             itemView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.light_green));
             itemView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.light_green));
@@ -82,7 +83,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
         TextView description = itemView.findViewById(R.id.box5);
         ImageView imageView = itemView.findViewById(R.id.image);
         ImageButton btnEdit = itemView.findViewById(R.id.btnEditEvent);
-        ImageButton btnFavorite = itemView.findViewById(R.id.favorite);
+        MaterialButton btnFavorite = itemView.findViewById(R.id.favorite);
         ImageButton btnDelete = itemView.findViewById(R.id.btnDeleteEvent);
 
         if(event != null) {
@@ -127,8 +128,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
     //TODO: update
     public void makeFavorite(ImageButton favorite, Event event) {
-        int filledFavoriteResId = R.drawable.baseline_favorite_24;
-        int notFilledFavoriteResId = R.drawable.baseline_favorite_border_24;
+        int filledFavoriteResId = R.drawable.ic_favorite_filled;
+        int notFilledFavoriteResId = R.drawable.ic_favorite;
 
         if (favorite.isSelected()) {
             favorite.setImageResource(notFilledFavoriteResId);
