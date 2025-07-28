@@ -1,4 +1,4 @@
-package com.example.evenmate.fragments;
+package com.example.evenmate.fragments.auth;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;

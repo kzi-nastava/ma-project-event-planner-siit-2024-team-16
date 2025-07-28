@@ -30,6 +30,8 @@ import com.example.evenmate.activities.notifications.NotificationsActivity;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.ActivityPageBinding;
+import com.example.evenmate.fragments.auth.LoginCallback;
+import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.navigation.NavigationView;
 
@@ -38,7 +40,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Arrays;
 
-public class PageActivity extends AppCompatActivity {
+public class PageActivity extends AppCompatActivity implements LoginCallback {
 
     private AppBarConfiguration mAppBarConfiguration;
     private NavController navController;
@@ -95,7 +97,10 @@ public class PageActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu_logged_in, menu);
+        if(AuthManager.loggedInUser != null)
+            getMenuInflater().inflate(R.menu.toolbar_menu_logged_in, menu);
+        else
+            getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         updateNotificationIcon(menu,this);
         return true;
     }
@@ -110,6 +115,7 @@ public class PageActivity extends AppCompatActivity {
         }
         return true;
     }
+
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_auth) {
@@ -131,21 +137,30 @@ public class PageActivity extends AppCompatActivity {
     private void handleLogout() {
         AuthManager.getInstance(this).logout();
         ToastUtils.showCustomToast(this, "Successfully logged out", false);
-        invalidateOptionsMenu();
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         navController.navigate(R.id.HomepageFragment);
 
-//        updateUIAfterLogout();
+        updateMenu();
     }
 
-    private void updateUIAfterLogout() {
-        invalidateOptionsMenu();
 
-        //TODO: REFRESH MENU
+    public void updateMenu() {
+        invalidateOptionsMenu();
         if (navigationView != null) {
             navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.nav_menu);
+            User loggedInUser = AuthManager.loggedInUser;
+            if(loggedInUser == null)
+                navigationView.inflateMenu(R.menu.nav_menu);
+            else if(loggedInUser.getRole().equals("Admin"))
+                navigationView.inflateMenu(R.menu.nav_menu_admin);
+            else if(loggedInUser.getRole().equals("EventOrganizer"))
+                navigationView.inflateMenu(R.menu.nav_menu_eo);
+            else if(loggedInUser.getRole().equals("AuthenticatedUser"))
+                navigationView.inflateMenu(R.menu.nav_menu_au);
+            else
+                navigationView.inflateMenu(R.menu.nav_menu_psp);
+            NavigationUI.setupWithNavController(navigationView, navController);
         }
     }
     public static void updateNotificationIcon(Menu menu, Context context) {
@@ -166,5 +181,10 @@ public class PageActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void OnLoginSuccess() {
+        updateMenu();
     }
 }
