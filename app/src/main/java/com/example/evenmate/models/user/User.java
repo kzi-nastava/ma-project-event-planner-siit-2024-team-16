@@ -21,6 +21,19 @@ public class User implements Parcelable {
     private String photo;
     private String role;
 
+    public User(User user) {
+        this.id = user.id;
+        this.email = user.email;
+        this.password = user.password;
+        this.firstName = user.firstName;
+        this.lastName = user.lastName;
+        this.address = user.address;
+        this.phone = user.phone;
+        this.company = user.company;
+        this.photo = user.photo;
+        this.role = user.role;
+    }
+
     public User() {
         this.address = new Address();
     }

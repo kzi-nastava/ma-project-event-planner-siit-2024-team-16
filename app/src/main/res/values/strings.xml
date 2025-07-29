@@ -108,4 +108,5 @@
     <string name="delete_dialog_title">Delete Confirmation</string>
     <string name="delete_dialog_text">Are you sure you want to delete this? This action cannot be undone.</string>
     <string name="your_profile">Your profile</string>
+    <string name="company_information">Company Information</string>
 </resources>

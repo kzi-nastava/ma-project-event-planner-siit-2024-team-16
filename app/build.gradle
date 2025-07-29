@@ -8,7 +8,7 @@ def getIpAddress() {
 }
 android {
     namespace 'com.example.evenmate'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.example.evenmate"
@@ -63,4 +63,6 @@ dependencies {
 
     implementation libs.lombok
     annotationProcessor libs.lombok
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

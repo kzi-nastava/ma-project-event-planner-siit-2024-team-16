@@ -86,8 +86,6 @@ public class RegisterFragment extends Fragment implements ImageUtils.ImageHandle
 
         return binding.getRoot();
     }
-
-    // ImageUtils.ImageUtilsCallback implementation
     @Override
     public void onImageSelected(String base64Image, Bitmap bitmap) {
         if (isUserImageSelection) {

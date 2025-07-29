@@ -96,32 +96,31 @@ public class EventAdapter extends ArrayAdapter<Event> {
             if (event.getPhoto() != null) {
                 Glide.with(getContext())
                         .load(Base64.decode(event.getPhoto(), Base64.DEFAULT))
-                        .into(imageView);
-                btnEdit.setOnClickListener(v -> {
-                    if (onEditClickListener != null) {
-                        onEditClickListener.onEditClick(event);
-                    }
-                });
-                btnDelete.setOnClickListener(v -> {
-                    if (onDeleteClickListener != null) {
-                        onDeleteClickListener.onDeleteClick(event);
-                    }
-                });
-                btnFavorite.setOnClickListener(v -> {
-                    if (onFavoriteClickListener != null) {
-                        onFavoriteClickListener.onFavoriteClick(event);
-                    }
-                });
-                btnEdit.setVisibility(View.VISIBLE);
-                btnDelete.setVisibility(View.VISIBLE);
+                        .into(imageView);}
+            btnEdit.setOnClickListener(v -> {
+                if (onEditClickListener != null) {
+                    onEditClickListener.onEditClick(event);
+                }
+            });
+            btnDelete.setOnClickListener(v -> {
+                if (onDeleteClickListener != null) {
+                    onDeleteClickListener.onDeleteClick(event);
+                }
+            });
+            btnFavorite.setOnClickListener(v -> {
+                if (onFavoriteClickListener != null) {
+                    onFavoriteClickListener.onFavoriteClick(event);
+                }
+            });
+            btnEdit.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
 
-                //TODO: implement
-                //        if (Objects.equals(event.get("isFavorite"), "true")) {
-                //            int filledFavoriteResId = R.drawable.baseline_favorite_24;
-                //            favorite.setImageResource(filledFavoriteResId);
-                //            favorite.setSelected(true);
-                //        }
-            }
+            //TODO: implement
+            //        if (Objects.equals(event.get("isFavorite"), "true")) {
+            //            int filledFavoriteResId = R.drawable.baseline_favorite_24;
+            //            favorite.setImageResource(filledFavoriteResId);
+            //            favorite.setSelected(true);
+            //        }
         }
         return itemView;
     }

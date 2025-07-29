@@ -12,7 +12,6 @@ import com.example.evenmate.models.user.TokenResponse;
 import com.example.evenmate.models.user.User;
 
 public interface AuthService {
-
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json",
