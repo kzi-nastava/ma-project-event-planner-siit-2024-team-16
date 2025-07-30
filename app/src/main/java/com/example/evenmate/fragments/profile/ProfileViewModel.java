@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.user.User;
 
@@ -30,6 +31,7 @@ public class ProfileViewModel extends ViewModel {
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     success.postValue("User successfully updated.");
+                    AuthManager.loggedInUser = response.body();
                 } else {
                     errorMessage.postValue("Failed to update user. Code: " + response.code());
                 }

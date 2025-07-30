@@ -54,13 +54,21 @@
         tools:layout="@layout/fragment_homepage" />
     <fragment
         android:id="@+id/profileEO"
-        android:name="com.example.evenmate.fragments.profile.ProfileEO"
+        android:name="com.example.evenmate.fragments.profile.ProfileEOFragment"
         android:label="fragment_profile_e_o"
         tools:layout="@layout/fragment_profile_e_o" />
     <fragment
         android:id="@+id/profilePSP"
-        android:name="com.example.evenmate.fragments.profile.ProfilePSP"
+        android:name="com.example.evenmate.fragments.profile.ProfilePSPFragment"
         android:label="fragment_profile_p_s_p"
-        tools:layout="@layout/fragment_profile_p_s_p" />
+        tools:layout="@layout/fragment_profile_p_s_p" >
+        <action
+            android:id="@+id/action_profilePSP_to_editPSPFragment"
+            app:destination="@id/editPSPFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPSPFragment"
+        android:name="com.example.evenmate.fragments.profile.EditPSPFragment"
+        android:label="EditPSPFragment" />
 
 </navigation>

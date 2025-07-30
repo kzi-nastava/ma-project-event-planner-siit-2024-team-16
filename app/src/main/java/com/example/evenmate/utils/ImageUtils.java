@@ -25,6 +25,7 @@ import java.io.IOException;
 
 public class ImageUtils {
     private static final int MAX_IMAGE_SIZE = 800;
+    public static final int MAX_COMPANY_IMAGES = 5;
 
     private final Context context;
     private final ActivityResultLauncher<String> permissionLauncher;

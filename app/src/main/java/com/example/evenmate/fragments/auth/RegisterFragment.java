@@ -1,5 +1,7 @@
 package com.example.evenmate.fragments.auth;
 
+import static com.example.evenmate.utils.ImageUtils.MAX_COMPANY_IMAGES;
+
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,7 +47,6 @@ import java.util.Objects;
 public class RegisterFragment extends Fragment implements ImageUtils.ImageHandlerCallback {
 
     private FragmentRegisterBinding binding;
-    private static final int MAX_COMPANY_IMAGES = 5;
     private String userImageBase64;
     private final List<String> companyImagesBase64 = new ArrayList<>();
     private LinearLayout companyImagesContainer;
@@ -190,6 +191,7 @@ public class RegisterFragment extends Fragment implements ImageUtils.ImageHandle
                 if (response.isSuccessful()) {
                     handleRegistrationSuccess();
                 } else {
+                    //todo check error message
                     String errorBody;
                     try (ResponseBody responseBody = response.errorBody()) {
                         errorBody = responseBody != null ? responseBody.string() : null;

@@ -109,4 +109,9 @@
     <string name="delete_dialog_text">Are you sure you want to delete this? This action cannot be undone.</string>
     <string name="your_profile">Your profile</string>
     <string name="company_information">Company Information</string>
+    <string name="upload_images">Upload images</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="change_password">Change password</string>
 </resources>

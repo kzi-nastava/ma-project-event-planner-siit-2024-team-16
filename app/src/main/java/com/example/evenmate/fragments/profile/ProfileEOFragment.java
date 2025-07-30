@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 
 import com.example.evenmate.R;
 
-public class ProfileEO extends Fragment {
+public class ProfileEOFragment extends Fragment {
 
-   public ProfileEO() {
+   public ProfileEOFragment() {
         // Required empty public constructor
     }
-    public static ProfileEO newInstance(String param1, String param2) {
-        ProfileEO fragment = new ProfileEO();
+    public static ProfileEOFragment newInstance(String param1, String param2) {
+        ProfileEOFragment fragment = new ProfileEOFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
