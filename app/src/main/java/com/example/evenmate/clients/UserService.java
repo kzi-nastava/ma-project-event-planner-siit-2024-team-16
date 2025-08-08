@@ -1,5 +1,6 @@
 package com.example.evenmate.clients;
 
+import com.example.evenmate.models.user.UpdateUserRequest;
 import com.example.evenmate.models.user.User;
 
 import retrofit2.Call;
@@ -20,6 +21,5 @@ public interface UserService {
             "Content-Type:application/json"
     })
     @PUT("users")
-    Call<User> update(@Body User request);
-
+    Call<User> update(@Body UpdateUserRequest request);
 }

@@ -6,25 +6,23 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.models.user.UpdateUserRequest;
 import com.example.evenmate.models.user.User;
 
+import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@Getter
 public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<User> user = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<String> success = new MutableLiveData<>();
 
-
-    public User getUser(){return user.getValue();}
-    public String getErrorMessage(){return errorMessage.getValue();}
-    public String getSuccess(){return success.getValue();}
-
     public ProfileViewModel(){}
 
-    public void update(User user) {
+    public void update(UpdateUserRequest user) {
         Call<User> call = ClientUtils.userService.update(user);
         call.enqueue(new Callback<>() {
             @Override

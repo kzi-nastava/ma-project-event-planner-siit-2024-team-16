@@ -17,15 +17,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.evenmate.R;
 import com.example.evenmate.databinding.FragmentEditPspBinding;
+import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.Company;
+import com.example.evenmate.models.user.UpdateCompanyRequest;
+import com.example.evenmate.models.user.UpdateUserRequest;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ImageUtils;
+import com.example.evenmate.utils.ToastUtils;
 import com.example.evenmate.validation.ValidationField;
 import com.example.evenmate.validation.ValidationRule;
-import com.example.evenmate.validation.rules.EmailRule;
 import com.example.evenmate.validation.rules.MatchPasswordRule;
 import com.example.evenmate.validation.rules.OptionalMinLengthRule;
 import com.example.evenmate.validation.rules.RequiredOldPasswordRule;
@@ -100,11 +105,11 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
 
         updateProfileSection();
         setupSaveButton();
+        observeViewModel();
     }
     private void updateProfileSection() {
         binding.txtFirstName.setText(user.getFirstName());
         binding.txtLastName.setText(user.getLastName());
-        binding.txtEmail.setText(user.getEmail());
         binding.txtPhone.setText(user.getPhone());
         if (user.getAddress() != null) {
             binding.txtCountry.setText(user.getAddress().getCountry());
@@ -119,7 +124,6 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
     }
     private void updateCompanySection(Company company) {
         binding.txtCompanyName.setText(company.getName());
-        binding.txtCompanyEmail.setText(company.getEmail());
         binding.txtCompanyPhone.setText(company.getPhone());
 
         if (company.getAddress() != null) {
@@ -222,14 +226,62 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
     private void setupSaveButton() {
         binding.btnSavePsp.setOnClickListener(v -> {
             if (validateInputs()) {
-                viewModel.update(user);
+                UpdateUserRequest updatedUser = new UpdateUserRequest();
+                updatedUser.setId(user.getId());
+                updatedUser.setOldPassword(Objects.requireNonNull(binding.txtPasswordOld.getText()).toString().trim());
+                updatedUser.setFirstName(Objects.requireNonNull(binding.txtFirstName.getText()).toString().trim());
+                updatedUser.setLastName(Objects.requireNonNull(binding.txtLastName.getText()).toString().trim());
+                updatedUser.setPhone(Objects.requireNonNull(binding.txtPhone.getText()).toString().trim());
+                updatedUser.setPhoto(userImageBase64);
+
+                updatedUser.setAddress(new Address());
+                updatedUser.getAddress().setCountry(Objects.requireNonNull(binding.txtCountry.getText()).toString().trim());
+                updatedUser.getAddress().setCity(Objects.requireNonNull(binding.txtCity.getText()).toString().trim());
+                updatedUser.getAddress().setStreetName(Objects.requireNonNull(binding.txtStreet.getText()).toString().trim());
+                updatedUser.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtStreetNumber.getText()).toString().trim());
+
+                String newPassword = Objects.requireNonNull(binding.txtPasswordNew.getText()).toString().trim();
+                if (!newPassword.isEmpty()) {
+                    updatedUser.setNewPassword(newPassword);
+                }
+                UpdateCompanyRequest company = new UpdateCompanyRequest();
+                company.setId(user.getCompany().getId());
+                company.setName(Objects.requireNonNull(binding.txtCompanyName.getText()).toString());
+                company.getAddress().setCountry(Objects.requireNonNull(binding.txtCountry.getText()).toString());
+                company.getAddress().setCity(Objects.requireNonNull(binding.txtCompanyCity.getText()).toString());
+                company.getAddress().setStreetName(Objects.requireNonNull(binding.txtCompanyStreet.getText()).toString());
+                company.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtCompanyStreetNumber.getText()).toString());
+                company.setPhone(Objects.requireNonNull(binding.txtCompanyPhone.getText()).toString());
+                company.setDescription(Objects.requireNonNull(binding.txtDescription.getText()).toString());
+                company.setPhotos(companyImagesBase64);
+                updatedUser.setCompany(company);
+                viewModel.update(updatedUser);
+            }
+        });
+    }
+
+    private void observeViewModel() {
+        viewModel.getSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (success != null) {
+                ToastUtils.showCustomToast(requireContext(),
+                        success,
+                        false);
+
+                NavController navController = NavHostFragment.findNavController(this);
+                navController.popBackStack();
+            }
+        });
+
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                ToastUtils.showCustomToast(requireContext(),
+                        error,
+                        false);
             }
         });
     }
     private List<ValidationField> getUserValidationFields() {
         return Arrays.asList(
-                new ValidationField(binding.txtFieldEmail, binding.txtEmail, getString(R.string.email),
-                        new RequiredRule(), new EmailRule()),
                 new ValidationField(binding.txtFieldNewPassword, binding.txtPasswordNew, getString(R.string.new_password),
                         new OptionalMinLengthRule(8)),
                 new ValidationField(binding.txtFieldOldPassword, binding.txtPasswordOld, getString(R.string.old_password),
@@ -255,8 +307,6 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
 
     private List<ValidationField> getCompanyValidationFields() {
         return Arrays.asList(
-                new ValidationField(binding.txtFieldCompanyEmail, binding.txtCompanyEmail, getString(R.string.company_email),
-                        new RequiredRule(), new EmailRule()),
                 new ValidationField(binding.txtFieldCompanyName, binding.txtCompanyName, getString(R.string.company_name),
                         new RequiredRule()),
                 new ValidationField(binding.txtFieldCompanyCity, binding.txtCompanyCity, getString(R.string.company_city),
@@ -311,5 +361,13 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
     public void onImageError(String error) {
         Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        user = null;
+        userImageBase64 = null;
+        companyImagesBase64 = null;
     }
 }
