@@ -20,7 +20,17 @@ public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<String> success = new MutableLiveData<>();
 
-    public ProfileViewModel(){}
+    public void resetMessages(){
+        this.success.setValue(null);
+        this.errorMessage.setValue(null);
+    }
+    public void setUser(User user){
+        this.user.setValue(user);
+    }
+
+    public ProfileViewModel(){
+        setUser(AuthManager.loggedInUser);
+    }
 
     public void update(UpdateUserRequest user) {
         Call<User> call = ClientUtils.userService.update(user);
@@ -30,6 +40,7 @@ public class ProfileViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     success.postValue("User successfully updated.");
                     AuthManager.loggedInUser = response.body();
+                    setUser(response.body());
                 } else {
                     errorMessage.postValue("Failed to update user. Code: " + response.code());
                 }

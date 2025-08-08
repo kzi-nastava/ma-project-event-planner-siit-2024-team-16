@@ -63,14 +63,6 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
         super.onCreateView(inflater, container, savedInstanceState);
         companyImageUtils = new ImageUtils(this, this);
         userImageUtils = new ImageUtils(this, this);
-
-        if(getArguments() != null){
-            user = getArguments().getParcelable("user");
-            if (user != null) {
-                userImageBase64 = user.getPhoto();
-                companyImagesBase64 = user.getCompany().getPhotos();
-            }
-        }
         binding = FragmentEditPspBinding.inflate(getLayoutInflater());
 
         return binding.getRoot();
@@ -81,6 +73,12 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        user = viewModel.getUser().getValue();
+        if (user != null) {
+            userImageBase64 = user.getPhoto();
+            if(user.getCompany() != null)
+                companyImagesBase64 = user.getCompany().getPhotos();
+        }
         companyImagesContainer = binding.companyImagesContainer;
         userImageContainer = binding.userImageContainer;
 
@@ -266,7 +264,7 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
                 ToastUtils.showCustomToast(requireContext(),
                         success,
                         false);
-
+                viewModel.resetMessages();
                 NavController navController = NavHostFragment.findNavController(this);
                 navController.popBackStack();
             }
@@ -277,6 +275,7 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
                 ToastUtils.showCustomToast(requireContext(),
                         error,
                         false);
+                viewModel.resetMessages();
             }
         });
     }
@@ -361,13 +360,5 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
     public void onImageError(String error) {
         Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
 
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        user = null;
-        userImageBase64 = null;
-        companyImagesBase64 = null;
     }
 }

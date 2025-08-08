@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.ProfileAdapter;
-import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.databinding.FragmentProfilePSPBinding;
 import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.Company;
@@ -26,8 +25,7 @@ import com.example.evenmate.models.user.User;
 
 public class ProfilePSPFragment extends Fragment{
 
-    private final User user = AuthManager.loggedInUser;
-    private ProfileViewModel viewModel;
+    private User user;
     private FragmentProfilePSPBinding binding;
     private ProfileAdapter imagesAdapter;
 
@@ -42,20 +40,18 @@ public class ProfilePSPFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-
+        ProfileViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        user = viewModel.getUser().getValue();
         setupCompanyImagesRecycler();
         setupClickListeners();
-        updateUI(user);
+        updateUI();
     }
 
     private void setupClickListeners() {
         ImageButton editProfileButton = binding.btnEditPSP;
         editProfileButton.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("user", user);
             NavController navController = Navigation.findNavController(v);
-            navController.navigate(R.id.action_profilePSP_to_editPSPFragment, bundle);
+            navController.navigate(R.id.action_profilePSP_to_editPSPFragment);
         });
     }
 
@@ -69,20 +65,20 @@ public class ProfilePSPFragment extends Fragment{
         binding.companyImagesRecycler.setAdapter(imagesAdapter);
     }
 
-    private void updateUI(User user) {
+    private void updateUI() {
         if (user == null) return;
 
-        updateProfileSection(user);
+        updateProfileSection();
 
         if (user.getCompany() != null) {
-            updateCompanySection(user.getCompany());
+            updateCompanySection();
             binding.companyCard.setVisibility(View.VISIBLE);
         } else {
             binding.companyCard.setVisibility(View.GONE);
         }
     }
 
-  private void updateProfileSection(User user) {
+  private void updateProfileSection() {
     String fullName = user.getFirstName() + " " + user.getLastName();
     binding.name.setText(!fullName.trim().isEmpty() ? fullName : "N/A");
     binding.email.setText(user.getEmail() != null ? user.getEmail() : "N/A");
@@ -99,7 +95,8 @@ public class ProfilePSPFragment extends Fragment{
         }
     }
 
-    private void updateCompanySection(Company company) {
+    private void updateCompanySection() {
+        Company company = user.getCompany();
         binding.companyName.setText(company.getName() != null ? company.getName() : "N/A");
         binding.companyEmail.setText(company.getEmail() != null ? company.getEmail() : "N/A");
         binding.companyPhone.setText(company.getPhone() != null ? company.getPhone() : "N/A");
