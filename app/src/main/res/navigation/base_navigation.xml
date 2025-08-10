@@ -52,23 +52,19 @@
         app:popUpTo="@+id/home"
         app:popUpToInclusive="true"
         tools:layout="@layout/fragment_homepage" />
-    <fragment
-        android:id="@+id/profileEO"
-        android:name="com.example.evenmate.fragments.profile.ProfileEOFragment"
-        android:label="fragment_profile_e_o"
-        tools:layout="@layout/fragment_profile_e_o" />
+
     <fragment
         android:id="@+id/profilePSP"
-        android:name="com.example.evenmate.fragments.profile.ProfilePSPFragment"
+        android:name="com.example.evenmate.fragments.profile.ProfileFragment"
         android:label="fragment_profile_p_s_p"
-        tools:layout="@layout/fragment_profile_p_s_p" >
+        tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profilePSP_to_editPSPFragment"
             app:destination="@id/editPSPFragment" />
     </fragment>
     <fragment
         android:id="@+id/editPSPFragment"
-        android:name="com.example.evenmate.fragments.profile.EditPSPFragment"
+        android:name="com.example.evenmate.fragments.profile.EditProfileFragment"
         android:label="EditPSPFragment" />
 
 </navigation>

@@ -28,9 +28,7 @@ public class ProfileViewModel extends ViewModel {
         this.user.setValue(user);
     }
 
-    public ProfileViewModel(){
-        setUser(AuthManager.loggedInUser);
-    }
+    public ProfileViewModel(){ }
 
     public void update(UpdateUserRequest user) {
         Call<User> call = ClientUtils.userService.update(user);

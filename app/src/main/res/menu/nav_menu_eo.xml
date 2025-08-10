@@ -10,7 +10,7 @@
         <item android:id="@+id/eventsFragment"
             android:title="@string/your_events"
             android:orderInCategory="200" />
-        <item android:id="@+id/profileEO"
+        <item android:id="@+id/profilePSP"
             android:title="@string/your_profile"
             android:orderInCategory="300"/>
     </group>

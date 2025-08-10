@@ -18,20 +18,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.ProfileAdapter;
-import com.example.evenmate.databinding.FragmentProfilePSPBinding;
+import com.example.evenmate.auth.AuthManager;
+import com.example.evenmate.databinding.FragmentProfileBinding;
 import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.Company;
 import com.example.evenmate.models.user.User;
 
-public class ProfilePSPFragment extends Fragment{
+public class ProfileFragment extends Fragment{
 
     private User user;
-    private FragmentProfilePSPBinding binding;
+    private FragmentProfileBinding binding;
     private ProfileAdapter imagesAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentProfilePSPBinding.inflate(getLayoutInflater());
+        binding = FragmentProfileBinding.inflate(getLayoutInflater());
 
         return binding.getRoot();
     }
@@ -41,6 +42,7 @@ public class ProfilePSPFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         ProfileViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        viewModel.setUser(AuthManager.loggedInUser);
         user = viewModel.getUser().getValue();
         setupCompanyImagesRecycler();
         setupClickListeners();

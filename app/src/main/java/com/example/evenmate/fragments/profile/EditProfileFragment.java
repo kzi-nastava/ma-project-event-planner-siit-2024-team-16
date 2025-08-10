@@ -21,7 +21,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.evenmate.R;
-import com.example.evenmate.databinding.FragmentEditPspBinding;
+import com.example.evenmate.databinding.FragmentEditProfileBinding;
 import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.Company;
 import com.example.evenmate.models.user.UpdateCompanyRequest;
@@ -41,8 +41,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandlerCallback {
-    private FragmentEditPspBinding binding;
+public class EditProfileFragment extends Fragment implements ImageUtils.ImageHandlerCallback {
+    private FragmentEditProfileBinding binding;
     private ProfileViewModel viewModel;
     private String userImageBase64;
     private List<String> companyImagesBase64 = new ArrayList<>();
@@ -54,7 +54,7 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
 
     private User user;
 
-    public EditPSPFragment() {
+    public EditProfileFragment() {
         this.user = null;
     }
 
@@ -63,7 +63,7 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
         super.onCreateView(inflater, container, savedInstanceState);
         companyImageUtils = new ImageUtils(this, this);
         userImageUtils = new ImageUtils(this, this);
-        binding = FragmentEditPspBinding.inflate(getLayoutInflater());
+        binding = FragmentEditProfileBinding.inflate(getLayoutInflater());
 
         return binding.getRoot();
     }
@@ -115,8 +115,11 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
             binding.txtStreet.setText(user.getAddress().getStreetName());
             binding.txtStreetNumber.setText(user.getAddress().getStreetNumber());
         }
-        if(user.getCompany() != null)
+        binding.companyInfoLayout.setVisibility(View.GONE);
+        if(user.getCompany() != null) {
             updateCompanySection(user.getCompany());
+            binding.companyInfoLayout.setVisibility(View.VISIBLE);
+        }
         updateUserImageUI();
 
     }
@@ -237,22 +240,24 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
                 updatedUser.getAddress().setCity(Objects.requireNonNull(binding.txtCity.getText()).toString().trim());
                 updatedUser.getAddress().setStreetName(Objects.requireNonNull(binding.txtStreet.getText()).toString().trim());
                 updatedUser.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtStreetNumber.getText()).toString().trim());
-
+                updatedUser.setCompany(null);
                 String newPassword = Objects.requireNonNull(binding.txtPasswordNew.getText()).toString().trim();
                 if (!newPassword.isEmpty()) {
                     updatedUser.setNewPassword(newPassword);
                 }
-                UpdateCompanyRequest company = new UpdateCompanyRequest();
-                company.setId(user.getCompany().getId());
-                company.setName(Objects.requireNonNull(binding.txtCompanyName.getText()).toString());
-                company.getAddress().setCountry(Objects.requireNonNull(binding.txtCountry.getText()).toString());
-                company.getAddress().setCity(Objects.requireNonNull(binding.txtCompanyCity.getText()).toString());
-                company.getAddress().setStreetName(Objects.requireNonNull(binding.txtCompanyStreet.getText()).toString());
-                company.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtCompanyStreetNumber.getText()).toString());
-                company.setPhone(Objects.requireNonNull(binding.txtCompanyPhone.getText()).toString());
-                company.setDescription(Objects.requireNonNull(binding.txtDescription.getText()).toString());
-                company.setPhotos(companyImagesBase64);
-                updatedUser.setCompany(company);
+                if (user.getCompany() != null) {
+                    UpdateCompanyRequest company = new UpdateCompanyRequest();
+                    company.setId(user.getCompany().getId());
+                    company.setName(Objects.requireNonNull(binding.txtCompanyName.getText()).toString());
+                    company.getAddress().setCountry(Objects.requireNonNull(binding.txtCountry.getText()).toString());
+                    company.getAddress().setCity(Objects.requireNonNull(binding.txtCompanyCity.getText()).toString());
+                    company.getAddress().setStreetName(Objects.requireNonNull(binding.txtCompanyStreet.getText()).toString());
+                    company.getAddress().setStreetNumber(Objects.requireNonNull(binding.txtCompanyStreetNumber.getText()).toString());
+                    company.setPhone(Objects.requireNonNull(binding.txtCompanyPhone.getText()).toString());
+                    company.setDescription(Objects.requireNonNull(binding.txtDescription.getText()).toString());
+                    company.setPhotos(companyImagesBase64);
+                    updatedUser.setCompany(company);
+                }
                 viewModel.update(updatedUser);
             }
         });
@@ -342,7 +347,9 @@ public class EditPSPFragment extends Fragment implements ImageUtils.ImageHandler
     }
 
     private boolean validateInputs() {
-        return validateFields(getUserValidationFields()) && validateFields(getCompanyValidationFields());
+        if(user.getCompany() != null)
+            return validateFields(getUserValidationFields()) && validateFields(getCompanyValidationFields());
+        return validateFields(getUserValidationFields());
     }
 
     @Override
