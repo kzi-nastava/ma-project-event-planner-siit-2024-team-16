@@ -229,7 +229,6 @@ public class EditProfileFragment extends Fragment implements ImageUtils.ImageHan
             if (validateInputs()) {
                 UpdateUserRequest updatedUser = new UpdateUserRequest();
                 updatedUser.setId(user.getId());
-                updatedUser.setOldPassword(Objects.requireNonNull(binding.txtPasswordOld.getText()).toString().trim());
                 updatedUser.setFirstName(Objects.requireNonNull(binding.txtFirstName.getText()).toString().trim());
                 updatedUser.setLastName(Objects.requireNonNull(binding.txtLastName.getText()).toString().trim());
                 updatedUser.setPhone(Objects.requireNonNull(binding.txtPhone.getText()).toString().trim());
@@ -243,6 +242,7 @@ public class EditProfileFragment extends Fragment implements ImageUtils.ImageHan
                 updatedUser.setCompany(null);
                 String newPassword = Objects.requireNonNull(binding.txtPasswordNew.getText()).toString().trim();
                 if (!newPassword.isEmpty()) {
+                    updatedUser.setOldPassword(Objects.requireNonNull(binding.txtPasswordOld.getText()).toString().trim());
                     updatedUser.setNewPassword(newPassword);
                 }
                 if (user.getCompany() != null) {
