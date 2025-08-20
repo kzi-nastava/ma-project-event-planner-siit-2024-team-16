@@ -91,7 +91,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
             description.setText(String.format("%s: %s", getContext().getString(R.string.description), event.getDescription()));
             date.setText(String.format("%s%s", getContext().getString(R.string.date), event.getDate()));
             address.setText(String.format("%s: %s", getContext().getString(R.string.address), String.format("%s %s, %s, %s", event.getAddress().getStreetName(), event.getAddress().getStreetNumber(), event.getAddress().getCity(), event.getAddress().getCountry())));
-            type.setText(String.format("%s %s", getContext().getString(R.string.type), event.getType().getName()));
+            type.setText(String.format("%s %s", getContext().getString(R.string.type), event.getType() != null ?  event.getType().getName() : "None"));
             maxAttendees.setText(String.format("%s%s", getContext().getString(R.string.max_guests), event.getMaxAttendees()));
             if (event.getPhoto() != null) {
                 Glide.with(getContext())
