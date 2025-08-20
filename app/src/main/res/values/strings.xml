@@ -22,6 +22,7 @@
     <string name="upload_image">Upload image</string>
     <string name="services_and_products">SERVICES AND PRODUCTS</string>
     <string name="events">EVENTS</string>
+    <string name="events_menu">Events</string>
     <string name="back">BACK</string>
     <string name="forward">FORWARD</string>
     <string name="search">search…</string>
@@ -83,8 +84,12 @@
     <string name="description">Description</string>
     <string name="add_an_event">ADD AN EVENT</string>
     <string name="no_events">No events</string>
+    <string name="calendar">Calendar</string>
+    <string name="favorite_ps">Favorite products and services</string>
     <string name="your_events_up">YOUR EVENTS</string>
     <string name="your_events">Your events</string>
+    <string name="your_ps">Your products and services</string>
+    <string name="favorite_events">Favorite events</string>
     <string name="address">Address</string>
     <string name="type">Type:</string>
     <string name="max_attendees">Max attendees</string>

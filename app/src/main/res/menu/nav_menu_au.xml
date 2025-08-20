@@ -8,14 +8,20 @@
             android:id="@+id/HomepageFragment"
             android:orderInCategory="100"
             android:title="@string/home" />
-        <item
-            android:id="@+id/eventsFragment"
-            android:orderInCategory="200"
-            android:title="@string/your_events" />
-        <item
-            android:id="@+id/profileEO"
+        <item android:id="@+id/EventsFragment"
+            android:title="@string/events_menu"
+            android:orderInCategory="200" />
+        <item android:id="@+id/favoriteEventsFragment"
+            android:orderInCategory="300"
+            android:title="@string/favorite_events" />
+        <item android:id="@+id/profileEO"
             android:orderInCategory="400"
             android:title="@string/your_profile" />
-
+        <item android:id="@+id/CalendarFragment"
+            android:title="@string/calendar"
+            android:orderInCategory="500"/>
+        <item android:id="@+id/FavoriteProductServiceFragment"
+            android:title="@string/favorite_ps"
+            android:orderInCategory="600"/>
     </group>
 </menu>
