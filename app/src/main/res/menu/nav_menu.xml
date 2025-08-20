@@ -7,7 +7,7 @@
         <item android:id="@+id/HomepageFragment"
             android:title="@string/home"
             android:orderInCategory="100" />
-        <item android:id="@+id/EventsFragment"
+        <item android:id="@+id/eventsFragment"
             android:title="@string/events_menu"
             android:orderInCategory="200" />
     </group>
