@@ -14,7 +14,7 @@
         <item android:id="@+id/favoriteEventsFragment"
             android:orderInCategory="300"
             android:title="@string/favorite_events" />
-        <item android:id="@+id/profileEO"
+        <item android:id="@+id/profile"
             android:orderInCategory="400"
             android:title="@string/your_profile" />
         <item android:id="@+id/CalendarFragment"

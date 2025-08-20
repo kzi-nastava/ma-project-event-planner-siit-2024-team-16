@@ -18,7 +18,6 @@ import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ImageViewHolder> {
     private List<String> imageData;
-
     public ProfileAdapter() {
         this.imageData = new ArrayList<>();
     }

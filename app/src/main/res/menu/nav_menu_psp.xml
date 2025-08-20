@@ -16,7 +16,7 @@
         <item android:id="@+id/providerServicesProductsFragment"
             android:title="@string/your_ps"
             android:orderInCategory="400" />
-        <item android:id="@+id/profilePSP"
+        <item android:id="@+id/profile"
             android:title="@string/your_profile"
             android:orderInCategory="500"/>
         <item android:id="@+id/CalendarFragment"

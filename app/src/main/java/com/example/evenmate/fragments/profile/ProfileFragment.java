@@ -23,12 +23,15 @@ import com.example.evenmate.databinding.FragmentProfileBinding;
 import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.Company;
 import com.example.evenmate.models.user.User;
+import com.example.evenmate.utils.ToastUtils;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class ProfileFragment extends Fragment{
 
     private User user;
     private FragmentProfileBinding binding;
     private ProfileAdapter imagesAdapter;
+    private ProfileViewModel viewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,20 +44,47 @@ public class ProfileFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ProfileViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         viewModel.setUser(AuthManager.loggedInUser);
         user = viewModel.getUser().getValue();
         setupCompanyImagesRecycler();
         setupClickListeners();
         updateUI();
+
+        viewModel.getDeleteFailed().observe(getViewLifecycleOwner(), failed -> {
+            if (failed == null) return;
+
+            if (failed) {
+                ToastUtils.showCustomToast(requireContext(),
+                        "Delete failed: user has future events",
+                        true);
+            } else {
+                ToastUtils.showCustomToast(requireContext(),
+                        String.format("%s successfully deleted",
+                                user.getFirstName() + " " + user.getLastName()),
+                        false);
+                viewModel.resetDeleteFailed();
+                AuthManager.loggedInUser = null;
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigate(R.id.action_profile_to_HomepageFragment);
+            }
+        });
     }
 
     private void setupClickListeners() {
-        ImageButton editProfileButton = binding.btnEditPSP;
+        ImageButton editProfileButton = binding.btnEditProfile;
         editProfileButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(v);
-            navController.navigate(R.id.action_profilePSP_to_editPSPFragment);
+            navController.navigate(R.id.action_profile_to_editProfileFragment);
         });
+        ImageButton deleteProfileButton = binding.btnDeleteUser;
+        deleteProfileButton.setOnClickListener(v -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Delete User")
+                .setMessage(String.format("Are you sure you want to delete %s? This action cannot be undone.", user.getFirstName() + " " + user.getLastName()))
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Delete", (dialog, which) -> viewModel.delete(user.getId()))
+                .show()
+            );
     }
 
     private void setupCompanyImagesRecycler() {

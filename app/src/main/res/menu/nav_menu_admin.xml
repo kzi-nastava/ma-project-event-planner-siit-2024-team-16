@@ -19,7 +19,7 @@
         <item android:id="@+id/eventTypesFragment"
             android:title="@string/event_types"
             android:orderInCategory="400" />
-        <item android:id="@+id/profileEO"
+        <item android:id="@+id/profile"
             android:title="@string/your_profile"
             android:orderInCategory="500"/>
     </group>

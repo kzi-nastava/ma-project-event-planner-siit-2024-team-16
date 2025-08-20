@@ -39,11 +39,11 @@
     <fragment
         android:id="@+id/createEventTypeFragment"
         android:name="com.example.evenmate.fragments.event_type.EventTypeFormFragment"
-        android:label="CreateEventTypeFragment" />
+        android:label="Create Event Type" />
     <fragment
         android:id="@+id/eventsFragment"
         android:name="com.example.evenmate.fragments.event.EventsFragment"
-        android:label="fragment_events"
+        android:label="Events"
         tools:layout="@layout/fragment_events" />
     <fragment
         android:id="@+id/HomepageFragment"
@@ -54,17 +54,20 @@
         tools:layout="@layout/fragment_homepage" />
 
     <fragment
-        android:id="@+id/profilePSP"
+        android:id="@+id/profile"
         android:name="com.example.evenmate.fragments.profile.ProfileFragment"
-        android:label="fragment_profile_p_s_p"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_profilePSP_to_editPSPFragment"
-            app:destination="@id/editPSPFragment" />
+            android:id="@+id/action_profile_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profile_to_HomepageFragment"
+            app:destination="@id/HomepageFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editPSPFragment"
+        android:id="@+id/editProfileFragment"
         android:name="com.example.evenmate.fragments.profile.EditProfileFragment"
-        android:label="EditPSPFragment" />
+        android:label="Edit Profile" />
 
 </navigation>
