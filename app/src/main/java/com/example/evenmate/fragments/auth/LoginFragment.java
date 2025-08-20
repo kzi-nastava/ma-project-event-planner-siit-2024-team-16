@@ -1,5 +1,6 @@
-package com.example.evenmate.fragments;
+package com.example.evenmate.fragments.auth;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import retrofit2.Response;
 
 public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
+    private LoginCallback loginCallback;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -51,6 +53,17 @@ public class LoginFragment extends Fragment {
 
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof LoginCallback)
+            loginCallback = (LoginCallback) context;
+    }
+
+    private void handleLoginSuccess(){
+        if(loginCallback != null)
+            loginCallback.OnLoginSuccess();
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -119,6 +132,7 @@ public class LoginFragment extends Fragment {
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     AuthManager.loggedInUser = response.body();
+                    handleLoginSuccess();
                     requireActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
                         NavController navController = Navigation.findNavController(requireView());
                         navController.popBackStack();

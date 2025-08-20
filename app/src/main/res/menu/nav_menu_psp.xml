@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/HomepageFragment"
+            android:title="@string/home"
+            android:orderInCategory="100" />
+        <item android:id="@+id/providerServicesProductsFragment"
+            android:title="@string/providerServicesProductsNavbarItem"
+            android:orderInCategory="200" />
+        <item android:id="@+id/eventsFragment"
+            android:title="@string/your_events"
+            android:orderInCategory="300" />
+        <item android:id="@+id/profilePSP"
+            android:title="@string/your_profile"
+            android:orderInCategory="400"/>
+    </group>
+</menu>

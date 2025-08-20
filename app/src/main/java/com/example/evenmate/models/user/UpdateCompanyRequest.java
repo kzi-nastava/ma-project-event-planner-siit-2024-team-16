@@ -2,28 +2,30 @@ package com.example.evenmate.models.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.example.evenmate.models.Address;
+
 import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Company implements Parcelable {
+public class UpdateCompanyRequest implements Parcelable {
     private Long id;
-    private String email;
     private String name;
     private Address address;
     private String phone;
     private String description;
     private List<String> photos;
 
-    public Company() {
+    public UpdateCompanyRequest() {
         address = new Address();
     }
 
-    protected Company(Parcel in) {
-        email = in.readString();
+    protected UpdateCompanyRequest(Parcel in) {
+        id = in.readLong();
         name = in.readString();
         address = in.readParcelable(Address.class.getClassLoader());
         phone = in.readString();
@@ -31,15 +33,15 @@ public class Company implements Parcelable {
         photos = in.createStringArrayList();
     }
 
-    public static final Creator<Company> CREATOR = new Creator<>() {
+    public static final Creator<com.example.evenmate.models.user.UpdateCompanyRequest> CREATOR = new Creator<>() {
         @Override
-        public Company createFromParcel(Parcel in) {
-            return new Company(in);
+        public com.example.evenmate.models.user.UpdateCompanyRequest createFromParcel(Parcel in) {
+            return new com.example.evenmate.models.user.UpdateCompanyRequest(in);
         }
 
         @Override
-        public Company[] newArray(int size) {
-            return new Company[size];
+        public com.example.evenmate.models.user.UpdateCompanyRequest[] newArray(int size) {
+            return new com.example.evenmate.models.user.UpdateCompanyRequest[size];
         }
     };
 
@@ -50,7 +52,7 @@ public class Company implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(email);
+        dest.writeLong(id);
         dest.writeString(name);
         dest.writeParcelable(address, flags);
         dest.writeString(phone);
@@ -58,3 +60,4 @@ public class Company implements Parcelable {
         dest.writeStringList(photos);
     }
 }
+

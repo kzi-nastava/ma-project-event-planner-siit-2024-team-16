@@ -2,81 +2,80 @@ package com.example.evenmate.models.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
+
 import com.example.evenmate.models.Address;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class User implements Parcelable {
+@Setter
+public class UpdateUserRequest implements Parcelable {
     private Long id;
-    private String email;
-    private String password;
+    private String newPassword;
+    private String oldPassword;
     private String firstName;
     private String lastName;
     private Address address;
     private String phone;
-    private Company company;
+    private UpdateCompanyRequest company;
     private String photo;
-    private String role;
 
-    public User(User user) {
+    public UpdateUserRequest(com.example.evenmate.models.user.UpdateUserRequest user) {
         this.id = user.id;
-        this.email = user.email;
-        this.password = user.password;
+        this.newPassword = user.newPassword;
+        this.oldPassword = user.oldPassword;
         this.firstName = user.firstName;
         this.lastName = user.lastName;
         this.address = user.address;
         this.phone = user.phone;
         this.company = user.company;
         this.photo = user.photo;
-        this.role = user.role;
     }
 
-    public User() {
+    public UpdateUserRequest() {
         this.address = new Address();
     }
 
-    public User(Long id, String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo, String role) {
+    public UpdateUserRequest(Long id, String newPassword, String oldPassword, String firstName, Address address, String lastName, String phone, UpdateCompanyRequest company, String photo) {
         this.id = id;
-        this.email = email;
-        this.password = password;
+        this.newPassword = newPassword;
+        this.oldPassword = oldPassword;
         this.firstName = firstName;
         this.address = address;
         this.lastName = lastName;
         this.phone = phone;
         this.company = company;
         this.photo = photo;
-        this.role = role;
     }
 
-    protected User(Parcel in) {
+    protected UpdateUserRequest(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
             id = in.readLong();
         }
-        email = in.readString();
-        password = in.readString();
+        newPassword = in.readString();
+        oldPassword = in.readString();
         firstName = in.readString();
         lastName = in.readString();
         address = in.readParcelable(Address.class.getClassLoader());
         phone = in.readString();
         company = in.readParcelable(Company.class.getClassLoader());
         photo = in.readString();
-        role = in.readString();
     }
 
-    public static final Creator<User> CREATOR = new Creator<>() {
+    public static final Creator<com.example.evenmate.models.user.UpdateUserRequest> CREATOR = new Creator<>() {
         @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
+        public com.example.evenmate.models.user.UpdateUserRequest createFromParcel(Parcel in) {
+            return new com.example.evenmate.models.user.UpdateUserRequest(in);
         }
 
         @Override
-        public User[] newArray(int size) {
-            return new User[size];
+        public com.example.evenmate.models.user.UpdateUserRequest[] newArray(int size) {
+            return new com.example.evenmate.models.user.UpdateUserRequest[size];
         }
     };
 
@@ -93,14 +92,13 @@ public class User implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeLong(id);
         }
-        dest.writeString(email);
-        dest.writeString(password);
+        dest.writeString(newPassword);
+        dest.writeString(oldPassword);
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeParcelable(address, flags);
         dest.writeString(phone);
         dest.writeParcelable(company, flags);
         dest.writeString(photo);
-        dest.writeString(role);
     }
 }

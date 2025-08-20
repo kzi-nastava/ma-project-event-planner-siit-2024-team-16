@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/HomepageFragment"
+            android:orderInCategory="100"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/eventsFragment"
+            android:orderInCategory="200"
+            android:title="@string/your_events" />
+        <item
+            android:id="@+id/profileEO"
+            android:orderInCategory="400"
+            android:title="@string/your_profile" />
+
+    </group>
+</menu>

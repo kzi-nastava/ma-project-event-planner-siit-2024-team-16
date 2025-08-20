@@ -66,7 +66,7 @@ public class EventFormFragment extends DialogFragment implements ImageUtils.Imag
                 event = receivedEvent.toRequest();
                 if (event != null) {
                     selectedEventTypeId = event.getTypeId();
-                    eventImageBase64 = event.getPhoto(); // Assuming EventRequest has getPhoto() method
+                    eventImageBase64 = event.getPhoto();
                 }
             }
         }
@@ -101,9 +101,7 @@ public class EventFormFragment extends DialogFragment implements ImageUtils.Imag
     }
 
     private void setupDatePicker() {
-        binding.showDatePickerButton.setOnClickListener(v -> {
-            showDatePicker();
-        });
+        binding.showDatePickerButton.setOnClickListener(v -> showDatePicker());
     }
 
     private void setupNextButton() {

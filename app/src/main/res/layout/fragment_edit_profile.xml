@@ -5,53 +5,50 @@
     android:id="@+id/fragment_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.auth.RegisterFragment">
+    tools:context=".fragments.profile.EditProfileFragment">
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/company_info_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_field_email"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txt_password_change"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:hint="@string/email"
+            android:clickable="true"
+            android:text="@string/change_password"
+            android:textColor="@color/purple"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.005">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
-                android:importantForAccessibility="yes"
-                android:inputType="textEmailAddress"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintVertical_bias="0.015" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_field_password_register"
+            android:id="@+id/txt_field_old_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:hint="@string/password"
+            android:hint="@string/old_password"
             app:endIconMode="password_toggle"
+            android:visibility="gone"
             app:errorEnabled="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_field_email"
+            app:layout_constraintTop_toBottomOf="@+id/txt_password_change"
             app:layout_constraintVertical_bias="0.015">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_password"
+                android:id="@+id/txt_password_old"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="yes"
@@ -60,19 +57,45 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_field_confirm_password_register"
+            android:id="@+id/txt_field_new_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:hint="@string/confirm_password"
+            android:visibility="gone"
+            android:hint="@string/new_password"
             app:endIconMode="password_toggle"
             app:errorEnabled="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_field_old_password"
+            app:layout_constraintVertical_bias="0.015">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_password_new"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="yes"
+                android:inputType="textPassword"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txt_field_confirm_new_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="@string/confirm_new_password"
+            app:endIconMode="password_toggle"
+            app:errorEnabled="true"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_field_password_register"
+            app:layout_constraintTop_toBottomOf="@+id/txt_field_new_password"
             app:layout_constraintVertical_bias="0.005">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -94,8 +117,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_field_confirm_password_register"
-            app:layout_constraintVertical_bias="0">
+            app:layout_constraintTop_toBottomOf="@+id/txt_field_confirm_new_password"
+            app:layout_constraintVertical_bias="0.005">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_first_name"
@@ -270,34 +293,15 @@
             app:layout_constraintStart_toEndOf="@+id/txt_upload_image_registration"
             app:layout_constraintTop_toBottomOf="@+id/txt_field_phone" />
 
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_register"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/userImageContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/register_button"
-            android:importantForAccessibility="yes"
-            android:text="@string/register"
-            android:textAllCaps="false"
-            android:layout_marginTop="8dp"
-            app:cornerRadius="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.3" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switch_provider"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="@string/sign_up_as_product_and_service_provider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_upload_image_registration"
-            app:layout_constraintBottom_toTopOf="@id/btn_register"
-            app:layout_constraintVertical_bias="0.02"/>
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/iconUpload"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/company_info_layout"
@@ -305,45 +309,22 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/btn_register"
+            app:layout_constraintBottom_toTopOf="@id/btn_save_psp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/switch_provider">
+            app:layout_constraintTop_toBottomOf="@id/userImageContainer">
 
             <TextView
                 android:id="@+id/txt_company_info"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/company_info"
+                android:textAlignment="center"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.3" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txt_field_company_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:hint="@string/company_email"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.07999998">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_company_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-                    android:importantForAccessibility="yes"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txt_field_company_name"
@@ -355,7 +336,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_field_company_email"
+                app:layout_constraintTop_toBottomOf="@+id/txt_company_info"
                 app:layout_constraintVertical_bias="0.025">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -522,7 +503,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/upload_image"
+                android:text="@string/upload_images"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -541,7 +522,26 @@
                 app:layout_constraintHorizontal_bias="0.08"
                 app:layout_constraintStart_toEndOf="@+id/txt_upload_company_images"
                 app:layout_constraintTop_toBottomOf="@+id/txt_field_description"/>
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save_psp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/save"
+            android:importantForAccessibility="yes"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            app:cornerRadius="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/company_info_layout"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
 

@@ -14,6 +14,8 @@ public class MatchPasswordRule implements ValidationRule {
 
     @Override
     public boolean validate(String value) {
+        if(passwordField.getText() == null || passwordField.getText().toString().isEmpty())
+            return true;
         return value.equals(Objects.requireNonNull(passwordField.getText()).toString());
     }
 
