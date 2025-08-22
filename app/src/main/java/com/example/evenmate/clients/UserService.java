@@ -8,6 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
@@ -18,6 +19,18 @@ public interface UserService {
     })
     @GET("users/whoami")
     Call<User> whoami();
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("users/{userId}/favorite-events/{eventId}/status")
+    Call<Boolean> checkFavoriteStatus(@Path("userId") Long userId, @Path("eventId") Long eventId);
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("users/{userId}/favorite-events/{eventId}/toggle")
+    Call<Boolean> favoriteEventToggle(@Path("userId") Long userId, @Path("eventId") Long eventId);
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"

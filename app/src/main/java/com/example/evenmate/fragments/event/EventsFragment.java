@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.evenmate.adapters.EventAdapter;
+import com.example.evenmate.clients.UserService;
 import com.example.evenmate.databinding.FragmentEventsBinding;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -38,7 +39,6 @@ public class EventsFragment extends ListFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         viewModel = new ViewModelProvider(this).get(EventsViewModel.class);
 
         adapter = new EventAdapter(getActivity(), new ArrayList<>());
@@ -68,6 +68,7 @@ public class EventsFragment extends ListFragment {
                 })
                 .show()
         );
+
         setListAdapter(adapter);
         setupPagination();
 
