@@ -43,8 +43,35 @@
     <fragment
         android:id="@+id/eventsFragment"
         android:name="com.example.evenmate.fragments.event.EventsFragment"
-        android:label="Events"
-        tools:layout="@layout/fragment_events" />
+        android:label="@string/events_menu"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="ALL_EVENTS"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteEventsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="@string/favorite_events"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="FAVORITES"/>
+    </fragment>
+    <fragment
+        android:id="@+id/yourEventsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="@string/your_events"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="YOUR_EVENTS"/>
+    </fragment>
+
     <fragment
         android:id="@+id/HomepageFragment"
         android:name="com.example.evenmate.fragments.homepage.HomepageFragment"

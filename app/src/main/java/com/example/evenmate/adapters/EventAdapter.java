@@ -39,12 +39,6 @@ public class EventAdapter extends ArrayAdapter<Event> {
     public interface OnDeleteClickListener {
         void onDeleteClick(Event event);
     }
-    @Setter
-    private OnFavoriteClickListener onFavoriteClickListener;
-
-    public interface OnFavoriteClickListener {
-        void onFavoriteClick(Event event);
-    }
 
     @Setter
     private OnEditClickListener onEditClickListener;
@@ -113,8 +107,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
                 }
             });
             btnFavorite.setOnClickListener(v -> this.favoriteEventToggle(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite));
-            btnEdit.setVisibility(View.VISIBLE);
-            btnDelete.setVisibility(View.VISIBLE);
+            btnEdit.setVisibility(AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE);
+            btnDelete.setVisibility(AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE);
 
             checkFavoriteStatus(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite);
         }

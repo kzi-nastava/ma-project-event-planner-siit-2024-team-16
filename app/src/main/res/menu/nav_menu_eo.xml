@@ -10,10 +10,10 @@
         <item android:id="@+id/eventsFragment"
             android:title="@string/events_menu"
             android:orderInCategory="200" />
-        <item android:id="@+id/FavoriteEventsFragment"
+        <item android:id="@+id/favoriteEventsFragment"
             android:orderInCategory="300"
             android:title="@string/favorite_events" />
-        <item android:id="@+id/YourEventsFragment"
+        <item android:id="@+id/yourEventsFragment"
             android:title="@string/your_events"
             android:orderInCategory="400" />
         <item android:id="@+id/profile"

@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.Event;
@@ -14,12 +15,15 @@ import com.example.evenmate.models.event.Event;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EventsViewModel extends ViewModel {
     private static final int PAGE_SIZE = 5;
+    @Setter
+    private String fetchMode = "ALL_EVENTS";
     private final MutableLiveData<List<Event>> events = new MutableLiveData<>();
     private final MutableLiveData<Integer> currentPage = new MutableLiveData<>(1);
     private final MutableLiveData<Integer> totalPages = new MutableLiveData<>(1);
@@ -27,10 +31,10 @@ public class EventsViewModel extends ViewModel {
     private final MutableLiveData<Boolean> deleteFailed = new MutableLiveData<>(false);
     public LiveData<List<Event>> getEvents() { return events; }
     public Boolean getDeleteFailed() { return deleteFailed.getValue(); }
+
     public void resetDeleteFailed() { deleteFailed.setValue(false); }
 
     public LiveData<Integer> getCurrentPage() { return currentPage; }
-
     public LiveData<Integer> getTotalPages() { return totalPages; }
 
     public EventsViewModel(){
@@ -38,7 +42,14 @@ public class EventsViewModel extends ViewModel {
 
     public void fetchEvents() {
         int apiPage = currentPage.getValue() != null ? currentPage.getValue() - 1 : 0;
-        Call<PaginatedResponse<Event>> call = ClientUtils.eventService.getEvents(apiPage, PAGE_SIZE);
+        Call<PaginatedResponse<Event>> call;
+        if ("FAVORITES".equals(fetchMode)) {
+            call = ClientUtils.userService.getFavoriteEvents(AuthManager.loggedInUser.getId(), apiPage, PAGE_SIZE);
+        } else if ("YOUR_EVENTS".equals(fetchMode)) {
+            call = ClientUtils.eventService.getEventsByOrganizer(apiPage, PAGE_SIZE);
+        } else {
+            call = ClientUtils.eventService.getEvents(apiPage, PAGE_SIZE);
+        }
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<PaginatedResponse<Event>> call, @NonNull Response<PaginatedResponse<Event>> response) {
@@ -94,40 +105,6 @@ public class EventsViewModel extends ViewModel {
             currentPage.setValue(current - 1);
             fetchEvents();
         }
-    }
-
-    public void updateFavoriteStatus(Event event) {
-        //TODO
-//        boolean newStatus = !event.isActive();
-//        event.setActive(newStatus);
-//
-//        Call<Event> call = ClientUtils.eventService.update(event);
-//        call.enqueue(new Callback<>() {
-//            @Override
-//            public void onResponse(@NonNull Call<Event> call, @NonNull Response<Event> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    List<Event> currentList = events.getValue();
-//                    if (currentList != null) {
-//                        int index = currentList.indexOf(event);
-//                        if (index != -1) {
-//                            currentList.set(index, response.body());
-//                            events.setValue(currentList);
-//                        }
-//                    }
-//                } else {
-//                    event.setActive(!newStatus);
-//                    errorMessage.setValue("Failed to update event status");
-//                    refreshEvents();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<Event> call, @NonNull Throwable t) {
-//                event.setActive(!newStatus);
-//                errorMessage.setValue("Network error while updating status");
-//                refreshEvents();
-//            }
-//        });
     }
 
     public LiveData<String> getErrorMessage() {

@@ -28,6 +28,15 @@ public interface EventService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
+    @GET("events/by-organizer")
+    Call<PaginatedResponse<Event>> getEventsByOrganizer(
+            @Query("page") int page,
+            @Query("size") int size
+    );
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
     @POST("events")
     Call<Event> create(@Body EventRequest request);
     @Headers({
