@@ -2,8 +2,11 @@ package com.example.evenmate.clients;
 
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.Event;
+import com.example.evenmate.models.user.CalendarItem;
 import com.example.evenmate.models.user.UpdateUserRequest;
 import com.example.evenmate.models.user.User;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -36,6 +39,12 @@ public interface UserService {
     @GET("users/{userId}/favorite-events")
     Call<PaginatedResponse<Event>> getFavoriteEvents(@Path("userId") Long userId, @Query("page") int page,
                                                      @Query("size") int size);
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("users/calendar")
+    Call<List<CalendarItem>> getCalendar();
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
