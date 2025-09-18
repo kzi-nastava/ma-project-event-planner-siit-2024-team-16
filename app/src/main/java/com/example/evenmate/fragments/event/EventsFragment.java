@@ -27,6 +27,7 @@ public class EventsFragment extends ListFragment {
     private FragmentEventsBinding binding;
     private EventsViewModel viewModel;
     private EventAdapter adapter;
+    private String fetchMode;
 
     @Nullable
     @Override
@@ -40,7 +41,7 @@ public class EventsFragment extends ListFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String fetchMode = requireArguments().getString("fetch_mode", "ALL_EVENTS");
+        fetchMode = requireArguments().getString("fetch_mode", "ALL_EVENTS");
         viewModel = new ViewModelProvider(this).get(EventsViewModel.class);
         if ("FAVORITES".equals(fetchMode)) {
             viewModel.setFetchMode("FAVORITES");
@@ -109,12 +110,18 @@ public class EventsFragment extends ListFragment {
     }
 
     private void setupAddEventButton() {
-        binding.btnAddEvent.setVisibility(AuthManager.loggedInUser.getRole().equals("EventOrganizer") ?
-                View.VISIBLE : View.GONE);
-        binding.btnAddEvent.setOnClickListener(v -> {
-            EventFormFragment dialogFragment = EventFormFragment.newInstance(null);
-            dialogFragment.show(getParentFragmentManager(), "CreateEvent");
-        });
+        boolean isFavoritesMode = this.fetchMode.equals("FAVORITES");
+        boolean isEventOrganizer = AuthManager.loggedInUser.getRole().equals("EventOrganizer");
+
+        if (isFavoritesMode || !isEventOrganizer) {
+            binding.btnAddEvent.setVisibility(View.GONE);
+        } else {
+            binding.btnAddEvent.setVisibility(View.VISIBLE);
+            binding.btnAddEvent.setOnClickListener(v -> {
+                EventFormFragment dialogFragment = EventFormFragment.newInstance(null);
+                dialogFragment.show(getParentFragmentManager(), "CreateEvent");
+            });
+        }
     }
 
     private void observeViewModel() {

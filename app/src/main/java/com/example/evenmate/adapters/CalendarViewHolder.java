@@ -34,14 +34,12 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
             dayNumber.setText(String.valueOf(day.getDateTime().getDayOfMonth()));
             dayNumber.setVisibility(View.VISIBLE);
 
-            // Set text color based on month
             if (day.isCurrentMonth()) {
                 dayNumber.setTextColor(itemView.getContext().getColor(R.color.black));
             } else {
                 dayNumber.setTextColor(itemView.getContext().getColor(R.color.light_grey));
             }
 
-            // Highlight today
             if (day.isToday()) {
                 GradientDrawable background = new GradientDrawable();
                 background.setShape(GradientDrawable.OVAL);
@@ -50,7 +48,6 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
                 dayNumber.setTextColor(Color.WHITE);
             }
 
-            // Show event indicators
             boolean hasRegularEvents = false;
             boolean hasSpecialEvents = false;
 
@@ -65,15 +62,12 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
             eventIndicator.setVisibility(hasRegularEvents ? View.VISIBLE : View.GONE);
             specialEventIndicator.setVisibility(hasSpecialEvents ? View.VISIBLE : View.GONE);
 
-            // Set click listener
             itemView.setOnClickListener(v -> {
                 if (onDateClickListener != null) {
                     onDateClickListener.onDateClick(LocalDate.from(day.getDateTime()));
                 }
 
-                // If there are events, handle event clicks
                 if (!day.getEvents().isEmpty() && onEventClickListener != null) {
-                    // For simplicity, click on first event
                     onEventClickListener.onEventClick(day.getEvents().get(0));
                 }
             });

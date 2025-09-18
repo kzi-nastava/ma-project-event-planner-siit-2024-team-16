@@ -18,6 +18,7 @@ import com.example.evenmate.models.user.CalendarDay;
 import com.example.evenmate.models.user.CalendarItem;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.CalendarUtils;
+import com.example.evenmate.utils.ToastUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -80,10 +81,9 @@ public class CalendarFragment extends Fragment {
             }
         }
 
-        // Show/hide legend items based on user role
         if (specialLabel != null) {
             binding.legendSpecialEvents.setVisibility(View.VISIBLE);
-            binding.legendSpecialLabel.setText("Your " + specialLabel);
+            binding.legendSpecialLabel.setText(String.format("Your %s", specialLabel));
         } else {
             binding.legendSpecialEvents.setVisibility(View.GONE);
         }
@@ -99,7 +99,7 @@ public class CalendarFragment extends Fragment {
         calendarViewModel.getError().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
                 Log.e("CalendarFragment", errorMessage);
-                // Handle error display (could show toast, snackbar, etc.)
+                ToastUtils.showCustomToast(requireContext(), errorMessage, true);
             }
         });
     }
@@ -127,12 +127,20 @@ public class CalendarFragment extends Fragment {
     private void updateCalendarHeader() {
         String monthName = currentMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
         int year = currentMonth.getYear();
-        binding.calendarTitle.setText(monthName + " " + year);
+        binding.calendarTitle.setText(String.format("%s %d", monthName, year));
     }
 
     private void updateCalendarDays() {
         List<CalendarDay> days = CalendarUtils.getDaysForMonth(currentMonth);
-        calendarAdapter.updateDays(days);
+
+        List<CalendarItem> currentEvents = calendarViewModel.getCalendarItems().getValue();
+        if (currentEvents != null) {
+            List<CalendarDay> daysWithEvents = CalendarUtils.mapEventsToDays(days, currentEvents);
+            calendarAdapter.updateDays(daysWithEvents);
+        } else {
+            calendarAdapter.updateDays(days);
+            calendarViewModel.loadCalendarItems();
+        }
     }
 
     private void updateCalendarWithEvents(List<CalendarItem> events) {
@@ -142,26 +150,17 @@ public class CalendarFragment extends Fragment {
     }
 
     private void loadCalendarData() {
-        calendarViewModel.loadCalendarItems();
         updateCalendarDays();
-        testDateParsing();
-
-    }
-    //todo: otvarati detalje i prebacivanje sa jednog na drugi mesec
-
-    private void handleDateClick(LocalDate date) {
-        System.out.println("Date clicked: " + date);
-        // Handle date click - could navigate to day view or create event
+        calendarViewModel.loadCalendarItems();
     }
 
     private void handleEventClick(CalendarItem event) {
-        //todo: navigate to details
-//        if ("reservation".equals(event.getType())) {
-//             NavController navController = Navigation.findNavController(requireView());
-//             CalendarFragmentDirections.ActionCalendarToEventDetails action =
-//                 CalendarFragmentDirections.actionCalendarToEventDetails(event.getId());
-//             navController.navigate(action);
-//        }
+        //todo: navigate to details page
+    }
+
+    private void handleDateClick(LocalDate date) {
+        //todo: event and reservation details
+        System.out.println("Date clicked: " + date);
     }
 
     @Override
@@ -169,30 +168,4 @@ public class CalendarFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-    // Add this method to your CalendarFragment for testing
-    private void testDateParsing() {
-        // Test with your actual API date format
-        String testDate = "2025-09-28T00:00:00";
-
-        try {
-            java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(testDate);
-            java.time.LocalDate date = dateTime.toLocalDate();
-
-            Log.d("DateTest", "Original string: " + testDate);
-            Log.d("DateTest", "Parsed LocalDateTime: " + dateTime);
-            Log.d("DateTest", "Parsed LocalDate: " + date);
-            Log.d("DateTest", "Current month being viewed: " + currentMonth.toLocalDate());
-
-            // Check if the event date is in the current month being viewed
-            boolean sameMonth = date.getMonth() == currentMonth.getMonth() &&
-                    date.getYear() == currentMonth.getYear();
-            Log.d("DateTest", "Event is in current viewing month: " + sameMonth);
-
-        } catch (Exception e) {
-            Log.e("DateTest", "Error parsing test date: " + e.getMessage());
-        }
-    }
-
-// Call this method in your loadCalendarData() method to test:
 }

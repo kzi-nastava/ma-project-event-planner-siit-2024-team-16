@@ -55,6 +55,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         holder.bind(day, onDateClickListener, onEventClickListener);
     }
 
+
     @Override
     public int getItemCount() {
         return days.size();
