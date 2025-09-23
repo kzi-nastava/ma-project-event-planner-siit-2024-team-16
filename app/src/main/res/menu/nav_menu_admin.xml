@@ -7,14 +7,20 @@
         <item android:id="@+id/HomepageFragment"
             android:title="@string/home"
             android:orderInCategory="100" />
+        <item android:id="@+id/eventsFragment"
+            android:title="@string/events_menu"
+            android:orderInCategory="200" />
+        <item android:id="@+id/favoriteEventsFragment"
+            android:title="@string/favorite_events"
+            android:orderInCategory="300" />
+        <item android:id="@+id/FavoriteProductServiceFragment"
+            android:title="@string/favorite_ps"
+            android:orderInCategory="400" />
         <item android:id="@+id/eventTypesFragment"
             android:title="@string/event_types"
-            android:orderInCategory="200" />
-        <item android:id="@+id/eventsFragment"
-            android:title="@string/your_events"
-            android:orderInCategory="300" />
-        <item android:id="@+id/profileEO"
+            android:orderInCategory="400" />
+        <item android:id="@+id/profile"
             android:title="@string/your_profile"
-            android:orderInCategory="400"/>
+            android:orderInCategory="500"/>
     </group>
 </menu>

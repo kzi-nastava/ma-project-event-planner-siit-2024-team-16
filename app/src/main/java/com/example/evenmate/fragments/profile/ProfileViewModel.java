@@ -1,5 +1,7 @@
 package com.example.evenmate.fragments.profile;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -19,7 +21,9 @@ public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<User> user = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<String> success = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> deleteFailed = new MutableLiveData<>(null);
 
+    public void resetDeleteFailed() { deleteFailed.setValue(false); }
     public void resetMessages(){
         this.success.setValue(null);
         this.errorMessage.setValue(null);
@@ -47,6 +51,28 @@ public class ProfileViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
                 errorMessage.postValue(t.getMessage());
+            }
+        });
+    }
+
+    public void delete(Long id) {
+        Call<Object> call = ClientUtils.userService.delete(id);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                if (response.isSuccessful()) {
+                    Log.d("delete", "deleted");
+                    deleteFailed.setValue(false);
+                } else {
+                    Log.e("delete", "Delete failed: " + response.code() + " " + response.message());
+                    deleteFailed.setValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Error deleting user: " + t.getMessage());
+                deleteFailed.setValue(true);
             }
         });
     }

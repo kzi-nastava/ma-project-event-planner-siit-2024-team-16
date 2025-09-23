@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.evenmate.R;
 import com.example.evenmate.adapters.EventAdapter;
+import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.databinding.FragmentEventsBinding;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -25,6 +27,7 @@ public class EventsFragment extends ListFragment {
     private FragmentEventsBinding binding;
     private EventsViewModel viewModel;
     private EventAdapter adapter;
+    private String fetchMode;
 
     @Nullable
     @Override
@@ -38,13 +41,22 @@ public class EventsFragment extends ListFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        fetchMode = requireArguments().getString("fetch_mode", "ALL_EVENTS");
         viewModel = new ViewModelProvider(this).get(EventsViewModel.class);
+        if ("FAVORITES".equals(fetchMode)) {
+            viewModel.setFetchMode("FAVORITES");
+            binding.eventsHeading.setText(R.string.favorite_events_up);
+        } else if ("YOUR_EVENTS".equals(fetchMode)){
+            binding.eventsHeading.setText(R.string.your_events_up);
+            viewModel.setFetchMode("YOUR_EVENTS");
+        } else {
+            binding.eventsHeading.setText(R.string.events);
+            viewModel.setFetchMode("ALL_EVENTS");
+
+        }
 
         adapter = new EventAdapter(getActivity(), new ArrayList<>());
-        adapter.setOnFavoriteClickListener(event ->
-                viewModel.updateFavoriteStatus(event)
-        );
+
         adapter.setOnEditClickListener(event -> {
                     EventFormFragment dialogFragment = EventFormFragment.newInstance(event);
                     dialogFragment.show(getParentFragmentManager(), "EditEvent");
@@ -68,6 +80,7 @@ public class EventsFragment extends ListFragment {
                 })
                 .show()
         );
+
         setListAdapter(adapter);
         setupPagination();
 
@@ -97,10 +110,18 @@ public class EventsFragment extends ListFragment {
     }
 
     private void setupAddEventButton() {
-        binding.btnAddEvent.setOnClickListener(v -> {
-            EventFormFragment dialogFragment = EventFormFragment.newInstance(null);
-            dialogFragment.show(getParentFragmentManager(), "CreateEvent");
-        });
+        boolean isFavoritesMode = this.fetchMode.equals("FAVORITES");
+        boolean isEventOrganizer = AuthManager.loggedInUser.getRole().equals("EventOrganizer");
+
+        if (isFavoritesMode || !isEventOrganizer) {
+            binding.btnAddEvent.setVisibility(View.GONE);
+        } else {
+            binding.btnAddEvent.setVisibility(View.VISIBLE);
+            binding.btnAddEvent.setOnClickListener(v -> {
+                EventFormFragment dialogFragment = EventFormFragment.newInstance(null);
+                dialogFragment.show(getParentFragmentManager(), "CreateEvent");
+            });
+        }
     }
 
     private void observeViewModel() {

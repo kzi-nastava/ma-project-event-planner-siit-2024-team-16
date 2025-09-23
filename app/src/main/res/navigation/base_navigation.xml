@@ -39,12 +39,39 @@
     <fragment
         android:id="@+id/createEventTypeFragment"
         android:name="com.example.evenmate.fragments.event_type.EventTypeFormFragment"
-        android:label="CreateEventTypeFragment" />
+        android:label="Create Event Type" />
     <fragment
         android:id="@+id/eventsFragment"
         android:name="com.example.evenmate.fragments.event.EventsFragment"
-        android:label="fragment_events"
-        tools:layout="@layout/fragment_events" />
+        android:label="@string/events_menu"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="ALL_EVENTS"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteEventsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="@string/favorite_events"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="FAVORITES"/>
+    </fragment>
+    <fragment
+        android:id="@+id/yourEventsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="@string/your_events"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="YOUR_EVENTS"/>
+    </fragment>
+
     <fragment
         android:id="@+id/HomepageFragment"
         android:name="com.example.evenmate.fragments.homepage.HomepageFragment"
@@ -54,17 +81,25 @@
         tools:layout="@layout/fragment_homepage" />
 
     <fragment
-        android:id="@+id/profilePSP"
+        android:id="@+id/profile"
         android:name="com.example.evenmate.fragments.profile.ProfileFragment"
-        android:label="fragment_profile_p_s_p"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_profilePSP_to_editPSPFragment"
-            app:destination="@id/editPSPFragment" />
+            android:id="@+id/action_profile_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profile_to_HomepageFragment"
+            app:destination="@id/HomepageFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editPSPFragment"
+        android:id="@+id/editProfileFragment"
         android:name="com.example.evenmate.fragments.profile.EditProfileFragment"
-        android:label="EditPSPFragment" />
+        android:label="Edit Profile" />
+    <fragment
+        android:id="@+id/CalendarFragment"
+        android:name="com.example.evenmate.fragments.profile.CalendarFragment"
+        android:label="Calendar"
+        tools:layout="@layout/fragment_calendar" />
 
 </navigation>
