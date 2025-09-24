@@ -51,6 +51,10 @@ public class CategoryManagementFragment extends Fragment implements CategoryAdap
             public void onEdit(CategorySuggestion suggestion) {
                 showEditSuggestionDialog(suggestion);
             }
+            @Override
+            public void onUpdateAssetCategory(CategorySuggestion suggestion) {
+                showUpdateAssetCategoryDialog(suggestion);
+            }
         });
         recyclerSuggestions.setAdapter(suggestionAdapter);
         setupViewModel();
@@ -105,7 +109,6 @@ public class CategoryManagementFragment extends Fragment implements CategoryAdap
 
     @Override
     public void onDelete(Category category) {
-        // Simple confirmation, can be replaced with a Material dialog
         viewModel.deleteCategory(category.getId());
     }
 
@@ -113,5 +116,14 @@ public class CategoryManagementFragment extends Fragment implements CategoryAdap
         AddCategoryDialogFragment dialog = AddCategoryDialogFragment.newInstance(suggestion.getName(), suggestion.getDescription());
         dialog.setListener((name, description) -> viewModel.editSuggestion(suggestion.getId(), new CategoryRequest(name, description)));
         dialog.show(getParentFragmentManager(), "EditSuggestionDialog");
+    }
+
+    private void showUpdateAssetCategoryDialog(CategorySuggestion suggestion) {
+        List<Category> categories = adapter != null ? adapter.getCategories() : new ArrayList<>();
+        UpdateAssetCategoryDialogFragment dialog = UpdateAssetCategoryDialogFragment.newInstance(suggestion, categories);
+        dialog.setListener((selectedCategory) -> {
+            viewModel.updateAssetCategory(suggestion.getAssetId(), selectedCategory.getId());
+        });
+        dialog.show(getParentFragmentManager(), "UpdateAssetCategoryDialog");
     }
 }
