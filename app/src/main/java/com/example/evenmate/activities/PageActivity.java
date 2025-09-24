@@ -32,6 +32,7 @@ import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.ActivityPageBinding;
 import com.example.evenmate.fragments.auth.LoginCallback;
+import com.example.evenmate.fragments.chat.ChatListFragment;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -98,7 +99,8 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
 
         FloatingActionButton fabChat = findViewById(R.id.fab_chat);
         fabChat.setOnClickListener(v -> {
-            Toast.makeText(this, "Chat clicked!", Toast.LENGTH_SHORT).show();
+            navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+            navController.navigate(R.id.chatListFragment);
         });
         updateChatButtonVisibility();
     }
