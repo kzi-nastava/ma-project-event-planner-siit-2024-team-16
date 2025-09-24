@@ -5,8 +5,6 @@ import com.example.evenmate.models.category.CategoryRequest;
 import com.example.evenmate.models.category.CategorySuggestion;
 import com.example.evenmate.models.PaginatedResponse;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
