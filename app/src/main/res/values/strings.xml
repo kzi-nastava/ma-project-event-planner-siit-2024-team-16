@@ -147,4 +147,9 @@
     <string name="category_suggestions">CATEGORY SUGGESTIONS</string>
     <string name="approve">Approve</string>
     <string name="update_asset_category">Update Asset Category</string>
+    <string name="price_required">Price is required</string>
+    <string name="discount_required">Discount is required</string>
+    <string name="discount">Discount</string>
+    <string name="discounted_price">Discounted Price</string>
+    <string name="price_list">Price List</string>
 </resources>
