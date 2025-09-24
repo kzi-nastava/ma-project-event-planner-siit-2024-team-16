@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.evenmate.clients.AssetService;
 import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.category.CategoryRequest;
 import com.example.evenmate.models.category.CategorySuggestion;
@@ -177,5 +179,27 @@ public class CategoryViewModel extends ViewModel {
                 error.setValue(t.getMessage());
             }
         });
+    }
+
+    public void updateAssetCategory(Long assetId, Long newCategoryId) {
+        isLoading.setValue(true);
+        ClientUtils.assetService.updateAssetCategory(assetId, newCategoryId)
+            .enqueue(new Callback<Asset>() {
+                @Override
+                public void onResponse(Call<Asset> call, Response<Asset> response) {
+                    isLoading.setValue(false);
+                    if (response.isSuccessful()) {
+                        fetchCategories();
+                        fetchSuggestions();
+                    } else {
+                        error.setValue("Failed to update asset category");
+                    }
+                }
+                @Override
+                public void onFailure(Call<Asset> call, Throwable t) {
+                    isLoading.setValue(false);
+                    error.setValue(t.getMessage());
+                }
+            });
     }
 }
