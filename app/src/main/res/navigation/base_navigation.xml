@@ -101,5 +101,36 @@
         android:name="com.example.evenmate.fragments.profile.CalendarFragment"
         android:label="Calendar"
         tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/productsFragment"
+        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
+        android:label="@string/products"
+        tools:layout="@layout/fragment_products" >
 
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="ALL_PRODUCTS"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteProductsFragment"
+        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
+        android:label="@string/favorite_products"
+        tools:layout="@layout/fragment_products" >
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="FAVORITES"/>
+    </fragment>
+    <fragment
+        android:id="@+id/yourProductsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="@string/your_products"
+        tools:layout="@layout/fragment_products" >
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="YOUR_PRODUCTS"/>
+    </fragment>
 </navigation>
