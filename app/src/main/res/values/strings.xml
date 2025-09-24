@@ -146,4 +146,5 @@
     <string name="category_management">Category Management</string>
     <string name="category_suggestions">CATEGORY SUGGESTIONS</string>
     <string name="approve">Approve</string>
+    <string name="update_asset_category">Update Asset Category</string>
 </resources>
