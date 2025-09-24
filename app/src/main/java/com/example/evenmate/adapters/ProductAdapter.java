@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
-import com.example.evenmate.models.event.Event;
+import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.button.MaterialButton;
@@ -32,42 +32,42 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class EventAdapter extends ArrayAdapter<Event> {
-    private List<Event> events;
+public class ProductAdapter extends ArrayAdapter<Product> {
+    private List<Product> products;
     @Setter
     private OnDeleteClickListener onDeleteClickListener;
 
     public interface OnDeleteClickListener {
-        void onDeleteClick(Event event);
+        void onDeleteClick(Product product);
     }
 
     @Setter
     private OnEditClickListener onEditClickListener;
 
     public interface OnEditClickListener {
-        void onEditClick(Event event);
+        void onEditClick(Product product);
     }
 
-    public EventAdapter(Activity context, List<Event> events){
-        super(context, R.layout.item_card_general, events);
-        this.events = events;
+    public ProductAdapter(Activity context, List<Product> products){
+        super(context, R.layout.item_card_general, products);
+        this.products = products;
     }
     @Override
     public int getCount() {
-        return events.size();
+        return products.size();
     }
 
     @Nullable
     @Override
-    public Event getItem(int position) {
-        return events.get(position);
+    public Product getItem(int position) {
+        return products.get(position);
     }
 
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View itemView, @NonNull ViewGroup parent) {
-        Event event = getItem(position);
+        Product product = getItem(position);
         if (itemView == null) {
             itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_card_general,
                     parent, false);
@@ -76,58 +76,57 @@ public class EventAdapter extends ArrayAdapter<Event> {
             itemView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.green));
         }
         TextView title = itemView.findViewById(R.id.title);
-        TextView date = itemView.findViewById(R.id.box1);
-        TextView address = itemView.findViewById(R.id.box2);
-        TextView type = itemView.findViewById(R.id.box3);
-        TextView maxAttendees = itemView.findViewById(R.id.box4);
-        TextView description = itemView.findViewById(R.id.box5);
+        TextView name = itemView.findViewById(R.id.box1);
+        TextView description = itemView.findViewById(R.id.box2);
+        TextView category = itemView.findViewById(R.id.box3);
+        TextView price = itemView.findViewById(R.id.box4);
+        TextView priceAfterDiscount = itemView.findViewById(R.id.box5);
         ImageView imageView = itemView.findViewById(R.id.image);
         ImageButton btnEdit = itemView.findViewById(R.id.btnEditEvent);
         MaterialButton btnFavorite = itemView.findViewById(R.id.favorite);
         ImageButton btnDelete = itemView.findViewById(R.id.btnDeleteEvent);
 
-        if(event != null) {
-            title.setText(event.getName());
-            description.setText(String.format("%s: %s", getContext().getString(R.string.description), event.getDescription()));
-            date.setText(String.format("%s%s", getContext().getString(R.string.date), event.getDate()));
-            address.setText(String.format("%s: %s", getContext().getString(R.string.address), String.format("%s %s, %s, %s", event.getAddress().getStreetName(), event.getAddress().getStreetNumber(), event.getAddress().getCity(), event.getAddress().getCountry())));
-            type.setText(String.format("%s %s", getContext().getString(R.string.type), event.getType() != null ?  event.getType().getName() : "None"));
-            maxAttendees.setText(String.format("%s%s", getContext().getString(R.string.max_guests), event.getMaxAttendees()));
-            if (event.getPhoto() != null) {
+        if(product != null) {
+            title.setText(product.getName());
+            description.setText(String.format("%s: %s", getContext().getString(R.string.description), product.getDescription()));
+            name.setText(String.format("%s: %s", getContext().getString(R.string.name), product.getName()));
+            category.setText(String.format("%s%s", getContext().getString(R.string.category), product.getCategory() != null ? product.getCategory().getName() : null));
+            price.setText(String.format("%s%s", getContext().getString(R.string.price), product.getPrice()));
+            priceAfterDiscount.setText(String.format("%s%s", getContext().getString(R.string.priceAfterDiscount), product.getPriceAfterDiscount()));
+            if (product.getImages() != null) {
                 Glide.with(getContext())
-                        .load(Base64.decode(event.getPhoto(), Base64.DEFAULT))
+                        .load(Base64.decode(product.getImages().get(0), Base64.DEFAULT))
                         .into(imageView);}
             btnEdit.setOnClickListener(v -> {
                 if (onEditClickListener != null) {
-                    onEditClickListener.onEditClick(event);
+                    onEditClickListener.onEditClick(product);
                 }
             });
             btnDelete.setOnClickListener(v -> {
                 if (onDeleteClickListener != null) {
-                    onDeleteClickListener.onDeleteClick(event);
+                    onDeleteClickListener.onDeleteClick(product);
                 }
             });
-
             User loggedInUser = AuthManager.loggedInUser;
             boolean isLoggedIn = loggedInUser!=null;
             btnEdit.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
             btnDelete.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
             btnFavorite.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
             if(isLoggedIn) {
-                btnFavorite.setOnClickListener(v -> this.changeFavoriteStatus(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite));
-                checkFavoriteStatus(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite);
+                btnFavorite.setOnClickListener(v -> this.changeFavoriteStatus(AuthManager.loggedInUser.getId(), product.getId(), btnFavorite));
+                checkFavoriteStatus(AuthManager.loggedInUser.getId(), product.getId(), btnFavorite);
             }
         }
         return itemView;
     }
 
-    public void setEvents(ArrayList<Event> events) {
-        this.events = events;
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
         notifyDataSetChanged();
     }
 
-    private void checkFavoriteStatus(Long userId, Long eventId, MaterialButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.userService.checkFavoriteStatus(userId, eventId);
+    private void checkFavoriteStatus(Long userId, Long productId, MaterialButton btnFavorite) {
+        retrofit2.Call<Boolean> call = ClientUtils.userService.checkFavoriteStatus(userId, productId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
@@ -147,8 +146,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
         });
     }
 
-    private void changeFavoriteStatus(Long userId, Long eventId, MaterialButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.userService.favoriteEventToggle(userId, eventId);
+    private void changeFavoriteStatus(Long userId, Long productId, MaterialButton btnFavorite) {
+        retrofit2.Call<Boolean> call = ClientUtils.userService.favoriteProductToggle(userId, productId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
@@ -171,3 +170,4 @@ public class EventAdapter extends ArrayAdapter<Event> {
         });
     }
 }
+

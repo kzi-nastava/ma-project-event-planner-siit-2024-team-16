@@ -125,4 +125,7 @@
     <string name="your_products">Your products</string>
     <string name="favorite_products">Favorite products</string>
     <string name="products">Products</string>
+    <string name="add_a_product">ADD PRODUCT</string>
+    <string name="no_products">No products</string>
+    <string name="priceAfterDiscount">"After discount: "</string>
 </resources>

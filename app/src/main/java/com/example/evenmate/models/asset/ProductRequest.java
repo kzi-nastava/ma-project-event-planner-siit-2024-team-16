@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.example.evenmate.models.Category;
-import com.example.evenmate.models.user.User;
-
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -15,27 +12,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Asset implements Parcelable {
+public class ProductRequest implements Parcelable {
     private Long id;
     private String name;
     private String description;
     private Integer price;
     private Integer discount;
-    private Double priceAfterDiscount;
-    private User provider;
     private List<String> images;
-    private Category category;
-    private Double averageReview;
-    private String type;
-    private Boolean isVisible;
-    private Boolean isVisibleToUser;
+    private Long categoryId;
+    private String newCategoryName;
+    private String newCategoryDescription;
     private Boolean isAvailable;
+    private Boolean isVisible;
 
-    protected Asset(Parcel in) {
+    protected ProductRequest(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
@@ -53,37 +47,29 @@ public class Asset implements Parcelable {
         } else {
             discount = in.readInt();
         }
-        if (in.readByte() == 0) {
-            priceAfterDiscount = null;
-        } else {
-            priceAfterDiscount = in.readDouble();
-        }
-        provider = in.readParcelable(User.class.getClassLoader());
         images = in.createStringArrayList();
-        category = in.readParcelable(Category.class.getClassLoader());
         if (in.readByte() == 0) {
-            averageReview = null;
+            categoryId = null;
         } else {
-            averageReview = in.readDouble();
+            categoryId = in.readLong();
         }
-        type = in.readString();
-        byte tmpIsVisible = in.readByte();
-        isVisible = tmpIsVisible == 0 ? null : tmpIsVisible == 1;
-        byte tmpIsVisibleToUser = in.readByte();
-        isVisibleToUser = tmpIsVisibleToUser == 0 ? null : tmpIsVisibleToUser == 1;
+        newCategoryName = in.readString();
+        newCategoryDescription = in.readString();
         byte tmpIsAvailable = in.readByte();
         isAvailable = tmpIsAvailable == 0 ? null : tmpIsAvailable == 1;
+        byte tmpIsVisible = in.readByte();
+        isVisible = tmpIsVisible == 0 ? null : tmpIsVisible == 1;
     }
 
-    public static final Creator<Asset> CREATOR = new Creator<>() {
+    public static final Creator<ProductRequest> CREATOR = new Creator<>() {
         @Override
-        public Asset createFromParcel(Parcel in) {
-            return new Asset(in);
+        public ProductRequest createFromParcel(Parcel in) {
+            return new ProductRequest(in);
         }
 
         @Override
-        public Asset[] newArray(int size) {
-            return new Asset[size];
+        public ProductRequest[] newArray(int size) {
+            return new ProductRequest[size];
         }
     };
 
@@ -114,24 +100,16 @@ public class Asset implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeInt(discount);
         }
-        if (priceAfterDiscount == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeDouble(priceAfterDiscount);
-        }
-        parcel.writeParcelable(provider, i);
         parcel.writeStringList(images);
-        parcel.writeParcelable(category, i);
-        if (averageReview == null) {
+        if (categoryId == null) {
             parcel.writeByte((byte) 0);
         } else {
             parcel.writeByte((byte) 1);
-            parcel.writeDouble(averageReview);
+            parcel.writeLong(categoryId);
         }
-        parcel.writeString(type);
-        parcel.writeByte((byte) (isVisible == null ? 0 : isVisible ? 1 : 2));
-        parcel.writeByte((byte) (isVisibleToUser == null ? 0 : isVisibleToUser ? 1 : 2));
+        parcel.writeString(newCategoryName);
+        parcel.writeString(newCategoryDescription);
         parcel.writeByte((byte) (isAvailable == null ? 0 : isAvailable ? 1 : 2));
+        parcel.writeByte((byte) (isVisible == null ? 0 : isVisible ? 1 : 2));
     }
 }

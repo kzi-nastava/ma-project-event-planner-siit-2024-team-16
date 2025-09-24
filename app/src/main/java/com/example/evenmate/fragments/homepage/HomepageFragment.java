@@ -17,15 +17,11 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.evenmate.R;
 import com.example.evenmate.models.asset.Asset;
-import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.event.Event;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class HomepageFragment extends Fragment {
 
@@ -129,11 +125,11 @@ public class HomepageFragment extends Fragment {
 
     public static List<Asset> getTop5ServicesAndProducts() {
         List<Asset> assets = new ArrayList<>();
-        assets.add(new Asset(1L, "Maya's Catering", new ArrayList<>(List.of("@drawable/img_service")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true));
-        assets.add(new Asset(2L, "Lilly Bloom's Flower Arrangements", new ArrayList<>(List.of("@drawable/img_product")), "Beautiful flower arrangements", 350, "decoration", 0, "USA", "California", "", "", 4.3, AssetType.PRODUCT,false));
-        assets.add(new Asset(3L, "Service 3", new ArrayList<>(List.of("@drawable/img_service")), "Description for service 3", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,false));
-        assets.add(new Asset(4L, "Product 4", new ArrayList<>(List.of("@drawable/img_product")), "Description for product 4", 350, "decoration", 0, "USA", "California", "", "", 4.3, AssetType.PRODUCT,false));
-        assets.add(new Asset(5L, "Service 5", new ArrayList<>(List.of("@drawable/img_service")), "Description for service 5", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,false));
+//        assets.add(new Asset(1L, "Maya's Catering", new ArrayList<>(List.of("@drawable/img_service")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true));
+//        assets.add(new Asset(2L, "Lilly Bloom's Flower Arrangements", new ArrayList<>(List.of("@drawable/img_product")), "Beautiful flower arrangements", 350, "decoration", 0, "USA", "California", "", "", 4.3, AssetType.PRODUCT,false));
+//        assets.add(new Asset(3L, "Service 3", new ArrayList<>(List.of("@drawable/img_service")), "Description for service 3", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,false));
+//        assets.add(new Asset(4L, "Product 4", new ArrayList<>(List.of("@drawable/img_product")), "Description for product 4", 350, "decoration", 0, "USA", "California", "", "", 4.3, AssetType.PRODUCT,false));
+//        assets.add(new Asset(5L, "Service 5", new ArrayList<>(List.of("@drawable/img_service")), "Description for service 5", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,false));
         return assets;
     }
 }

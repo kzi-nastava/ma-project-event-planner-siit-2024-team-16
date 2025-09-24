@@ -4,11 +4,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.example.evenmate.models.Address;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements Parcelable {
     private Long id;
     private String email;
@@ -32,23 +37,6 @@ public class User implements Parcelable {
         this.company = user.company;
         this.photo = user.photo;
         this.role = user.role;
-    }
-
-    public User() {
-        this.address = new Address();
-    }
-
-    public User(Long id, String email, String password, String firstName, Address address, String lastName, String phone, Company company, String photo, String role) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.address = address;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.company = company;
-        this.photo = photo;
-        this.role = role;
     }
 
     protected User(Parcel in) {
