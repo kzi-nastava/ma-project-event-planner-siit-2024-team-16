@@ -1,49 +1,33 @@
 package com.example.evenmate.models.asset;
 
-import androidx.annotation.Nullable;
+import com.example.evenmate.models.category.Category;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Asset {
     private Long id;
-    private String title;
-    private ArrayList<String> image;
+    private String name;
     private String description;
     private Integer price;
-    private String category;
     private Integer discount;
-    private String country;
-    private String city;
-    private String street;
-    private String streetNumber;
-    @Nullable
-    private Double rating;
+    private List<String> images;
+    private Boolean isVisible;
+    private Boolean isAvailable;
+//    TODO: private ProductServiceProvider provider;
+    private Category category;
+    private Double averageReview;
     private AssetType type;
-    @Nullable
-    private Boolean isFavorite;
-    public Asset(Long id, String title, ArrayList<String> image, String description, Integer price,
-                 String category, Integer discount, String country, String city, String street,
-                 String streetNumber, @Nullable Double rating, AssetType type,@Nullable Boolean isFavorite) {
-        this.id = id;
-        this.title = title;
-        this.image = image;
-        this.description = description;
-        this.price = price;
-        this.category = category;
-        this.discount = discount;
-        this.country = country;
-        this.city = city;
-        this.street = street;
-        this.streetNumber = streetNumber;
-        this.rating = rating;
-        this.type = type;
-        this.isFavorite=isFavorite;
-    }
+    private Boolean isVisibleToUser;
+
     public String getNewPrice(){
         Double newPrice = Double.valueOf(this.price);
         newPrice-=newPrice*this.discount/100;
