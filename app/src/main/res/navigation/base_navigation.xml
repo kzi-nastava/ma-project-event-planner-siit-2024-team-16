@@ -101,5 +101,23 @@
         android:name="com.example.evenmate.fragments.profile.CalendarFragment"
         android:label="Calendar"
         tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/chatListFragment"
+        android:name="com.example.evenmate.fragments.chat.ChatListFragment"
+        android:label="Chats"
+        tools:layout="@layout/fragment_chat_list" >
+        <action
+            android:id="@+id/action_chatListFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.evenmate.fragments.chat.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="chatId"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

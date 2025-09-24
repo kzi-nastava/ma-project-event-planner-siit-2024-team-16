@@ -64,5 +64,9 @@ dependencies {
     implementation libs.lombok
     annotationProcessor libs.lombok
 
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation libs.circleimageview
+
+    implementation libs.stompprotocolandroid
+    implementation libs.rxjava
+    implementation libs.rxandroid
 }
