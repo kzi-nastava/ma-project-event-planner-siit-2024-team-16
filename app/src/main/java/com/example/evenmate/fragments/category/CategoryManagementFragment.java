@@ -13,8 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.CategoryAdapter;
+import com.example.evenmate.adapters.CategorySuggestionAdapter;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.category.CategoryRequest;
+import com.example.evenmate.models.category.CategorySuggestion;
 import com.example.evenmate.viewmodels.CategoryViewModel;
 import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class CategoryManagementFragment extends Fragment implements CategoryAdap
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private MaterialButton btnAddCategory;
+    private RecyclerView recyclerSuggestions;
+    private CategorySuggestionAdapter suggestionAdapter;
 
     @Nullable
     @Override
@@ -36,6 +40,19 @@ public class CategoryManagementFragment extends Fragment implements CategoryAdap
         btnAddCategory = view.findViewById(R.id.btn_add_category);
         adapter = new CategoryAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
+
+        recyclerSuggestions = view.findViewById(R.id.recycler_category_suggestions);
+        suggestionAdapter = new CategorySuggestionAdapter(new ArrayList<>(), new CategorySuggestionAdapter.OnSuggestionActionListener() {
+            @Override
+            public void onApprove(CategorySuggestion suggestion) {
+                viewModel.approveSuggestion(suggestion.getId());
+            }
+            @Override
+            public void onEdit(CategorySuggestion suggestion) {
+                showEditSuggestionDialog(suggestion);
+            }
+        });
+        recyclerSuggestions.setAdapter(suggestionAdapter);
         setupViewModel();
         btnAddCategory.setOnClickListener(v -> showAddCategoryDialog());
         return view;
@@ -46,7 +63,9 @@ public class CategoryManagementFragment extends Fragment implements CategoryAdap
         viewModel.getCategories().observe(getViewLifecycleOwner(), this::onCategoriesChanged);
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), this::onLoadingChanged);
         viewModel.getError().observe(getViewLifecycleOwner(), this::onError);
+        viewModel.getSuggestions().observe(getViewLifecycleOwner(), this::onSuggestionsChanged);
         viewModel.fetchCategories();
+        viewModel.fetchSuggestions();
     }
 
     private void onCategoriesChanged(List<Category> categories) {
@@ -61,6 +80,10 @@ public class CategoryManagementFragment extends Fragment implements CategoryAdap
         if (error != null) {
             Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void onSuggestionsChanged(List<CategorySuggestion> suggestions) {
+        suggestionAdapter.setSuggestions(suggestions);
     }
 
     private void showAddCategoryDialog() {
@@ -85,5 +108,10 @@ public class CategoryManagementFragment extends Fragment implements CategoryAdap
         // Simple confirmation, can be replaced with a Material dialog
         viewModel.deleteCategory(category.getId());
     }
-}
 
+    private void showEditSuggestionDialog(CategorySuggestion suggestion) {
+        AddCategoryDialogFragment dialog = AddCategoryDialogFragment.newInstance(suggestion.getName(), suggestion.getDescription());
+        dialog.setListener((name, description) -> viewModel.editSuggestion(suggestion.getId(), new CategoryRequest(name, description)));
+        dialog.show(getParentFragmentManager(), "EditSuggestionDialog");
+    }
+}

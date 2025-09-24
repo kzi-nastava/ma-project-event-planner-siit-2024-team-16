@@ -13,7 +13,6 @@ import java.util.List;
 public class CategorySuggestionAdapter extends RecyclerView.Adapter<CategorySuggestionAdapter.SuggestionViewHolder> {
     public interface OnSuggestionActionListener {
         void onApprove(CategorySuggestion suggestion);
-        void onReject(CategorySuggestion suggestion);
         void onEdit(CategorySuggestion suggestion);
     }
 
@@ -43,7 +42,6 @@ public class CategorySuggestionAdapter extends RecyclerView.Adapter<CategorySugg
         holder.name.setText(suggestion.getName());
         holder.description.setText(suggestion.getDescription());
         holder.approve.setOnClickListener(v -> listener.onApprove(suggestion));
-        holder.reject.setOnClickListener(v -> listener.onReject(suggestion));
         holder.edit.setOnClickListener(v -> listener.onEdit(suggestion));
     }
 
@@ -53,13 +51,12 @@ public class CategorySuggestionAdapter extends RecyclerView.Adapter<CategorySugg
     }
 
     static class SuggestionViewHolder extends RecyclerView.ViewHolder {
-        TextView name, description, approve, reject, edit;
+        TextView name, description, approve, edit;
         SuggestionViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.suggestion_name);
             description = itemView.findViewById(R.id.suggestion_description);
             approve = itemView.findViewById(R.id.suggestion_approve);
-            reject = itemView.findViewById(R.id.suggestion_reject);
             edit = itemView.findViewById(R.id.suggestion_edit);
         }
     }
