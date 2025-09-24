@@ -12,5 +12,6 @@ import lombok.Setter;
 public class CategorySuggestion {
     private Long id;
     private String name;
+    private String description;
 }
 
