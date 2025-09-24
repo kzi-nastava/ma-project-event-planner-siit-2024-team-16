@@ -3,7 +3,7 @@ package com.example.evenmate.models.event;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

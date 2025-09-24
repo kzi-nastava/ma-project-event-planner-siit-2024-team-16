@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.evenmate.R;
-import com.example.evenmate.models.CategorySuggestion;
+import com.example.evenmate.models.category.CategorySuggestion;
 import com.example.evenmate.viewmodels.CategoryViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

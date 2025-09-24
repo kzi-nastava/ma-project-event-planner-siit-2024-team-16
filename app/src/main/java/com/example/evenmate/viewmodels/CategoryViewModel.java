@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.evenmate.clients.ClientUtils;
-import com.example.evenmate.models.Category;
-import com.example.evenmate.models.CategoryRequest;
-import com.example.evenmate.models.CategorySuggestion;
+import com.example.evenmate.models.category.Category;
+import com.example.evenmate.models.category.CategoryRequest;
+import com.example.evenmate.models.category.CategorySuggestion;
 import com.example.evenmate.models.PaginatedResponse;
 
 import java.util.List;

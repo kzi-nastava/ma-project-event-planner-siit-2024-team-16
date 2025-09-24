@@ -1,4 +1,4 @@
-package com.example.evenmate.models;
+package com.example.evenmate.models.category;
 
 import android.os.Parcel;
 import android.os.Parcelable;

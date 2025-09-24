@@ -1,11 +1,9 @@
 package com.example.evenmate.clients;
 
-import com.example.evenmate.models.Category;
-import com.example.evenmate.models.CategoryRequest;
-import com.example.evenmate.models.CategorySuggestion;
+import com.example.evenmate.models.category.Category;
+import com.example.evenmate.models.category.CategoryRequest;
+import com.example.evenmate.models.category.CategorySuggestion;
 import com.example.evenmate.models.PaginatedResponse;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

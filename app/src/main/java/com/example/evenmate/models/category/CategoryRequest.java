@@ -1,4 +1,4 @@
-package com.example.evenmate.models;
+package com.example.evenmate.models.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
