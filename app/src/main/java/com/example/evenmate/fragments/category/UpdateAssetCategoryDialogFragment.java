@@ -2,6 +2,7 @@ package com.example.evenmate.fragments.category;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -49,13 +50,16 @@ public class UpdateAssetCategoryDialogFragment extends DialogFragment {
 
         assetName.setText(suggestion.getAssetName());
         assetDescription.setText(suggestion.getAssetDescription());
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item);
         categories.forEach(c -> adapter.add(c.getName()));
         categoryDropdown.setAdapter(adapter);
+        categoryDropdown.setInputType(InputType.TYPE_NULL); // Prevent keyboard
+        categoryDropdown.setKeyListener(null); // Prevent manual input
+        categoryDropdown.setFocusable(false);
+        categoryDropdown.setOnClickListener(v -> categoryDropdown.showDropDown());
 
         btnUpdate.setOnClickListener(v -> {
-            int pos = categoryDropdown.getListSelection();
-            if (pos < 0) pos = categoryDropdown.getText() != null ? adapter.getPosition(categoryDropdown.getText().toString()) : -1;
+            int pos = adapter.getPosition(categoryDropdown.getText().toString());
             if (pos >= 0 && pos < categories.size() && listener != null) {
                 listener.onCategorySelected(categories.get(pos));
                 dismiss();
@@ -68,4 +72,3 @@ public class UpdateAssetCategoryDialogFragment extends DialogFragment {
                 .create();
     }
 }
-
