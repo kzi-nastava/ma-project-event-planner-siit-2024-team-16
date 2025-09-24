@@ -142,5 +142,40 @@ public class CategoryViewModel extends ViewModel {
             }
         });
     }
-}
 
+    public void approveSuggestion(Long id) {
+        isLoading.setValue(true);
+        ClientUtils.categoryService.approveCategorySuggestion(id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                isLoading.setValue(false);
+                fetchCategories();
+                fetchSuggestions();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isLoading.setValue(false);
+                error.setValue(t.getMessage());
+            }
+        });
+    }
+
+    public void editSuggestion(Long id, CategoryRequest request) {
+        isLoading.setValue(true);
+        ClientUtils.categoryService.updateCategory(id, request).enqueue(new Callback<Category>() {
+            @Override
+            public void onResponse(Call<Category> call, Response<Category> response) {
+                isLoading.setValue(false);
+                fetchCategories();
+                fetchSuggestions();
+            }
+
+            @Override
+            public void onFailure(Call<Category> call, Throwable t) {
+                isLoading.setValue(false);
+                error.setValue(t.getMessage());
+            }
+        });
+    }
+}
