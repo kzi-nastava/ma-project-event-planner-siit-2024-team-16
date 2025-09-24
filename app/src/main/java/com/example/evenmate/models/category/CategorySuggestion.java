@@ -13,5 +13,8 @@ public class CategorySuggestion {
     private Long id;
     private String name;
     private String description;
+    private Long assetId;
+    private String assetName;
+    private String assetDescription;
 }
 
