@@ -85,6 +85,9 @@ public class ProductsFragment extends ListFragment {
             setupFragmentResultListener();
             observeViewModel();
         }
+        private void filter(){
+            //todo andjela
+        }
 
         private void setupPagination() {
             binding.btnPrevious.setOnClickListener(v -> viewModel.previousPage());
