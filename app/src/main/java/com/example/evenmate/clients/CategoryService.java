@@ -5,6 +5,8 @@ import com.example.evenmate.models.category.CategoryRequest;
 import com.example.evenmate.models.category.CategorySuggestion;
 import com.example.evenmate.models.PaginatedResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -34,4 +36,7 @@ public interface CategoryService {
 
     @GET("categories/suggestions")
     Call<PaginatedResponse<CategorySuggestion>> getCategorySuggestions(@Query("page") Integer page, @Query("size") Integer size);
+
+    @PUT("categories/{id}/approve")
+    Call<Void> approveCategorySuggestion(@Path("id") Long id);
 }
