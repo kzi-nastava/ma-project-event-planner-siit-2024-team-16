@@ -1,4 +1,4 @@
-package com.example.evenmate.fragments;
+package com.example.evenmate.fragments.category;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

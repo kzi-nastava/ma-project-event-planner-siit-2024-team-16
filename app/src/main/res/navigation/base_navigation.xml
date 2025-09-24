@@ -121,7 +121,7 @@
     </fragment>
     <fragment
         android:id="@+id/categoryManagementFragment"
-        android:name="com.example.evenmate.fragments.CategoryManagementFragment"
+        android:name="com.example.evenmate.fragments.category.CategoryManagementFragment"
         android:label="Category Management"
         tools:layout="@layout/fragment_category_management" >
         <action
@@ -130,11 +130,11 @@
     </fragment>
     <fragment
         android:id="@+id/createCategoryFragment"
-        android:name="com.example.evenmate.fragments.CategoryManagementFragment"
+        android:name="com.example.evenmate.fragments.category.CategoryManagementFragment"
         android:label="Create Category" />
     <fragment
         android:id="@+id/selectCategoryDialogFragment"
-        android:name="com.example.evenmate.fragments.SelectCategoryDialogFragment"
+        android:name="com.example.evenmate.fragments.category.SelectCategoryDialogFragment"
         android:label="Favorite Products and Services"
         tools:layout="@layout/dialog_select_category" />
 
