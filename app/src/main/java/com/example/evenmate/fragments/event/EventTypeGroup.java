@@ -2,7 +2,6 @@ package com.example.evenmate.fragments.event;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -12,19 +11,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.evenmate.R;
-import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.databinding.EventTypeGroupBinding;
 import com.example.evenmate.models.event.EventRequest;
 import com.example.evenmate.models.event.EventType;
-import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
-import java.util.Objects;
 
 public class EventTypeGroup extends DialogFragment{
     private RadioGroup eventTypeGroup;

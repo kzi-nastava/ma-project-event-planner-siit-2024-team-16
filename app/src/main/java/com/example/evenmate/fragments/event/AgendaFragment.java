@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.example.evenmate.adapters.AgendaAdapter;
 import com.example.evenmate.auth.AuthManager;
@@ -235,7 +234,6 @@ public class AgendaFragment extends DialogFragment {
     }
     private void sendResultAndDismiss() {
         Bundle result = new Bundle();
-        Log.d("ref", "saljem");
         result.putBoolean("refresh_events", true);
         getParentFragmentManager().setFragmentResult("event_form_result", result);
         dismissAllowingStateLoss();
