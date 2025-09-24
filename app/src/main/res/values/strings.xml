@@ -51,6 +51,7 @@
     <string name="edit">Edit</string>
     <string name="recommended_ps_categories"><![CDATA[Recommended P&S Categories : ]]></string>
     <string name="save">SAVE</string>
+    <string name="create_agenda">CREATE AGENDA</string>
     <string name="name">Name</string>
     <string name="no_event_types">No event types</string>
     <string name="add_an_event_type">ADD AN EVENT TYPE</string>
