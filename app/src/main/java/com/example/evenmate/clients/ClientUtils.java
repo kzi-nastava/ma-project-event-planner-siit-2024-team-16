@@ -3,8 +3,10 @@ package com.example.evenmate.clients;
 import android.content.Context;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 import com.example.evenmate.BuildConfig;
+import com.example.evenmate.adapters.LocalDateTimeAdapter;
 import com.example.evenmate.adapters.LocalDateTypeAdapter;
 import com.example.evenmate.interceptors.AuthInterceptor;
 import com.google.gson.Gson;
@@ -27,6 +29,7 @@ public class ClientUtils {
     public static AuthService authService;
     public static UserService userService;
     public static CategoryService categoryService;
+    public static ChatService chatService;
 
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
@@ -39,6 +42,7 @@ public class ClientUtils {
         authService = getRetrofit().create(AuthService.class);
         userService = getRetrofit().create(UserService.class);
         categoryService = getRetrofit().create(CategoryService.class);
+        chatService = getRetrofit().create(ChatService.class);
     }
 
     private static OkHttpClient createHttpClient() {
@@ -60,6 +64,7 @@ public class ClientUtils {
 
     public static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();
     private static Retrofit getRetrofit() {
         if (retrofit == null) {
