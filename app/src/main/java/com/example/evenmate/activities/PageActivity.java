@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import com.example.evenmate.databinding.ActivityPageBinding;
 import com.example.evenmate.fragments.auth.LoginCallback;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
@@ -93,6 +95,12 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
                 }
             }
         });
+
+        FloatingActionButton fabChat = findViewById(R.id.fab_chat);
+        fabChat.setOnClickListener(v -> {
+            Toast.makeText(this, "Chat clicked!", Toast.LENGTH_SHORT).show();
+        });
+        updateChatButtonVisibility();
     }
 
     @Override
@@ -142,6 +150,7 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
         navController.navigate(R.id.HomepageFragment);
 
         updateMenu();
+        updateChatButtonVisibility();
     }
 
 
@@ -186,5 +195,11 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
     @Override
     public void OnLoginSuccess() {
         updateMenu();
+        updateChatButtonVisibility();
+    }
+
+    private void updateChatButtonVisibility() {
+        FloatingActionButton fabChat = findViewById(R.id.fab_chat);
+        fabChat.setVisibility(AuthManager.loggedInUser != null ? View.VISIBLE : View.GONE);
     }
 }
