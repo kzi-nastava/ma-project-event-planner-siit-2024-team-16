@@ -19,6 +19,7 @@ import com.example.evenmate.R;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.event.Event;
+import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.button.MaterialButton;
 
@@ -106,11 +107,15 @@ public class EventAdapter extends ArrayAdapter<Event> {
                     onDeleteClickListener.onDeleteClick(event);
                 }
             });
-            btnFavorite.setOnClickListener(v -> this.favoriteEventToggle(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite));
-            btnEdit.setVisibility(AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE);
-            btnDelete.setVisibility(AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE);
-
-            checkFavoriteStatus(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite);
+            User loggedInUser = AuthManager.loggedInUser;
+            boolean isLoggedIn = loggedInUser!=null;
+            btnEdit.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
+            btnDelete.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
+            btnFavorite.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
+            if(isLoggedIn) {
+                btnFavorite.setOnClickListener(v -> this.favoriteEventToggle(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite));
+                checkFavoriteStatus(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite);
+            }
         }
         return itemView;
     }
