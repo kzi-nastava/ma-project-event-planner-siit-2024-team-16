@@ -30,6 +30,11 @@
         <item name="android:textColor">@color/green</item>
         <item name="strokeColor">@color/green</item>
     </style>
+    <style name="GreenRoundedButton" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="backgroundTint">@color/green</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="strokeColor">@color/green</item>
+    </style>
     <style name="RedOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="backgroundTint">@color/white</item>
         <item name="android:textColor">@color/red</item>

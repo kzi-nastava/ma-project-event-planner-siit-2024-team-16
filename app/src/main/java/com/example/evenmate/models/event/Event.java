@@ -10,6 +10,7 @@ import com.example.evenmate.models.user.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class Event implements Parcelable {
     private Double rating;
     private Boolean isFavorite;
     private ArrayList<String> invited;
+    private List<AgendaItem> agendaItems;
     public Event(){}
 
     protected Event(Parcel in) {
@@ -63,6 +65,8 @@ public class Event implements Parcelable {
         organizer = in.readParcelable(User.class.getClassLoader());
 
         photo = in.readString();
+
+        agendaItems = in.createTypedArrayList(AgendaItem.CREATOR);
     }
 
     public static final Creator<Event> CREATOR = new Creator<>() {
@@ -112,19 +116,23 @@ public class Event implements Parcelable {
         dest.writeParcelable(organizer, flags);
 
         dest.writeString(photo);
+
+        dest.writeTypedList(agendaItems);
     }
+
     public EventRequest toRequest() {
         return new EventRequest(
                 id,
                 name,
                 description,
-                isPrivate,
-                photo,
                 maxAttendees,
+                isPrivate,
                 address,
                 type != null ? type.getId() : null,
                 date,
-                organizer != null ? organizer.getId() : null
+                organizer != null ? organizer.getId() : null,
+                photo,
+                agendaItems
         );
     }
 

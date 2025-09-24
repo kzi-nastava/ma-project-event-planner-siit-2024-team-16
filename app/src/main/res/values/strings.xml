@@ -51,6 +51,7 @@
     <string name="edit">Edit</string>
     <string name="recommended_ps_categories"><![CDATA[Recommended P&S Categories : ]]></string>
     <string name="save">SAVE</string>
+    <string name="create_agenda">CREATE AGENDA</string>
     <string name="name">Name</string>
     <string name="no_event_types">No event types</string>
     <string name="add_an_event_type">ADD AN EVENT TYPE</string>
@@ -121,4 +122,13 @@
     <string name="confirm_new_password">Confirm new password</string>
     <string name="change_password">Change password</string>
     <string name="open_chat">Open chat</string>
+    <string name="location_hint">Location</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="actions">Actions</string>
+    <string name="add_new_agenda_item">Add New Agenda Item</string>
+    <string name="start_time_hh_mm">Start Time (HH:mm)</string>
+    <string name="end_time_hh_mm">End Time (HH:mm)</string>
+    <string name="add_agenda_item">Add Agenda Item</string>
+    <string name="edit_agenda">EDIT AGENDA</string>
 </resources>

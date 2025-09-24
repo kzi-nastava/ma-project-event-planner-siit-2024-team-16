@@ -13,15 +13,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.evenmate.auth.AuthManager;
+import com.example.evenmate.R;
 import com.example.evenmate.databinding.EventTypeGroupBinding;
 import com.example.evenmate.models.event.EventRequest;
 import com.example.evenmate.models.event.EventType;
-import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
-import java.util.Objects;
 
 public class EventTypeGroup extends DialogFragment{
     private RadioGroup eventTypeGroup;
@@ -45,8 +43,7 @@ public class EventTypeGroup extends DialogFragment{
         eventTypeGroup = binding.rgEventTypes;
         viewModel = new ViewModelProvider(requireActivity()).get(EventFormViewModel.class);
         getEventTypes();
-        setupSaveButton();
-        observeViewModel();
+        setupCreateAgendaButton();
 
         return new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(title)
@@ -55,16 +52,22 @@ public class EventTypeGroup extends DialogFragment{
                 .create();
     }
 
-    private void setupSaveButton() {
-        binding.btnSaveEvent.setOnClickListener(v -> {
-            if (validateInput()) {
-                if (Objects.equals(this.title, "Add Event")) {
-                    event.setOrganizerId(AuthManager.loggedInUser.getId());
-                    viewModel.addEvent(event);
-                } else {
-                    viewModel.updateEvent(event);
+    private void setupCreateAgendaButton() {
+        if(title.equals("Edit Event"))
+            binding.btnCreateAgenda.setText(R.string.edit_agenda);
+        binding.btnCreateAgenda.setOnClickListener(v -> {
+                if (validateInput()) {
+
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("event", event);
+                    bundle.putString("title", title);
+
+                    dismiss();
+
+                    AgendaFragment nextDialog = new AgendaFragment();
+                    nextDialog.setArguments(bundle);
+                    nextDialog.show(getParentFragmentManager(), "createAgenda");
                 }
-            }
         });
     }
 
@@ -97,25 +100,6 @@ public class EventTypeGroup extends DialogFragment{
         }
     }
 
-    private void observeViewModel() {
-        viewModel.getSuccess().observe(this, success -> {
-            if (success != null) {
-                ToastUtils.showCustomToast(requireContext(),
-                        success,
-                        false);
-
-                sendResultAndDismiss();
-            }
-        });
-
-        viewModel.getErrorMessage().observe(this, error -> {
-            if (error != null) {
-                ToastUtils.showCustomToast(requireContext(),
-                        error,
-                        false);
-            }
-        });
-    }
     private boolean validateInput() {
         int selectedId = eventTypeGroup.getCheckedRadioButtonId();
         if (selectedId != -1) {
@@ -126,13 +110,6 @@ public class EventTypeGroup extends DialogFragment{
             Toast.makeText(this.getContext(), "Please select an event type", Toast.LENGTH_SHORT).show();
             return false;
         }
-    }
-
-    private void sendResultAndDismiss() {
-        Bundle result = new Bundle();
-        result.putBoolean("refresh_events", true);
-        getParentFragmentManager().setFragmentResult("event_form_result", result);
-        dismissAllowingStateLoss();
     }
 
     @Override
