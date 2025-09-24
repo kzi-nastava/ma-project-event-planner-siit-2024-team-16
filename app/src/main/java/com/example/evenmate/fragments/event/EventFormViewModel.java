@@ -47,6 +47,10 @@ public class EventFormViewModel extends ViewModel {
         eventLiveData.setValue(event);
     }
 
+    public void resetState() {
+        success.setValue(null);
+        errorMessage.setValue(null);
+    }
     public void fetchTypes() {
         Call<PaginatedResponse<EventType>> call = ClientUtils.eventTypeService.getActiveTypes(true);
         call.enqueue(new Callback<>() {

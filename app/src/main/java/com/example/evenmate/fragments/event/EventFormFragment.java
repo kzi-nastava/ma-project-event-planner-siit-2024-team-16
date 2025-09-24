@@ -6,14 +6,12 @@ import static com.example.evenmate.adapters.LocalDateTypeAdapter.FORMATTER;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.evenmate.databinding.FragmentEventFormBinding;
@@ -77,7 +75,7 @@ public class EventFormFragment extends DialogFragment implements ImageUtils.Imag
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         binding = FragmentEventFormBinding.inflate(getLayoutInflater());
         viewModel = new ViewModelProvider(requireActivity()).get(EventFormViewModel.class);
-
+        viewModel.resetState();
         setupNextButton();
         setupFormFields();
         setupDatePicker();
@@ -108,21 +106,15 @@ public class EventFormFragment extends DialogFragment implements ImageUtils.Imag
         binding.btnNext.setOnClickListener(v -> {
             if (validateInput()) {
                 getEventValues();
-                EventTypeGroup targetFragment = new EventTypeGroup();
-
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("event", event);
                 bundle.putString("title", title);
-                targetFragment.setArguments(bundle);
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
                 dismiss();
 
-                new Handler().postDelayed(() -> {
-                    EventTypeGroup nextDialog = new EventTypeGroup();
-                    nextDialog.setArguments(bundle);
-                    nextDialog.show(fragmentManager, "eventTypeGroup");
-                }, 100);
+                EventTypeGroup nextDialog = new EventTypeGroup();
+                nextDialog.setArguments(bundle);
+                nextDialog.show(getParentFragmentManager(), "eventTypeGroup");
             }
         });
     }
@@ -311,7 +303,6 @@ public class EventFormFragment extends DialogFragment implements ImageUtils.Imag
     public void onImageSelected(String base64Image, Bitmap bitmap) {
         eventImageBase64 = base64Image;
         binding.iconUploadEvent.setImageBitmap(bitmap);
-        Toast.makeText(requireContext(), "Photo selected successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override

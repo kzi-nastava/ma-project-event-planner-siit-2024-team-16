@@ -8,12 +8,17 @@ import androidx.annotation.NonNull;
 import com.example.evenmate.models.Address;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EventRequest implements Parcelable {
     private Long id;
     private String name;
@@ -25,22 +30,7 @@ public class EventRequest implements Parcelable {
     private LocalDate date;
     private Long organizerId;
     private String photo;
-
-    public EventRequest() {
-    }
-
-    public EventRequest(Long id, String name, String description, Boolean isPrivate, String photo, Integer maxAttendees, Address address, Long typeId, LocalDate date, Long organizerId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.isPrivate = isPrivate;
-        this.photo = photo;
-        this.maxAttendees = maxAttendees;
-        this.address = address;
-        this.typeId = typeId;
-        this.date = date;
-        this.organizerId = organizerId;
-    }
+    private List<AgendaItem> agendaItems;
 
     protected EventRequest(Parcel in) {
         if (in.readByte() == 0) {
@@ -76,10 +66,12 @@ public class EventRequest implements Parcelable {
         }
 
         photo = in.readString();
+
+        agendaItems = in.createTypedArrayList(AgendaItem.CREATOR);
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         if (id == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -122,14 +114,17 @@ public class EventRequest implements Parcelable {
         }
 
         dest.writeString(photo);
+
+        dest.writeTypedList(agendaItems);
     }
+
 
     @Override
     public int describeContents() {
         return 0;
     }
 
-    public static final Creator<EventRequest> CREATOR = new Creator<EventRequest>() {
+    public static final Creator<EventRequest> CREATOR = new Creator<>() {
         @Override
         public EventRequest createFromParcel(Parcel in) {
             return new EventRequest(in);
@@ -155,6 +150,7 @@ public class EventRequest implements Parcelable {
                 ", date=" + date +
                 ", organizerId=" + organizerId +
                 ", photo='" + photo + '\'' +
+                ", agenda='" + agendaItems.toString() + '\'' +
                 '}';
     }
 }
