@@ -6,7 +6,6 @@ import static com.example.evenmate.adapters.LocalDateTypeAdapter.FORMATTER;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -108,21 +107,16 @@ public class EventFormFragment extends DialogFragment implements ImageUtils.Imag
         binding.btnNext.setOnClickListener(v -> {
             if (validateInput()) {
                 getEventValues();
-                EventTypeGroup targetFragment = new EventTypeGroup();
-
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("event", event);
                 bundle.putString("title", title);
-                targetFragment.setArguments(bundle);
                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
                 dismiss();
 
-                new Handler().postDelayed(() -> {
-                    EventTypeGroup nextDialog = new EventTypeGroup();
-                    nextDialog.setArguments(bundle);
-                    nextDialog.show(fragmentManager, "eventTypeGroup");
-                }, 100);
+                EventTypeGroup nextDialog = new EventTypeGroup();
+                nextDialog.setArguments(bundle);
+                nextDialog.show(fragmentManager, "eventTypeGroup");
             }
         });
     }

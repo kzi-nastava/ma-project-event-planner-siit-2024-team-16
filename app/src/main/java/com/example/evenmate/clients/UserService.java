@@ -70,6 +70,7 @@ public interface UserService {
     @PUT("users")
     Call<User> update(@Body UpdateUserRequest request);
 
+    //todo backend
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
@@ -77,12 +78,5 @@ public interface UserService {
     @GET("users/{userId}/favorite-products")
     Call<PaginatedResponse<Product>> getFavoriteProducts(@Path("userId") Long userId, @Query("page") int page,
                                                      @Query("size") int size);
-
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
-    @POST("users/{userId}/favorite-products/{productId}/toggle")
-    Call<Boolean> favoriteProductToggle(@Path("userId") Long userId, @Path("productId") Long productId);
 
 }

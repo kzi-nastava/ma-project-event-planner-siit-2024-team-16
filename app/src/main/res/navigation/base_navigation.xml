@@ -125,7 +125,7 @@
     </fragment>
     <fragment
         android:id="@+id/yourProductsFragment"
-        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
         android:label="@string/your_products"
         tools:layout="@layout/fragment_products" >
         <argument

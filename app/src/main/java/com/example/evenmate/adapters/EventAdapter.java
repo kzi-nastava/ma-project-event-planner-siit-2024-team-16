@@ -94,9 +94,15 @@ public class EventAdapter extends ArrayAdapter<Event> {
             type.setText(String.format("%s %s", getContext().getString(R.string.type), event.getType() != null ?  event.getType().getName() : "None"));
             maxAttendees.setText(String.format("%s%s", getContext().getString(R.string.max_guests), event.getMaxAttendees()));
             if (event.getPhoto() != null) {
+                String base64Image = event.getPhoto();
+                if (base64Image.contains(",")) {
+                    base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
+                }
                 Glide.with(getContext())
-                        .load(Base64.decode(event.getPhoto(), Base64.DEFAULT))
-                        .into(imageView);}
+                        .asBitmap()
+                        .load(Base64.decode(base64Image, Base64.DEFAULT))
+                        .into(imageView);
+            }
             btnEdit.setOnClickListener(v -> {
                 if (onEditClickListener != null) {
                     onEditClickListener.onEditClick(event);
@@ -110,12 +116,13 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
             User loggedInUser = AuthManager.loggedInUser;
             boolean isLoggedIn = loggedInUser!=null;
-            btnEdit.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
-            btnDelete.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
-            btnFavorite.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
+            boolean isEventOrganizer = isLoggedIn && loggedInUser.getRole().equals("EventOrganizer");
+            btnEdit.setVisibility(isEventOrganizer ? View.VISIBLE : View.GONE);
+            btnDelete.setVisibility(isLoggedIn ? (isEventOrganizer ? View.VISIBLE : View.GONE) : View.GONE);
+            btnFavorite.setVisibility(isLoggedIn ? View.VISIBLE : View.GONE);
             if(isLoggedIn) {
-                btnFavorite.setOnClickListener(v -> this.changeFavoriteStatus(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite));
-                checkFavoriteStatus(AuthManager.loggedInUser.getId(), event.getId(), btnFavorite);
+                btnFavorite.setOnClickListener(v -> this.changeFavoriteStatus(loggedInUser.getId(), event.getId(), btnFavorite));
+                checkFavoriteStatus(loggedInUser.getId(), event.getId(), btnFavorite);
             }
         }
         return itemView;

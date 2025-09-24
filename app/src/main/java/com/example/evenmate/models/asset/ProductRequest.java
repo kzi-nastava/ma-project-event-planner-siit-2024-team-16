@@ -20,7 +20,7 @@ public class ProductRequest implements Parcelable {
     private Long id;
     private String name;
     private String description;
-    private Integer price;
+    private Double price;
     private Integer discount;
     private List<String> images;
     private Long categoryId;
@@ -40,7 +40,7 @@ public class ProductRequest implements Parcelable {
         if (in.readByte() == 0) {
             price = null;
         } else {
-            price = in.readInt();
+            price = in.readDouble();
         }
         if (in.readByte() == 0) {
             discount = null;
@@ -92,7 +92,7 @@ public class ProductRequest implements Parcelable {
             parcel.writeByte((byte) 0);
         } else {
             parcel.writeByte((byte) 1);
-            parcel.writeInt(price);
+            parcel.writeDouble(price);
         }
         if (discount == null) {
             parcel.writeByte((byte) 0);

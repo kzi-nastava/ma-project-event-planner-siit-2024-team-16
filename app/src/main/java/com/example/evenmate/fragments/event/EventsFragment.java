@@ -111,7 +111,7 @@ public class EventsFragment extends ListFragment {
 
     private void setupAddEventButton() {
         boolean isFavoritesMode = this.fetchMode.equals("FAVORITES");
-        boolean isEventOrganizer = AuthManager.loggedInUser.getRole().equals("EventOrganizer");
+        boolean isEventOrganizer = AuthManager.loggedInUser != null && AuthManager.loggedInUser.getRole().equals("EventOrganizer");
 
         if (isFavoritesMode || !isEventOrganizer) {
             binding.btnAddEvent.setVisibility(View.GONE);

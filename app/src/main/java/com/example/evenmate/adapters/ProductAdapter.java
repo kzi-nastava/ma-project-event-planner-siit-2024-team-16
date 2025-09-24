@@ -91,12 +91,18 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             description.setText(String.format("%s: %s", getContext().getString(R.string.description), product.getDescription()));
             name.setText(String.format("%s: %s", getContext().getString(R.string.name), product.getName()));
             category.setText(String.format("%s%s", getContext().getString(R.string.category), product.getCategory() != null ? product.getCategory().getName() : null));
-            price.setText(String.format("%s%s", getContext().getString(R.string.price), product.getPrice()));
-            priceAfterDiscount.setText(String.format("%s%s", getContext().getString(R.string.priceAfterDiscount), product.getPriceAfterDiscount()));
+            price.setText(String.format("%s: %s", getContext().getString(R.string.price), product.getPrice()));
+            priceAfterDiscount.setText(String.format("%s: %s", getContext().getString(R.string.priceAfterDiscount), product.getPriceAfterDiscount()));
             if (product.getImages() != null) {
+                String base64Image = product.getImages().get(0);
+                if (base64Image.contains(",")) {
+                    base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
+                }
                 Glide.with(getContext())
-                        .load(Base64.decode(product.getImages().get(0), Base64.DEFAULT))
-                        .into(imageView);}
+                        .asBitmap()
+                        .load(Base64.decode(base64Image, Base64.DEFAULT))
+                        .into(imageView);
+            }
             btnEdit.setOnClickListener(v -> {
                 if (onEditClickListener != null) {
                     onEditClickListener.onEditClick(product);
@@ -109,12 +115,13 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             });
             User loggedInUser = AuthManager.loggedInUser;
             boolean isLoggedIn = loggedInUser!=null;
-            btnEdit.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
-            btnDelete.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
-            btnFavorite.setVisibility(isLoggedIn ? (AuthManager.loggedInUser.getRole().equals("EventOrganizer") ? View.VISIBLE : View.GONE) : View.GONE);
+            boolean isProvider = isLoggedIn && loggedInUser.getRole().equals("ProductServiceProvider");
+            btnEdit.setVisibility(isProvider ? View.VISIBLE : View.GONE);
+            btnDelete.setVisibility(isLoggedIn ? (isProvider ? View.VISIBLE : View.GONE) : View.GONE);
+            btnFavorite.setVisibility(isLoggedIn ? View.VISIBLE : View.GONE);
             if(isLoggedIn) {
-                btnFavorite.setOnClickListener(v -> this.changeFavoriteStatus(AuthManager.loggedInUser.getId(), product.getId(), btnFavorite));
-                checkFavoriteStatus(AuthManager.loggedInUser.getId(), product.getId(), btnFavorite);
+                btnFavorite.setOnClickListener(v -> this.changeFavoriteStatus(product.getId(), btnFavorite));
+                checkFavoriteStatus(product.getId(), btnFavorite);
             }
         }
         return itemView;
@@ -125,13 +132,14 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         notifyDataSetChanged();
     }
 
-    private void checkFavoriteStatus(Long userId, Long productId, MaterialButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.userService.checkFavoriteStatus(userId, productId);
+    private void checkFavoriteStatus(Long productId, MaterialButton btnFavorite) {
+        retrofit2.Call<Boolean> call = ClientUtils.productService.checkIsProductFavorite(productId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     boolean isFavorite = response.body();
+
                     btnFavorite.setBackgroundResource(
                             isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite
                     );
@@ -141,30 +149,26 @@ public class ProductAdapter extends ArrayAdapter<Product> {
 
             @Override
             public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
-                ToastUtils.showCustomToast(getContext(),R.string.network_error + t.getMessage(), true);
+                ToastUtils.showCustomToast(getContext(), R.string.network_error + t.getMessage(), true);
             }
         });
     }
 
-    private void changeFavoriteStatus(Long userId, Long productId, MaterialButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.userService.favoriteProductToggle(userId, productId);
+    private void changeFavoriteStatus(Long productId, MaterialButton btnFavorite) {
+        retrofit2.Call<Void> call = ClientUtils.productService.favoriteProductToggle(productId);
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    boolean isFavorite = response.body();
-                    btnFavorite.setBackgroundResource(
-                            isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite
-                    );
-                    btnFavorite.setSelected(isFavorite);
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                boolean isFavorite = !btnFavorite.isSelected();
 
-                } else {
-                    ToastUtils.showCustomToast(getContext(),response.message(), true);
-                }
+                btnFavorite.setBackgroundResource(
+                        isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite
+                );
+                btnFavorite.setSelected(isFavorite);
             }
 
             @Override
-            public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 ToastUtils.showCustomToast(getContext(),R.string.network_error + t.getMessage(), true);
             }
         });

@@ -24,33 +24,51 @@ public interface ProductService {
             @Query("page") int page,
             @Query("size") int size
     );
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @GET("products/by-organizer")
-    Call<PaginatedResponse<Product>> getProductsByOrganizer(
+    @GET("products/by-provider")
+    Call<PaginatedResponse<Product>> getProductsByProvider(
             @Query("page") int page,
             @Query("size") int size
     );
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @POST("products")
     Call<Product> create(@Body ProductRequest request);
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @PUT("products")
-    Call<Product> update(@Body ProductRequest request);
+    @PUT("products/{id}")
+    Call<Product> update(@Body ProductRequest request, @Path("id") Long id);
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @DELETE("products/{id}")
     Call<Object> delete(@Path("id") Long id);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("products/{productId}/favorite")
+    Call<Void> favoriteProductToggle(@Path("productId") Long productId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("products/{productId}/favorite")
+    Call<Boolean> checkIsProductFavorite(@Path("productId") Long productId);
 }
 
 

@@ -56,11 +56,11 @@ public class ProductsFragment extends ListFragment {
 
             adapter = new ProductAdapter(getActivity(), new ArrayList<>());
 
-//            adapter.setOnEditClickListener(product -> {
-//                        ProductFormFragment dialogFragment = ProductFormFragment.newInstance(product);
-//                        dialogFragment.show(getParentFragmentManager(), "EditProduct");
-//                    }
-//            );
+            adapter.setOnEditClickListener(product -> {
+                        ProductFormFragment dialogFragment = ProductFormFragment.newInstance(product);
+                        dialogFragment.show(getParentFragmentManager(), "EditProduct");
+                    }
+            );
             adapter.setOnDeleteClickListener(product -> new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Delete Product")
                     .setMessage(String.format("Are you sure you want to delete %s? This action cannot be undone.", product.getName()))
@@ -72,9 +72,7 @@ public class ProductsFragment extends ListFragment {
                                     viewModel.getDeleteFailed().toString(),
                                     true);
                         else
-                            ToastUtils.showCustomToast(requireContext(),
-                                    String.format("%s successfully deleted", product.getName()),
-                                    false);
+                            viewModel.fetchProducts();
                         viewModel.resetDeleteFailed();
                     })
                     .show()
@@ -110,16 +108,16 @@ public class ProductsFragment extends ListFragment {
 
         private void setupAddProductButton() {
             boolean isFavoritesMode = this.fetchMode.equals("FAVORITES");
-            boolean isProductOrganizer = AuthManager.loggedInUser.getRole().equals("ProductOrganizer");
+            boolean isProvider = AuthManager.loggedInUser != null && AuthManager.loggedInUser.getRole().equals("ProductServiceProvider");
 
-            if (isFavoritesMode || !isProductOrganizer) {
+            if (isFavoritesMode || !isProvider) {
                 binding.btnAddProduct.setVisibility(View.GONE);
             } else {
                 binding.btnAddProduct.setVisibility(View.VISIBLE);
-//                binding.btnAddProduct.setOnClickListener(v -> {
-//                    ProductFormFragment dialogFragment = ProductFormFragment.newInstance(null);
-//                    dialogFragment.show(getParentFragmentManager(), "CreateProduct");
-//                });
+                binding.btnAddProduct.setOnClickListener(v -> {
+                    ProductFormFragment dialogFragment = ProductFormFragment.newInstance(null);
+                    dialogFragment.show(getParentFragmentManager(), "CreateProduct");
+                });
             }
         }
 

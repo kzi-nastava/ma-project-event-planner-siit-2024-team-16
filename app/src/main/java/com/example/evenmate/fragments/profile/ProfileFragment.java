@@ -121,8 +121,13 @@ public class ProfileFragment extends Fragment{
         binding.address.setText("N/A");
     }
     if(user.getPhoto() != null){
+        String base64Image = user.getPhoto();
+        if (base64Image.contains(",")) {
+            base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
+        }
         Glide.with(requireContext())
-                .load(Base64.decode(user.getPhoto(), Base64.DEFAULT))
+                .asBitmap()
+                .load(Base64.decode(base64Image, Base64.DEFAULT))
                 .into(binding.pspProfileImage);
         }
     }

@@ -112,7 +112,7 @@ public class EventTypeGroup extends DialogFragment{
             if (error != null) {
                 ToastUtils.showCustomToast(requireContext(),
                         error,
-                        false);
+                        true);
             }
         });
     }

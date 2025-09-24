@@ -47,7 +47,7 @@ public class ProductsViewModel extends ViewModel {
         if ("FAVORITES".equals(fetchMode)) {
             call = ClientUtils.userService.getFavoriteProducts(AuthManager.loggedInUser.getId(), apiPage, PAGE_SIZE);
         } else if ("YOUR_PRODUCTS".equals(fetchMode)) {
-            call = ClientUtils.productService.getProductsByOrganizer(apiPage, PAGE_SIZE);
+            call = ClientUtils.productService.getProductsByProvider(apiPage, PAGE_SIZE);
         } else {
             call = ClientUtils.productService.getProducts(apiPage, PAGE_SIZE);
         }
