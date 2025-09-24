@@ -131,4 +131,9 @@
     <string name="end_time_hh_mm">End Time (HH:mm)</string>
     <string name="add_agenda_item">Add Agenda Item</string>
     <string name="edit_agenda">EDIT AGENDA</string>
+    <string name="chat_type_message">Type a message</string>
+    <string name="send_message">Send</string>
+    <string name="chat_name">Chat Name</string>
+    <string name="sender">Sender</string>
+    <string name="message_content">Message content</string>
 </resources>

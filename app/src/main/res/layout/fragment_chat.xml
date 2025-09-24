@@ -10,9 +10,9 @@
         android:layout_width="match_parent" android:layout_height="wrap_content">
         <EditText android:id="@+id/edit_message"
             android:layout_width="0dp" android:layout_weight="1"
-            android:layout_height="wrap_content" android:hint="Type a message"/>
+            android:layout_height="wrap_content" android:hint="@string/chat_type_message"/>
         <Button android:id="@+id/button_send"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Send"/>
+            android:text="@string/send_message"/>
     </LinearLayout>
 </LinearLayout>
