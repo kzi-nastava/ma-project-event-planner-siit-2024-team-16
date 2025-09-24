@@ -8,12 +8,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
 import com.example.evenmate.models.category.CategorySuggestion;
+
 import java.util.List;
 
 public class CategorySuggestionAdapter extends RecyclerView.Adapter<CategorySuggestionAdapter.SuggestionViewHolder> {
     public interface OnSuggestionActionListener {
         void onApprove(CategorySuggestion suggestion);
         void onEdit(CategorySuggestion suggestion);
+        void onUpdateAssetCategory(CategorySuggestion suggestion);
     }
 
     private List<CategorySuggestion> suggestions;
@@ -43,6 +45,7 @@ public class CategorySuggestionAdapter extends RecyclerView.Adapter<CategorySugg
         holder.description.setText(suggestion.getDescription());
         holder.approve.setOnClickListener(v -> listener.onApprove(suggestion));
         holder.edit.setOnClickListener(v -> listener.onEdit(suggestion));
+        holder.updateAssetCategory.setOnClickListener(v -> listener.onUpdateAssetCategory(suggestion));
     }
 
     @Override
@@ -51,14 +54,14 @@ public class CategorySuggestionAdapter extends RecyclerView.Adapter<CategorySugg
     }
 
     static class SuggestionViewHolder extends RecyclerView.ViewHolder {
-        TextView name, description, approve, edit;
+        TextView name, description, approve, edit, updateAssetCategory;
         SuggestionViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.suggestion_name);
             description = itemView.findViewById(R.id.suggestion_description);
             approve = itemView.findViewById(R.id.suggestion_approve);
             edit = itemView.findViewById(R.id.suggestion_edit);
+            updateAssetCategory = itemView.findViewById(R.id.suggestion_update_asset_category);
         }
     }
 }
-

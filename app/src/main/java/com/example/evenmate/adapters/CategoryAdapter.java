@@ -24,6 +24,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         this.listener = listener;
     }
 
+    public List<Category> getCategories() {
+        return this.categories;
+    }
+
     public void setCategories(List<Category> categories) {
         this.categories = categories;
         notifyDataSetChanged();
