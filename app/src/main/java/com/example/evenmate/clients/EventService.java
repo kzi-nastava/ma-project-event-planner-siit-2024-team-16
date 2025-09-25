@@ -50,7 +50,7 @@ public interface EventService {
             "Content-Type:application/json"
     })
     @DELETE("events/{id}")
-    Call<Object> delete(@Path("id") Long id);
+    Call<Void> delete(@Path("id") Long id);
 }
 
 

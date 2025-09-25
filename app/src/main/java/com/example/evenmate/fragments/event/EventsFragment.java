@@ -73,10 +73,6 @@ public class EventsFragment extends ListFragment {
                         ToastUtils.showCustomToast(requireContext(),
                             viewModel.getDeleteFailed().toString(),
                             true);
-                    else
-                        ToastUtils.showCustomToast(requireContext(),
-                                String.format("%s successfully deleted", event.getName()),
-                                false);
                     viewModel.resetDeleteFailed();
                 })
                 .show()

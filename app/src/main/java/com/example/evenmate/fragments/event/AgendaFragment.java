@@ -46,7 +46,7 @@ public class AgendaFragment extends DialogFragment {
         binding = FragmentAgendaBinding.inflate(getLayoutInflater());
         viewModel = new ViewModelProvider(requireActivity()).get(EventFormViewModel.class);
         RecyclerView recyclerView = binding.agendaRecyclerView;
-        adapter = new AgendaAdapter(new ArrayList<>());
+        adapter = new AgendaAdapter(new ArrayList<>(), true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

@@ -48,85 +48,104 @@ import retrofit2.Response;
 
 public class EventDetailsFragment extends Fragment {
 
-        private FragmentEventDetailsBinding binding;
-        private EventsViewModel viewModel;
-        private Event event;
+    private FragmentEventDetailsBinding binding;
+    private EventsViewModel viewModel;
+    private Event event;
     private boolean isFavorite = false;
+    private boolean isAdmin;
+    private boolean isOrganizer;
+    private long userId = -1;
 
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                                 @Nullable Bundle savedInstanceState) {
-            binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
-            viewModel = new ViewModelProvider(this).get(EventsViewModel.class);
-            event = getArguments() != null ? getArguments().getParcelable("event") : null;
-            return binding.getRoot();
-        }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(this).get(EventsViewModel.class);
+        event = getArguments() != null ? getArguments().getParcelable("event") : null;
+        return binding.getRoot();
+    }
 
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            if(event != null) {
-                setupDetails();
-                binding.favoriteButton.setOnClickListener(v -> toggleFavorite());
-                binding.downloadPdfButton.setOnClickListener(v -> generatePdf(false));
-                binding.downloadReportPdfButton.setOnClickListener(v -> generatePdf(true));
-                binding.btnEditEvent.setOnClickListener(e -> {
-                            EventFormFragment dialogFragment = EventFormFragment.newInstance(event);
-                            dialogFragment.show(getParentFragmentManager(), "EditEvent");
-                        }
-                );
-                binding.btnDeleteEvent.setOnClickListener(e -> new MaterialAlertDialogBuilder(requireContext())
-                        .setTitle("Delete Event")
-                        .setMessage(String.format("Are you sure you want to delete %s? This action cannot be undone.", event.getName()))
-                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                        .setPositiveButton("Delete", (dialog, which) -> {
-                            viewModel.deleteEvent(event.getId());
-                            if(viewModel.getDeleteFailed())
-                                ToastUtils.showCustomToast(requireContext(),
-                                        viewModel.getDeleteFailed().toString(),
-                                        true);
-                            else
-                                ToastUtils.showCustomToast(requireContext(),
-                                        String.format("%s successfully deleted", event.getName()),
-                                        false);
-                            viewModel.resetDeleteFailed();
-                        })
-                        .show()
-                );
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(event != null) {
+            User user = AuthManager.loggedInUser;
+            if(user != null){
+                isOrganizer = user.getRole().equals("EventOrganizer");
+                isAdmin = user.getRole().equals("Admin");
+                userId = user.getId();
+                setupActionButtons();
             }
-        }
+            setupDetails();
+        } else
+            binding.eventName.setText(R.string.no_event_to_display);
+    }
+
+    private void setupActionButtons() {
+        binding.actionButtons.setVisibility(View.VISIBLE);
+        binding.favoriteButton.setVisibility(View.VISIBLE);
+        binding.budgetButton.setVisibility(View.VISIBLE);
+        binding.downloadPdfButton.setVisibility(isAdmin || isOrganizer ? View.VISIBLE : View.GONE);
+        binding.downloadReportPdfButton.setVisibility(isAdmin || isOrganizer ? View.VISIBLE : View.GONE);
+        binding.btnDeleteEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
+        binding.btnEditEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
+
+        binding.favoriteButton.setOnClickListener(v -> toggleFavorite());
+        binding.downloadPdfButton.setOnClickListener(v -> generatePdf(false));
+        binding.downloadReportPdfButton.setOnClickListener(v -> generatePdf(true));
+        binding.btnEditEvent.setOnClickListener(e -> {
+                    EventFormFragment dialogFragment = EventFormFragment.newInstance(event);
+                    dialogFragment.show(getParentFragmentManager(), "EditEvent");
+                }
+        );
+        binding.btnDeleteEvent.setOnClickListener(e -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Delete Event")
+                .setMessage(String.format("Are you sure you want to delete %s? This action cannot be undone.", event.getName()))
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    //todo nav to previous page
+                    viewModel.deleteEvent(event.getId());
+                    if(viewModel.getDeleteFailed())
+                        ToastUtils.showCustomToast(requireContext(),
+                                viewModel.getDeleteFailed().toString(),
+                                true);
+                    viewModel.resetDeleteFailed();
+                })
+                .show()
+        );
+    }
 
     private void setupAgenda() {
         binding.agendaRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        AgendaAdapter agendaAdapter = new AgendaAdapter(new ArrayList<>());
+        AgendaAdapter agendaAdapter = new AgendaAdapter(new ArrayList<>(), false);
         binding.agendaRecyclerView.setAdapter(agendaAdapter);
         agendaAdapter.setItems(event.getAgendaItems());
     }
 
     private void setupDetails() {
-            binding.eventName.setText(event.getName());
-            binding.eventDescription.setText(event.getDescription());
-            binding.eventDate.setText(String.format("Date: %s", event.getDate()));
-            binding.eventLocation.setText(String.format("Location: %s", event.getAddress()));
-            binding.eventOrganizer.setText(String.format("Organizer: %s %s", event.getOrganizer().getFirstName(), event.getOrganizer().getLastName()));
-            if (event.getPhoto() != null) {
-                String base64Image = event.getPhoto();
-                if (base64Image.contains(",")) {
-                    base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
-                }
-                Glide.with(requireContext())
-                        .asBitmap()
-                        .load(Base64.decode(base64Image, Base64.DEFAULT))
-                        .into(binding.eventPhoto);
-            } else
-                binding.eventPhoto.setVisibility(View.GONE);
-            User user = AuthManager.loggedInUser;
-            if(user != null)
-                checkFavoriteStatus(user.getId(), event.getId(), binding.favoriteButton);
-            setupAgenda();
+        binding.eventName.setText(event.getName());
+        binding.eventDescription.setText(event.getDescription());
+        binding.eventDate.setText(String.format("Date: %s", event.getDate()));
+        binding.eventLocation.setText(String.format("Location: %s", event.getAddress()));
+        binding.eventOrganizer.setText(String.format("Organizer: %s %s", event.getOrganizer().getFirstName(), event.getOrganizer().getLastName()));
+        if (event.getPhoto() != null) {
+            String base64Image = event.getPhoto();
+            if (base64Image.contains(",")) {
+                base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
+            }
+            Glide.with(requireContext())
+                    .asBitmap()
+                    .load(Base64.decode(base64Image, Base64.DEFAULT))
+                    .into(binding.eventPhoto);
+        } else
+            binding.eventPhoto.setVisibility(View.GONE);
+        if(userId != -1)
+            checkFavoriteStatus(userId, event.getId(), binding.favoriteButton);
+        setupAgenda();
+        if(isOrganizer || isAdmin)
             renderChart();
-        }
+    }
 
     private void checkFavoriteStatus(Long userId, Long eventId, ImageButton btnFavorite) {
         retrofit2.Call<Boolean> call = ClientUtils.userService.checkFavoriteStatus(userId, eventId);
@@ -150,6 +169,7 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void renderChart() {
+        binding.ratingChartLayout.setVisibility(View.VISIBLE);
         List<Review> reviews = event.getReviews();
         int[] counts = new int[5];
         for (Review r : reviews) {
@@ -176,6 +196,7 @@ public class EventDetailsFragment extends Fragment {
         binding.ratingChart.setData(data);
         binding.ratingChart.invalidate();
     }
+
     private void generatePdf(boolean isReport) {
         PdfDocument pdf = isReport ? EventReportPdf.getDocument(event, (binding.ratingChart)) : EventDetailsPdf.getDocument(event);
 
@@ -215,4 +236,4 @@ public class EventDetailsFragment extends Fragment {
             super.onDestroyView();
             binding = null;
         }
-    }
+}

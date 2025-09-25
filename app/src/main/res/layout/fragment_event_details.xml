@@ -41,10 +41,11 @@
         <LinearLayout
             android:orientation="horizontal"
             android:gravity="center"
+            android:id="@+id/actionButtons"
+            android:visibility="gone"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <ImageButton
                 android:id="@+id/favoriteButton"
                 android:layout_margin="4dp"
@@ -135,29 +136,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:id="@+id/ratingChartLayout">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/reviews"
-                android:layout_gravity="center_vertical"
-                android:textStyle="bold"/>
-            <ImageButton
-                android:id="@+id/downloadReportPdfButton"
-                android:src="@drawable/ic_download"
-                android:layout_margin="4dp"
-                android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content"
-                app:tint="@color/grey"
-                android:layout_width="wrap_content"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/download_pdf"/>
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reviews"
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"/>
+                <ImageButton
+                    android:id="@+id/downloadReportPdfButton"
+                    android:src="@drawable/ic_download"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    app:tint="@color/grey"
+                    android:layout_width="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/download_pdf"/>
+            </LinearLayout>
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/ratingChart"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"/>
         </LinearLayout>
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/ratingChart"
-            android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"/>
     </LinearLayout>
 </ScrollView>

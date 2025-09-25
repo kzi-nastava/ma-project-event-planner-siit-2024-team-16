@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/base_navigation"
     app:startDestination="@+id/HomepageFragment">
+    <!-- todo back <- -->
     <fragment
         android:id="@+id/nav_auth"
         android:name="com.example.evenmate.fragments.auth.LoginFragment"

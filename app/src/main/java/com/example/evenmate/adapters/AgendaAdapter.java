@@ -20,9 +20,11 @@ import lombok.Getter;
 public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaViewHolder> {
 
     private final List<AgendaItem> items;
+    private final boolean isDeleteButtonVisible;
 
-    public AgendaAdapter(List<AgendaItem> items) {
+    public AgendaAdapter(List<AgendaItem> items, boolean isDeleteButtonVisible) {
         this.items = items;
+        this.isDeleteButtonVisible = isDeleteButtonVisible;
     }
 
     public static class AgendaViewHolder extends RecyclerView.ViewHolder {
@@ -57,6 +59,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaView
         holder.start.setText(item.getStartTime());
         holder.end.setText(item.getEndTime());
 
+        holder.deleteBtn.setVisibility(isDeleteButtonVisible ? View.VISIBLE : View.GONE);
         holder.deleteBtn.setOnClickListener(v -> {
             int pos = holder.getBindingAdapterPosition();
             items.remove(pos);

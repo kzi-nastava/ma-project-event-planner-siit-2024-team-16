@@ -12,7 +12,6 @@ import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.Event;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Setter;
@@ -67,27 +66,19 @@ public class EventsViewModel extends ViewModel {
     }
 
     public void deleteEvent(Long id) {
-        Call<Object> call = ClientUtils.eventService.delete(id);
+        Call<Void> call = ClientUtils.eventService.delete(id);
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
-                Log.d("delete", "deleted");
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                fetchEvents();
             }
 
             @Override
-            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error deleting event: " + t.getMessage());
                 deleteFailed.setValue(true);
             }
         });
-        refreshEvents();
-    }
-
-    public void refreshEvents() {
-        List<Event> currentList = events.getValue();
-        if (currentList != null) {
-            events.setValue(new ArrayList<>(currentList));
-        }
     }
 
     public void nextPage() {
