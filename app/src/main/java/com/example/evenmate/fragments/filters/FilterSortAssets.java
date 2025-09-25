@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
 import com.example.evenmate.clients.ClientUtils;
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.Location;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.EventType;
@@ -214,7 +214,6 @@ public class FilterSortAssets extends Fragment {
                         break;
                     }
                 }
-                sortButton.setText("Sort: " + label);
                 selectedSortKey = key;
             });
 
