@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.CommentAdapter;
+import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.commentreview.Comment;
@@ -59,6 +60,10 @@ public class CommentsFragment extends Fragment {
         if (getArguments() != null) {
             assetId = getArguments().containsKey(ARG_ASSET_ID) ? getArguments().getLong(ARG_ASSET_ID) : null;
             userId = getArguments().containsKey(ARG_USER_ID) ? getArguments().getLong(ARG_USER_ID) : null;
+        }
+        if (AuthManager.loggedInUser == null || AuthManager.loggedInUser.getId().equals(userId)) {
+            inputComment.setEnabled(false);
+            btnAddComment.setEnabled(false);
         }
         loadComments();
         return view;
