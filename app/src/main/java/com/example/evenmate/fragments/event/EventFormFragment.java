@@ -109,11 +109,13 @@ public class EventFormFragment extends DialogFragment implements ImageUtils.Imag
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("event", event);
                 bundle.putString("title", title);
+//                 FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
                 dismiss();
 
                 EventTypeGroup nextDialog = new EventTypeGroup();
                 nextDialog.setArguments(bundle);
+//                 nextDialog.show(fragmentManager, "eventTypeGroup");
                 nextDialog.show(getParentFragmentManager(), "eventTypeGroup");
             }
         });

@@ -29,11 +29,11 @@ public class CardAdapter {
         TextView title = cardView.findViewById(R.id.title);
         title.setText(asset.getName());
         TextView box1 = cardView.findViewById(R.id.box1);
-//        box1.setText(String.format("%s%s, %s", fragment.getString(R.string.location), asset.getCountry(),asset.getCity()));
+        box1.setText(String.format("%s: %s", fragment.getString(R.string.description), asset.getDescription()));
         TextView box2 = cardView.findViewById(R.id.box2);
         box2.setText(String.format("%s%s", fragment.getString(R.string.category), asset.getCategory()));
         TextView box3 = cardView.findViewById(R.id.box3);
-        box3.setText(String.format("%s%s", fragment.getString(R.string.price), asset.getPrice()));
+        box3.setText(String.format("%s: %s", fragment.getString(R.string.price), asset.getPrice()));
         TextView box4 = cardView.findViewById(R.id.box4);
         box4.setText(String.format("%s%s", fragment.getString(R.string.rating), asset.getAverageReview()));
         // image

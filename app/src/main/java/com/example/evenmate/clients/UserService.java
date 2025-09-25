@@ -1,6 +1,7 @@
 package com.example.evenmate.clients;
 
 import com.example.evenmate.models.PaginatedResponse;
+import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.user.CalendarItem;
 import com.example.evenmate.models.user.UpdateUserRequest;
@@ -25,6 +26,7 @@ public interface UserService {
     })
     @GET("users/whoami")
     Call<User> whoami();
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
@@ -45,6 +47,7 @@ public interface UserService {
     })
     @GET("users/calendar")
     Call<List<CalendarItem>> getCalendar();
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
@@ -52,16 +55,28 @@ public interface UserService {
 
     @POST("users/{userId}/favorite-events/{eventId}/toggle")
     Call<Boolean> favoriteEventToggle(@Path("userId") Long userId, @Path("eventId") Long eventId);
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @DELETE("users/{id}")
     Call<Object> delete(@Path("id") Long id);
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @PUT("users")
     Call<User> update(@Body UpdateUserRequest request);
+
+    //todo backend
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("users/{userId}/favorite-products")
+    Call<PaginatedResponse<Product>> getFavoriteProducts(@Path("userId") Long userId, @Query("page") int page,
+                                                     @Query("size") int size);
+
 }

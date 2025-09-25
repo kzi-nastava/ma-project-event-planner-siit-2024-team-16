@@ -17,15 +17,11 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.evenmate.R;
 import com.example.evenmate.models.asset.Asset;
-import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.event.Event;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class HomepageFragment extends Fragment {
 

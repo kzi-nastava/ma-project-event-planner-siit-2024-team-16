@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 //@AllArgsConstructor
-public class Product extends Asset{
+public class Product extends Asset {
 }
