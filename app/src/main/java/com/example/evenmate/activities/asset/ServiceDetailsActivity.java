@@ -142,7 +142,7 @@ public class ServiceDetailsActivity extends AppCompatActivity {
         reservationTypeText.setText(service.getReservationConformation());
 
         setupStatusChips();
-        setupEventTypesChips(service.getEventTypes());
+//        setupEventTypesChips(service.getEventTypes());
     }
     private String getDuration(){
         if (service.getLength()!=null){
@@ -179,8 +179,8 @@ public class ServiceDetailsActivity extends AppCompatActivity {
     }
 
     public static Service getServiceById(Long id){
-        return null;
 //        return new Service(id, "Maya's Catering", new ArrayList<>(List.of("https://picsum.photos/400/300", "https://picsum.photos/400/301", "https://picsum.photos/400/302")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true,"distinct.",11,null,null,"Book at least 48 hours in advance","Manual confirmation","Cancel at least 24 hours before the date.",new ArrayList<>(List.of("Wedding","Birthday","Corporate Event","Family gathering")));
+        return new Service();
     }
 }
 class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder> {

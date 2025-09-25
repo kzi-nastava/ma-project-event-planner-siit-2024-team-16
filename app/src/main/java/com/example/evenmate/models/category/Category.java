@@ -1,10 +1,9 @@
-package com.example.evenmate.models;
+package com.example.evenmate.models.category;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
-import com.example.evenmate.models.event.EventType;
-import java.util.List;
+
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;
@@ -14,13 +13,12 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Category implements Parcelable {
     private Long id;
     private String name;
     private String description;
-    private List<EventType> types;
 
     protected Category(Parcel in) {
         if (in.readByte() == 0) {
@@ -30,7 +28,6 @@ public class Category implements Parcelable {
         }
         name = in.readString();
         description = in.readString();
-        types = in.createTypedArrayList(EventType.CREATOR);
     }
 
     public static final Creator<Category> CREATOR = new Creator<>() {
@@ -60,7 +57,6 @@ public class Category implements Parcelable {
         }
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeTypedList(types);
     }
 
     @NonNull
@@ -74,11 +70,11 @@ public class Category implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(description, category.description) && Objects.equals(types, category.types);
+        return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(description, category.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, types);
+        return Objects.hash(id, name, description);
     }
 }

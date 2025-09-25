@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.evenmate.R;
 import com.example.evenmate.models.event.EventType;
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
