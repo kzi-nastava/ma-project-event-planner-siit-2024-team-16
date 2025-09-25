@@ -178,4 +178,6 @@
     <string name="post">Post</string>
     <string name="reviews">Reviews</string>
     <string name="your_rating">Your rating:</string>
+    <string name="average_rating">Average Rating</string>
+    <string name="comments">Comments</string>
 </resources>
