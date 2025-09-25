@@ -3,6 +3,8 @@ package com.example.evenmate.models.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.example.evenmate.models.Address;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +27,9 @@ public class User implements Parcelable {
     private Company company;
     private String photo;
     private String role;
+
+    @Nullable
+    private Double averageReview; // To avoid casting issues in subclasses
 
     public User(User user) {
         this.id = user.id;
