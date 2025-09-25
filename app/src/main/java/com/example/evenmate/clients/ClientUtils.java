@@ -34,6 +34,7 @@ public class ClientUtils {
     public static AssetService assetService;
     public static PriceListService priceListService;
     public static CommentReviewService commentReviewService;
+    public static ServiceService serviceService;
 
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
@@ -51,6 +52,7 @@ public class ClientUtils {
         assetService = getRetrofit().create(AssetService.class);
         priceListService = getRetrofit().create(PriceListService.class);
         commentReviewService = getRetrofit().create(CommentReviewService.class);
+        serviceService = getRetrofit().create(ServiceService.class);
     }
 
     private static OkHttpClient createHttpClient() {
