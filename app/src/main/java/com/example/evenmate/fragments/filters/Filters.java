@@ -15,5 +15,7 @@ public class Filters {
     private List<Long> selectedTypes;
     private List<String> selectedLocations;
     private boolean showInPast;
+
+    private String sortOption = "id,asc";
 }
 

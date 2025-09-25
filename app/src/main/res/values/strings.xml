@@ -129,4 +129,8 @@
     <string name="reset">RESET</string>
     <string name="apply">APPLY</string>
     <string name="show_past_events">Show Past Events</string>
+    <string name="price_range">Price Range</string>
+    <string name="select_category">Select category</string>
+    <string name="select_event_type">Select Event Type</string>
+    <string name="select_provider">Select Provider</string>
 </resources>

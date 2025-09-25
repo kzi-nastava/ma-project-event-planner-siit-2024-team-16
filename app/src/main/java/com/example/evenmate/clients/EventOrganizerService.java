@@ -13,5 +13,5 @@ public interface EventOrganizerService {
             "Content-Type:application/json"
     })
     @GET("organizers/for-filter")
-    Call<List<EventOrganizer>> getAllOrganizers();
+    Call<List<EventOrganizer>> getAll();
 }

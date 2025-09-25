@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.evenmate.models.Category;
+import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.event.EventTypeRequest;
@@ -41,19 +42,19 @@ public class EventTypeFormViewModel extends ViewModel {
         errorMessage.setValue(null);
     }
     public void fetchCategories() {
-        Call<List<Category>> call = ClientUtils.categoryService.getCategories();
+        Call<PaginatedResponse<Category>> call = ClientUtils.categoryService.getCategories();
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<List<Category>> call, @NonNull Response<List<Category>> response) {
+            public void onResponse(@NonNull Call<PaginatedResponse<Category>> call, @NonNull Response<PaginatedResponse<Category>> response) {
                 Log.d("API_DEBUG", "Response code: " + response.code());
                 Log.d("API_DEBUG", "Response body: " + response.body());
                 if (response.isSuccessful() && response.body() != null) {
-                    categories.setValue(response.body());
+                    categories.setValue(response.body().getContent());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Category>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<PaginatedResponse<Category>> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error fetching categories: " + t.getMessage());
             }
         });

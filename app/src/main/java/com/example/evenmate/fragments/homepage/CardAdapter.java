@@ -28,18 +28,18 @@ public class CardAdapter {
         cardView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.purple));
         // text
         TextView title = cardView.findViewById(R.id.title);
-        title.setText(asset.getTitle());
+        title.setText(asset.getName());
         TextView box1 = cardView.findViewById(R.id.box1);
-        box1.setText(String.format("%s%s, %s", fragment.getString(R.string.location), asset.getCountry(),asset.getCity()));
+        box1.setText(String.format("%s%s, %s", fragment.getString(R.string.location), asset.getProvider().getAddress().getCountry(),asset.getProvider().getAddress().getCity()));
         TextView box2 = cardView.findViewById(R.id.box2);
         box2.setText(String.format("%s%s", fragment.getString(R.string.category), asset.getCategory()));
         TextView box3 = cardView.findViewById(R.id.box3);
         box3.setText(String.format("%s%s", fragment.getString(R.string.price), asset.getPrice()));
         TextView box4 = cardView.findViewById(R.id.box4);
-        box4.setText(String.format("%s%s", fragment.getString(R.string.rating), asset.getRating()));
+        box4.setText(String.format("%s%s", fragment.getString(R.string.rating), asset.getAverageReview()));
         // image
         ImageView imageView = cardView.findViewById(R.id.image);
-        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(asset.getImage().get(0), "drawable", fragment.requireContext().getPackageName());
+        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(asset.getImages().get(0), "drawable", fragment.requireContext().getPackageName());
         imageView.setImageResource(imageResId);
         // favorite
         Button favorite = cardView.findViewById(R.id.favorite);

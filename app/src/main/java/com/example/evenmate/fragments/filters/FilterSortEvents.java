@@ -44,11 +44,9 @@ public class FilterSortEvents extends Fragment {
     private OnFilterApplyListener listener;
     private TextView typesButton, organizersButton, locationsButton;
     private boolean[] selectedTypesArray, selectedOrganizersArray, selectedLocationsArray;
-    private String[] locationsNames;
     private HashMap<Long, String> typesMap = new HashMap<>();
     private HashMap<Long, String> organizersMap = new HashMap<>();
-    private String[] typesNames;
-    private String[] organizersNames;
+    private String[] typesNames, organizersNames, locationsNames;
     private List<Long> selectedTypes = new ArrayList<>();
     private List<Long> selectedOrganizers = new ArrayList<>();
     private List<String> selectedLocations = new ArrayList<>();
@@ -279,7 +277,7 @@ public class FilterSortEvents extends Fragment {
     }
 
     private void loadOrganizersFromBackend() {
-        ClientUtils.eventOrganizerService.getAllOrganizers().enqueue(new retrofit2.Callback<List<EventOrganizer>>() {
+        ClientUtils.eventOrganizerService.getAll().enqueue(new retrofit2.Callback<List<EventOrganizer>>() {
             @Override
             public void onResponse(Call<List<EventOrganizer>> call, retrofit2.Response<List<EventOrganizer>> response) {
                 if (response.isSuccessful() && response.body() != null) {

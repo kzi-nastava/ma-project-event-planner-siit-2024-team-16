@@ -47,8 +47,8 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
         if(assets!=null){ // top cards are for assets
             Asset asset = this.assets.get(position);
             // text
-            String rating=asset.getRating() != null? asset.getRating().toString() : "0.0";
-            holder.setAll(asset.getTitle(),asset.getCountry(),asset.getCategory(),asset.getNewPrice(),rating,null,asset.getImage().get(0));
+            String rating=asset.getAverageReview() != null? asset.getAverageReview().toString() : "0.0";
+            holder.setAll(asset.getName(),asset.getProvider().getAddress().getCountry(),asset.getCategory().getName(),asset.getPrice().toString(),rating,null,asset.getImages().get(0));
             // click
             if (asset.getType().equals(AssetType.SERVICE)){
                 holder.itemView.setOnClickListener(v -> {

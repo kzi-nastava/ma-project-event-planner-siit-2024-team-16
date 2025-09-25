@@ -29,6 +29,8 @@ public class ClientUtils {
     public static CategoryService categoryService;
     public static EventOrganizerService eventOrganizerService;
     public static  AddressService addressService;
+    public static AssetService assetService;
+    public static ProviderService providerService;
 
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
@@ -43,6 +45,8 @@ public class ClientUtils {
         categoryService = getRetrofit().create(CategoryService.class);
         eventOrganizerService = getRetrofit().create(EventOrganizerService.class);
         addressService = getRetrofit().create(AddressService.class);
+        assetService = getRetrofit().create(AssetService.class);
+        providerService = getRetrofit().create(ProviderService.class);
     }
 
     private static OkHttpClient createHttpClient() {

@@ -11,7 +11,4 @@ public class EventFilters extends Filters {
     private Integer minMaxGuests;
     private Integer maxMaxGuests;
     private List<Long> selectedOrganizers;
-    private String sortOption = "id,asc";
-
-
 }

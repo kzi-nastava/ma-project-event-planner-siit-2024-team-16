@@ -127,11 +127,11 @@ public class ServiceDetailsActivity extends AppCompatActivity {
 
     }
     private void loadData() {
-        ImageSliderAdapter imageAdapter = new ImageSliderAdapter(service.getImage());
+        ImageSliderAdapter imageAdapter = new ImageSliderAdapter(service.getImages());
         imageViewPager.setAdapter(imageAdapter);
-        serviceName.setText(service.getTitle());
-        categoryChip.setText(service.getCategory());
-        priceText.setText(String.format("$%s",service.getNewPrice()));
+        serviceName.setText(service.getName());
+        categoryChip.setText(service.getCategory().getName());
+        priceText.setText(String.format("$%s",service.getPrice()));
 
         discountChip.setVisibility(View.VISIBLE);
         discountChip.setText(String.format("%s%%",service.getDiscount()));
@@ -182,7 +182,7 @@ public class ServiceDetailsActivity extends AppCompatActivity {
     }
 
     public static Service getServiceById(Long id){
-        return new Service(id, "Maya's Catering", new ArrayList<>(List.of("https://picsum.photos/400/300", "https://picsum.photos/400/301", "https://picsum.photos/400/302")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true,"distinct.",11,null,null,"Book at least 48 hours in advance","Manual confirmation","Cancel at least 24 hours before the date.",new ArrayList<>(List.of("Wedding","Birthday","Corporate Event","Family gathering")));
+        return null;
     }
 }
 class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder> {

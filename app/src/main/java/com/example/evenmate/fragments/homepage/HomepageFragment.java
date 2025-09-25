@@ -17,21 +17,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.evenmate.R;
-import com.example.evenmate.clients.ClientUtils;
-import com.example.evenmate.fragments.filters.EventFilters;
+import com.example.evenmate.fragments.filters.FilterSortAssets;
 import com.example.evenmate.fragments.filters.FilterSortEvents;
-import com.example.evenmate.models.asset.Asset;
-import com.example.evenmate.models.asset.AssetType;
-import com.example.evenmate.models.event.Event;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-import retrofit2.Callback;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class HomepageFragment extends Fragment {
 
@@ -41,7 +29,6 @@ public class HomepageFragment extends Fragment {
     private Fragment allServicesAndProducts;
     private SwitchMaterial fragmentSwitch;
     private SearchView searchView;
-    private EventFilters currentFilters = new EventFilters();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,16 +44,12 @@ public class HomepageFragment extends Fragment {
         FragmentManager manager = getChildFragmentManager();
 
         if (savedInstanceState == null) {
-            getTop5Events(top5-> {
-                top5Events = new TopCardSwiper(null, top5);
-                manager.beginTransaction().replace(R.id.top_5, top5Events, "top5Events").commit();
-            });
-            getTop5Events(top5-> {
-                allEvents = new CardCollection(null, top5);
-                manager.beginTransaction().replace(R.id.all, allEvents,"allEvents").commit();
-            });
-            top5ServicesAndProducts = new TopCardSwiper(getTop5ServicesAndProducts(),null);
-            allServicesAndProducts = new CardCollection(getTop5ServicesAndProducts(),null);
+            top5Events = new TopCardSwiper(CollectionType.Event);
+            manager.beginTransaction().replace(R.id.top_5, top5Events, "top5Events").commit();
+            allEvents = new CardCollection(CollectionType.Event);
+            manager.beginTransaction().replace(R.id.all, allEvents,"allEvents").commit();
+            top5ServicesAndProducts = new TopCardSwiper(CollectionType.Asset);
+            allServicesAndProducts = new CardCollection(CollectionType.Asset);
         } else {
             top5Events = manager.findFragmentByTag("top5Events");
             allEvents = manager.findFragmentByTag( "allEvents");
@@ -81,14 +64,13 @@ public class HomepageFragment extends Fragment {
         this.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (!fragmentSwitch.isChecked()) {
-                    Toast.makeText(requireContext(), "You event searched for: " + query, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(requireContext(), "You s/p searched for: " + query, Toast.LENGTH_SHORT).show();
+                if (!fragmentSwitch.isChecked() && allEvents instanceof CardCollection) {
+                    ((CardCollection) allEvents).searchEvents(query);
+                } else if (fragmentSwitch.isChecked() && allServicesAndProducts instanceof CardCollection) {
+                    ((CardCollection) allServicesAndProducts).searchAssets(query);
                 }
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
@@ -99,40 +81,42 @@ public class HomepageFragment extends Fragment {
         Button filterButton = view.findViewById(R.id.filter);
 
         filterButton.setOnClickListener(v -> {
-            FilterSortEvents filterFragment = (FilterSortEvents) getChildFragmentManager().findFragmentById(R.id.filter_container);
-            if (filterFragment == null) {
-                filterFragment = new FilterSortEvents();
-                filterFragment.setOnFilterApplyListener(filters -> {
-                    if (allEvents instanceof CardCollection) {
-                        CardCollection cardCollection = (CardCollection) allEvents;
-                        cardCollection.eventFilters = filters;
-                        cardCollection.currentPage = 0;
-                        cardCollection.loadNewEvents();
-                    }
-                });
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.filter_container, filterFragment)
-                        .setReorderingAllowed(true)
-                        .commit();
-            }
-            filterContainer.setVisibility(View.VISIBLE);
-        });
+            Fragment filterFragment;
 
-        this.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (!fragmentSwitch.isChecked() && allEvents instanceof CardCollection) {
-                    ((CardCollection) allEvents).searchEvents(query);
-                } else if (fragmentSwitch.isChecked() && allServicesAndProducts instanceof CardCollection) {
-//                    ((CardCollection) allServicesAndProducts).searchAssets(query);
+            if (!fragmentSwitch.isChecked()) {
+                filterFragment = getChildFragmentManager().findFragmentById(R.id.filter_container);
+                if (!(filterFragment instanceof FilterSortEvents)) {
+                    filterFragment = new FilterSortEvents();
+                    ((FilterSortEvents) filterFragment).setOnFilterApplyListener(filters -> {
+                        if (allEvents instanceof CardCollection) {
+                            CardCollection cardCollection = (CardCollection) allEvents;
+                            cardCollection.eventFilters = filters;
+                            cardCollection.currentPage = 0;
+                            cardCollection.loadNewEvents();
+                        }
+                    });
                 }
-                return true;
+            } else {
+                filterFragment = getChildFragmentManager().findFragmentById(R.id.filter_container);
+                if (!(filterFragment instanceof FilterSortAssets)) {
+                    filterFragment = new FilterSortAssets();
+                    ((FilterSortAssets) filterFragment).setOnFilterApplyListener(filters -> {
+                        if (allServicesAndProducts instanceof CardCollection) {
+                            CardCollection cardCollection = (CardCollection) allServicesAndProducts;
+                            cardCollection.assetFilters = filters;
+                            cardCollection.currentPage = 0;
+                            cardCollection.loadNewAssets();
+                        }
+                    });
+                }
             }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.filter_container, filterFragment)
+                    .setReorderingAllowed(true)
+                    .commit();
+
+            filterContainer.setVisibility(View.VISIBLE);
         });
 
     }
@@ -152,7 +136,6 @@ public class HomepageFragment extends Fragment {
         }
         updateSwitchColors(isChecked);
     }
-
     private void updateSwitchColors(boolean isChecked) {
         int trackColor = isChecked ? R.color.light_purple : R.color.light_green;
         int thumbColor = isChecked ? R.color.purple : R.color.green;
@@ -164,32 +147,5 @@ public class HomepageFragment extends Fragment {
         GradientDrawable background = (GradientDrawable) frameLayout.getBackground();
         background.setColor(ContextCompat.getColor(requireContext(), backgroundColor));
         requireView().findViewById(R.id.filter).setBackgroundColor(requireContext().getColor(backgroundColor));
-    }
-
-    public void getTop5Events(Consumer<List<Event>> callback) {
-        ClientUtils.eventService.getTop5Events().enqueue(new Callback<List<Event>>() {
-            @Override
-            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    callback.accept(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Event>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error fetching events: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-    public static List<Asset> getTop5ServicesAndProducts() {
-        List<Asset> assets = new ArrayList<>();
-        assets.add(new Asset(1L, "Maya's Catering", new ArrayList<>(List.of("@drawable/img_service")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true));
-        assets.add(new Asset(2L, "Lilly Bloom's Flower Arrangements", new ArrayList<>(List.of("@drawable/img_product")), "Beautiful flower arrangements", 350, "decoration", 0, "USA", "California", "", "", 4.3, AssetType.PRODUCT,false));
-        assets.add(new Asset(3L, "Service 3", new ArrayList<>(List.of("@drawable/img_service")), "Description for service 3", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,false));
-        assets.add(new Asset(4L, "Product 4", new ArrayList<>(List.of("@drawable/img_product")), "Description for product 4", 350, "decoration", 0, "USA", "California", "", "", 4.3, AssetType.PRODUCT,false));
-        assets.add(new Asset(5L, "Service 5", new ArrayList<>(List.of("@drawable/img_service")), "Description for service 5", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,false));
-        return assets;
     }
 }
