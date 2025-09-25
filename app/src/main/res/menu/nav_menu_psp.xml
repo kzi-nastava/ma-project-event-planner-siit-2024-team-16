@@ -25,5 +25,8 @@
         <item android:id="@+id/FavoriteProductServiceFragment"
             android:title="@string/favorite_ps"
             android:orderInCategory="700"/>
+        <item android:id="@+id/assetsPriceList"
+            android:title="@string/price_list"
+            android:orderInCategory="800"/>
     </group>
 </menu>
