@@ -51,6 +51,7 @@
     <string name="edit">Edit</string>
     <string name="recommended_ps_categories"><![CDATA[Recommended P&S Categories : ]]></string>
     <string name="save">SAVE</string>
+    <string name="create_agenda">CREATE AGENDA</string>
     <string name="name">Name</string>
     <string name="no_event_types">No event types</string>
     <string name="add_an_event_type">ADD AN EVENT TYPE</string>
@@ -120,7 +121,6 @@
     <string name="new_password">New password</string>
     <string name="confirm_new_password">Confirm new password</string>
     <string name="change_password">Change password</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_products">Your products</string>
     <string name="favorite_products">Favorite products</string>
@@ -138,4 +138,19 @@
     <string name="product_is_available">Product is Available</string>
     <string name="can_t_find_the_category_you_want_you_can_suggest_a_new_one">Can\'t find the category you want? You can suggest a new one</string>
     <string name="images">Images</string>
+    <string name="open_chat">Open chat</string>
+    <string name="location_hint">Location</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="actions">Actions</string>
+    <string name="add_new_agenda_item">Add New Agenda Item</string>
+    <string name="start_time_hh_mm">Start Time (HH:mm)</string>
+    <string name="end_time_hh_mm">End Time (HH:mm)</string>
+    <string name="add_agenda_item">Add Agenda Item</string>
+    <string name="edit_agenda">EDIT AGENDA</string>
+    <string name="chat_type_message">Type a message</string>
+    <string name="send_message">Send</string>
+    <string name="chat_name">Chat Name</string>
+    <string name="sender">Sender</string>
+    <string name="message_content">Message content</string>
 </resources>

@@ -113,7 +113,6 @@ public class EventAdapter extends ArrayAdapter<Event> {
                     onDeleteClickListener.onDeleteClick(event);
                 }
             });
-
             User loggedInUser = AuthManager.loggedInUser;
             boolean isLoggedIn = loggedInUser!=null;
             boolean isEventOrganizer = isLoggedIn && loggedInUser.getRole().equals("EventOrganizer");
