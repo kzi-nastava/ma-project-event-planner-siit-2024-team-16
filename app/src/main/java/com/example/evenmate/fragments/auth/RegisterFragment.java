@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +38,8 @@ import com.example.evenmate.validation.rules.MatchPasswordRule;
 import com.example.evenmate.validation.rules.MinLengthRule;
 import com.example.evenmate.validation.rules.RequiredRule;
 
-import java.io.IOException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -193,25 +193,19 @@ public class RegisterFragment extends Fragment implements ImageUtils.ImageHandle
                 if (response.isSuccessful()) {
                     handleRegistrationSuccess();
                 } else {
-                    //todo check error message
-                    String errorBody;
-                    try (ResponseBody responseBody = response.errorBody()) {
-                        errorBody = responseBody != null ? responseBody.string() : null;
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (errorBody != null) {
-                        if (errorBody.contains(getString(R.string.email_already_exists))) {
-                            errorBody = getString(R.string.account_already_exists_email);
-                        } else if (errorBody.contains(getString(R.string.company_already_exists))) {
-                            errorBody = getString(R.string.company_already_exists);
-                        } else {
-                            errorBody = getString(R.string.registration_failed_check_your_information);
+
+                    String errorMessage = getString(R.string.registration_failed_try_again);
+
+                    try {
+                        if (response.errorBody() != null) {
+                            JSONObject json = new JSONObject(response.errorBody().string());
+                            if (json.has("message")) {
+                                errorMessage = json.getString("message");
+                            }
                         }
-                    } else {
-                        errorBody = getString(R.string.registration_failed_try_again);
-                    }
-                    handleRegistrationError(errorBody);
+                    } catch (Exception ignored) { }
+
+                    ToastUtils.showCustomToast(requireContext(), errorMessage, true);
                 }
             }
 
@@ -233,12 +227,6 @@ public class RegisterFragment extends Fragment implements ImageUtils.ImageHandle
             navController.popBackStack();
             navController.popBackStack();
         }, 1000));
-    }
-
-    private void handleRegistrationError(String errorMessage) {
-        ToastUtils.showCustomToast(requireContext(),
-                getString(R.string.registration_failed) + errorMessage,
-                true);
     }
 
     private List<ValidationField> getUserValidationFields() {

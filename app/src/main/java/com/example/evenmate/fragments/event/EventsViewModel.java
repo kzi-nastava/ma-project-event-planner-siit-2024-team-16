@@ -77,7 +77,22 @@ public class EventsViewModel extends ViewModel {
             }
         });
     }
-    public void getEvent(Long id) {
+    public void addAttendee(Long id) {
+        Call<Void> call = ClientUtils.eventService.addAttendee(id);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                getEventById(id);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Error deleting event: " + t.getMessage());
+                deleteFailed.setValue(true);
+            }
+        });
+    }
+    public void getEventById(Long id) {
         Call<Event> call = ClientUtils.eventService.getById(id);
         call.enqueue(new Callback<>() {
             @Override

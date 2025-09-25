@@ -22,10 +22,10 @@ import com.example.evenmate.models.user.TokenResponse;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
 
-import java.io.IOException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -90,26 +90,18 @@ public class LoginFragment extends Fragment {
                     authManager.saveToken( response.body().getAccessToken());
                     getUserInfo();
                 }else {
-                    String errorBody;
-                    try (ResponseBody responseBody = response.errorBody()) {
-                        errorBody = responseBody != null ? responseBody.string() : null;
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    //todo error from back for activation
-                    if (errorBody != null) {
-                        if (errorBody.contains(getString(R.string.your_account_is_not_activated))) {
-                            errorBody = getString(R.string.your_account_is_not_activated_please_activate);
-                        } else if (errorBody.contains(getString(R.string.invalid_credentials))){
-                            errorBody = getString(R.string.invalid_credentials);
+                    String errorMessage = getString(R.string.login_failed_please_try_again_later);
+
+                    try {
+                        if (response.errorBody() != null) {
+                            JSONObject json = new JSONObject(response.errorBody().string());
+                            if (json.has("message")) {
+                                errorMessage = json.getString("message");
+                            }
                         }
-                        else {
-                            errorBody = getString(R.string.login_failed);
-                        }
-                    } else {
-                        errorBody = getString(R.string.login_failed_please_try_again_later);
-                    }
-                    ToastUtils.showCustomToast(requireContext(), errorBody, true);
+                    } catch (Exception ignored) { }
+
+                    ToastUtils.showCustomToast(requireContext(), errorMessage, true);
                 }
             }
 
