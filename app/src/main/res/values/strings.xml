@@ -152,4 +152,6 @@
     <string name="discount">Discount</string>
     <string name="discounted_price">Discounted Price</string>
     <string name="price_list">Price List</string>
+    <string name="products">Products</string>
+    <string name="services">Services</string>
 </resources>
