@@ -56,9 +56,19 @@ public class FilterSortAssets extends Fragment {
     private HashMap<Long, String> typesMap = new HashMap<>();
     private HashMap<Long, String> categoriesMap = new HashMap<>();
     private OnFilterApplyListener listener;
-    private int selectedSortIndex = 0;
-    private String[] sortOptions = {"id,asc", "price,asc", "price,desc", "rating,asc", "rating,desc"};
+    private HashMap<String, String> sortOptionsMap = new HashMap<>(){{
+        put("id,asc", "Date added ↑");
+        put("id,desc", "Date added ↓");
+        put("name,asc", "Asset name ↑");
+        put("name,desc", "Asset name ↓");
+        put("price,asc", "Asset price ↑");
+        put("price,desc", "Asset price ↓");
+        put("discount,asc", "Asset discount ↑");
+        put("discount,desc", "Asset discount ↓");
 
+    }};
+    private int selectedSortIndex = 0;
+    private String selectedSortKey;
     public interface OnFilterApplyListener {
         void onApplyFilters(AssetFilters filters);
     }
@@ -191,14 +201,28 @@ public class FilterSortAssets extends Fragment {
 
     private void setupSortDialog() {
         sortButton.setOnClickListener(v -> {
+            String[] sortLabels =  sortOptionsMap.values().toArray(new String[0]);
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("Sort By");
-            builder.setSingleChoiceItems(sortOptions, selectedSortIndex, (dialog, which) -> selectedSortIndex = which);
-            builder.setPositiveButton("OK", (dialog, which) -> sortButton.setText("Sort: " + sortOptions[selectedSortIndex]));
+            builder.setSingleChoiceItems( sortLabels, selectedSortIndex, (dialog, which) -> selectedSortIndex = which);
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                String label = sortLabels[selectedSortIndex];
+                String key = "";
+                for (HashMap.Entry<String, String> entry : sortOptionsMap.entrySet()) {
+                    if (entry.getValue().equals(label)) {
+                        key = entry.getKey();
+                        break;
+                    }
+                }
+                sortButton.setText("Sort: " + label);
+                selectedSortKey = key;
+            });
+
             builder.setNegativeButton("Cancel", null);
             builder.show();
         });
     }
+
 
     private void setupApplyButton(View view) {
         Button applyButton = view.findViewById(R.id.filter_button);
@@ -228,7 +252,7 @@ public class FilterSortAssets extends Fragment {
                 data.setSelectedProviders(new ArrayList<>(selectedProviders));
                 data.setSelectedLocations(new ArrayList<>(selectedLocations));
 
-                data.setSortOption(sortOptions[selectedSortIndex]);
+                data.setSortOption(selectedSortKey);
 
                 listener.onApplyFilters(data);
             }

@@ -93,14 +93,14 @@
         <!-- Multi-choice selectors -->
         <Button
             android:id="@+id/categories_button"
-            android:layout_width="377dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/select_category" />
 
         <Button
             android:id="@+id/event_types_button"
-            android:layout_width="379dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/select_event_type" />
@@ -118,15 +118,8 @@
             android:text="@string/select_location"
             android:layout_marginTop="8dp"/>
 
-        <!-- Sort button -->
-        <Button
-            android:id="@+id/sort_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sort"
-            android:layout_marginTop="16dp"/>
 
-        <!-- Apply and Reset -->
+        <!-- Apply Sort and Reset -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -139,6 +132,13 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/apply"/>
+
+            <Button
+                android:id="@+id/sort_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/sort"/>
 
             <Button
                 android:id="@+id/reset_filters_button"
