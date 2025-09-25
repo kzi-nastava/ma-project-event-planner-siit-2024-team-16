@@ -154,4 +154,5 @@
     <string name="price_list">Price List</string>
     <string name="products">Products</string>
     <string name="services">Services</string>
+    <string name="download_pdf">Download PDF</string>
 </resources>
