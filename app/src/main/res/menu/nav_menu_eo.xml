@@ -22,8 +22,11 @@
         <item android:id="@+id/CalendarFragment"
             android:title="@string/calendar"
             android:orderInCategory="600"/>
-        <item android:id="@+id/FavoriteProductServiceFragment"
-            android:title="@string/favorite_ps"
+        <item android:id="@+id/favoriteProductsFragment"
+            android:title="@string/favorite_products"
             android:orderInCategory="700"/>
+        <item android:id="@+id/productsFragment"
+            android:title="@string/products"
+            android:orderInCategory="800" />
     </group>
 </menu>

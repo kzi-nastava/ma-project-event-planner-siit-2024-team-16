@@ -10,15 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.evenmate.R;
 import com.example.evenmate.activities.PageActivity;
 import com.example.evenmate.activities.notifications.NotificationsActivity;
-import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.asset.Product;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProductDetailsActivity extends AppCompatActivity {
     private Product product;
@@ -69,6 +65,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     public static Product getProductById(Long id){
-        return new Product(id, "Maya's Catering", new ArrayList<>(List.of("https://picsum.photos/400/300", "https://picsum.photos/400/301", "https://picsum.photos/400/302")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true);
+        return null;
+//        return new Product(id, "Maya's Catering", new ArrayList<>(List.of("https://picsum.photos/400/300", "https://picsum.photos/400/301", "https://picsum.photos/400/302")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true);
     }
 }

@@ -36,10 +36,6 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private LoginCallback loginCallback;
 
-    public static LoginFragment newInstance() {
-        return new LoginFragment();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -101,6 +97,7 @@ public class LoginFragment extends Fragment {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    //todo error from back for activation
                     if (errorBody != null) {
                         if (errorBody.contains(getString(R.string.your_account_is_not_activated))) {
                             errorBody = getString(R.string.your_account_is_not_activated_please_activate);

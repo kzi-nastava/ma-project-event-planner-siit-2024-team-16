@@ -4,42 +4,24 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.example.evenmate.models.event.EventType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category implements Parcelable {
     private Long id;
     private String name;
     private String description;
     private List<EventType> types;
 
-    public Category(Long id, String name, String description, List<EventType> types) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.types = types;
-    }
-
-    public Category(Long id, String name, String description) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.types = new ArrayList<>();
-    }
-
-    public Category() {
-    }
-
-    public Category(String name) {
-        this.name = name;
-    }
-
-    // Parcelable implementation
     protected Category(Parcel in) {
         if (in.readByte() == 0) {
             id = null;

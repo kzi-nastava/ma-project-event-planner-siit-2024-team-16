@@ -1,8 +1,7 @@
 package com.example.evenmate.clients;
 
 import com.example.evenmate.models.Category;
-
-import java.util.List;
+import com.example.evenmate.models.PaginatedResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,5 +13,5 @@ public interface CategoryService {
             "Content-Type:application/json"
     })
     @GET("categories")
-    Call<List<Category>> getCategories();
+    Call<PaginatedResponse<Category>> getAllForFilters();
 }

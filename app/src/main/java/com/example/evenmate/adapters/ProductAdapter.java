@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
-import com.example.evenmate.models.event.Event;
+import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.button.MaterialButton;
@@ -32,42 +32,42 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class EventAdapter extends ArrayAdapter<Event> {
-    private List<Event> events;
+public class ProductAdapter extends ArrayAdapter<Product> {
+    private List<Product> products;
     @Setter
     private OnDeleteClickListener onDeleteClickListener;
 
     public interface OnDeleteClickListener {
-        void onDeleteClick(Event event);
+        void onDeleteClick(Product product);
     }
 
     @Setter
     private OnEditClickListener onEditClickListener;
 
     public interface OnEditClickListener {
-        void onEditClick(Event event);
+        void onEditClick(Product product);
     }
 
-    public EventAdapter(Activity context, List<Event> events){
-        super(context, R.layout.item_card_general, events);
-        this.events = events;
+    public ProductAdapter(Activity context, List<Product> products){
+        super(context, R.layout.item_card_general, products);
+        this.products = products;
     }
     @Override
     public int getCount() {
-        return events.size();
+        return products.size();
     }
 
     @Nullable
     @Override
-    public Event getItem(int position) {
-        return events.get(position);
+    public Product getItem(int position) {
+        return products.get(position);
     }
 
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View itemView, @NonNull ViewGroup parent) {
-        Event event = getItem(position);
+        Product product = getItem(position);
         if (itemView == null) {
             itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_card_general,
                     parent, false);
@@ -76,25 +76,25 @@ public class EventAdapter extends ArrayAdapter<Event> {
             itemView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.green));
         }
         TextView title = itemView.findViewById(R.id.title);
-        TextView date = itemView.findViewById(R.id.box1);
-        TextView address = itemView.findViewById(R.id.box2);
-        TextView type = itemView.findViewById(R.id.box3);
-        TextView maxAttendees = itemView.findViewById(R.id.box4);
-        TextView description = itemView.findViewById(R.id.box5);
+        TextView name = itemView.findViewById(R.id.box1);
+        TextView description = itemView.findViewById(R.id.box2);
+        TextView category = itemView.findViewById(R.id.box3);
+        TextView price = itemView.findViewById(R.id.box4);
+        TextView priceAfterDiscount = itemView.findViewById(R.id.box5);
         ImageView imageView = itemView.findViewById(R.id.image);
         ImageButton btnEdit = itemView.findViewById(R.id.btnEditEvent);
         MaterialButton btnFavorite = itemView.findViewById(R.id.favorite);
         ImageButton btnDelete = itemView.findViewById(R.id.btnDeleteEvent);
 
-        if(event != null) {
-            title.setText(event.getName());
-            description.setText(String.format("%s: %s", getContext().getString(R.string.description), event.getDescription()));
-            date.setText(String.format("%s%s", getContext().getString(R.string.date), event.getDate()));
-            address.setText(String.format("%s: %s", getContext().getString(R.string.address), String.format("%s %s, %s, %s", event.getAddress().getStreetName(), event.getAddress().getStreetNumber(), event.getAddress().getCity(), event.getAddress().getCountry())));
-            type.setText(String.format("%s %s", getContext().getString(R.string.type), event.getType() != null ?  event.getType().getName() : "None"));
-            maxAttendees.setText(String.format("%s%s", getContext().getString(R.string.max_guests), event.getMaxAttendees()));
-            if (event.getPhoto() != null) {
-                String base64Image = event.getPhoto();
+        if(product != null) {
+            title.setText(product.getName());
+            description.setText(String.format("%s: %s", getContext().getString(R.string.description), product.getDescription()));
+            name.setText(String.format("%s: %s", getContext().getString(R.string.name), product.getName()));
+            category.setText(String.format("%s%s", getContext().getString(R.string.category), product.getCategory() != null ? product.getCategory().getName() : null));
+            price.setText(String.format("%s: %s", getContext().getString(R.string.price), product.getPrice()));
+            priceAfterDiscount.setText(String.format("%s: %s", getContext().getString(R.string.priceAfterDiscount), product.getPriceAfterDiscount()));
+            if (product.getImages() != null) {
+                String base64Image = product.getImages().get(0);
                 if (base64Image.contains(",")) {
                     base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
                 }
@@ -105,40 +105,41 @@ public class EventAdapter extends ArrayAdapter<Event> {
             }
             btnEdit.setOnClickListener(v -> {
                 if (onEditClickListener != null) {
-                    onEditClickListener.onEditClick(event);
+                    onEditClickListener.onEditClick(product);
                 }
             });
             btnDelete.setOnClickListener(v -> {
                 if (onDeleteClickListener != null) {
-                    onDeleteClickListener.onDeleteClick(event);
+                    onDeleteClickListener.onDeleteClick(product);
                 }
             });
             User loggedInUser = AuthManager.loggedInUser;
             boolean isLoggedIn = loggedInUser!=null;
-            boolean isEventOrganizer = isLoggedIn && loggedInUser.getRole().equals("EventOrganizer");
-            btnEdit.setVisibility(isEventOrganizer ? View.VISIBLE : View.GONE);
-            btnDelete.setVisibility(isLoggedIn ? (isEventOrganizer ? View.VISIBLE : View.GONE) : View.GONE);
+            boolean isProvider = isLoggedIn && loggedInUser.getRole().equals("ProductServiceProvider");
+            btnEdit.setVisibility(isProvider ? View.VISIBLE : View.GONE);
+            btnDelete.setVisibility(isLoggedIn ? (isProvider ? View.VISIBLE : View.GONE) : View.GONE);
             btnFavorite.setVisibility(isLoggedIn ? View.VISIBLE : View.GONE);
             if(isLoggedIn) {
-                btnFavorite.setOnClickListener(v -> this.changeFavoriteStatus(loggedInUser.getId(), event.getId(), btnFavorite));
-                checkFavoriteStatus(loggedInUser.getId(), event.getId(), btnFavorite);
+                btnFavorite.setOnClickListener(v -> this.changeFavoriteStatus(product.getId(), btnFavorite));
+                checkFavoriteStatus(product.getId(), btnFavorite);
             }
         }
         return itemView;
     }
 
-    public void setEvents(ArrayList<Event> events) {
-        this.events = events;
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
         notifyDataSetChanged();
     }
 
-    private void checkFavoriteStatus(Long userId, Long eventId, MaterialButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.userService.checkFavoriteStatus(userId, eventId);
+    private void checkFavoriteStatus(Long productId, MaterialButton btnFavorite) {
+        retrofit2.Call<Boolean> call = ClientUtils.productService.checkIsProductFavorite(productId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     boolean isFavorite = response.body();
+
                     btnFavorite.setBackgroundResource(
                             isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite
                     );
@@ -148,32 +149,29 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
             @Override
             public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
-                ToastUtils.showCustomToast(getContext(),R.string.network_error + t.getMessage(), true);
+                ToastUtils.showCustomToast(getContext(), R.string.network_error + t.getMessage(), true);
             }
         });
     }
 
-    private void changeFavoriteStatus(Long userId, Long eventId, MaterialButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.userService.favoriteEventToggle(userId, eventId);
+    private void changeFavoriteStatus(Long productId, MaterialButton btnFavorite) {
+        retrofit2.Call<Void> call = ClientUtils.productService.favoriteProductToggle(productId);
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    boolean isFavorite = response.body();
-                    btnFavorite.setBackgroundResource(
-                            isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite
-                    );
-                    btnFavorite.setSelected(isFavorite);
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                boolean isFavorite = !btnFavorite.isSelected();
 
-                } else {
-                    ToastUtils.showCustomToast(getContext(),response.message(), true);
-                }
+                btnFavorite.setBackgroundResource(
+                        isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite
+                );
+                btnFavorite.setSelected(isFavorite);
             }
 
             @Override
-            public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 ToastUtils.showCustomToast(getContext(),R.string.network_error + t.getMessage(), true);
             }
         });
     }
 }
+

@@ -27,6 +27,7 @@ import retrofit2.Response;
 import com.example.evenmate.R;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentRegisterBinding;
+import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.models.user.Company;
 import com.example.evenmate.utils.ImageUtils;
@@ -160,6 +161,7 @@ public class RegisterFragment extends Fragment implements ImageUtils.ImageHandle
         user.setPassword(Objects.requireNonNull(binding.txtPassword.getText()).toString());
         user.setFirstName(Objects.requireNonNull(binding.txtFirstName.getText()).toString());
         user.setLastName(Objects.requireNonNull(binding.txtLastName.getText()).toString());
+        user.setAddress(new Address());
         user.getAddress().setCountry(Objects.requireNonNull(binding.txtCountry.getText()).toString());
         user.getAddress().setCity(Objects.requireNonNull(binding.txtCity.getText()).toString());
         user.getAddress().setStreetName(Objects.requireNonNull(binding.txtStreet.getText()).toString());
