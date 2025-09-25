@@ -13,8 +13,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -22,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -32,16 +31,12 @@ import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.ActivityPageBinding;
 import com.example.evenmate.fragments.auth.LoginCallback;
-import com.example.evenmate.fragments.chat.ChatListFragment;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
 
 public class PageActivity extends AppCompatActivity implements LoginCallback {
 
@@ -62,25 +57,12 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
 
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
-            actionBar.setHomeButtonEnabled(true);
-        }
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
-        Set<Integer> topLevelDestinations = new HashSet<>(Arrays.asList(R.id.nav_auth, R.id.HomepageFragment, R.id.providerServicesProductsFragment));
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.HomepageFragment).setOpenableLayout(drawer).build();
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).setOpenableLayout(drawer).build();
-
-        NavigationUI.setupWithNavController(navigationView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
@@ -149,7 +131,12 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
         ToastUtils.showCustomToast(this, "Successfully logged out", false);
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
-        navController.navigate(R.id.HomepageFragment);
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(navController.getGraph().getStartDestinationId(), true)
+                .build();
+
+        navController.navigate(R.id.HomepageFragment, null, navOptions);
+
 
         updateMenu();
         updateChatButtonVisibility();
@@ -196,6 +183,12 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
 
     @Override
     public void OnLoginSuccess() {
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(navController.getGraph().getId(), true)
+                .build();
+
+        navController.navigate(R.id.HomepageFragment, null, navOptions);
         updateMenu();
         updateChatButtonVisibility();
     }

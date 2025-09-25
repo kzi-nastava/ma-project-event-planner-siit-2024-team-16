@@ -64,6 +64,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="FAVORITES"/>
+        <action
+            android:id="@+id/action_favoriteEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/yourEventsFragment"

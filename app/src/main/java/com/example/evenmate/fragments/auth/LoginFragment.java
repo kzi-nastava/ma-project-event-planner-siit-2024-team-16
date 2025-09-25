@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,10 +129,6 @@ public class LoginFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     AuthManager.loggedInUser = response.body();
                     handleLoginSuccess();
-                    requireActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
-                        NavController navController = Navigation.findNavController(requireView());
-                        navController.popBackStack();
-                    }, 1000));
                 }
             }
 

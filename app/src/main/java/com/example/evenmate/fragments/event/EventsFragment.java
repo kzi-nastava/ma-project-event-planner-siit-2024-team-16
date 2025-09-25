@@ -81,8 +81,16 @@ public class EventsFragment extends ListFragment {
         adapter.setOnItemClickListener(event -> {
             Bundle bundle = new Bundle();
             bundle.putParcelable("event", event);
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_eventsFragment_to_eventDetailsFragment, bundle);
+            if ("FAVORITES".equals(fetchMode))
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_favoriteEventsFragment_to_eventDetailsFragment, bundle);
+            else if ("YOUR_EVENTS".equals(fetchMode))
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_yourEventsFragment_to_eventDetailsFragment, bundle);
+            else
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_eventsFragment_to_eventDetailsFragment, bundle);
+
         });
 
 
