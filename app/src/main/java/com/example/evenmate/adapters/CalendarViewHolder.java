@@ -27,8 +27,7 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(CalendarDay day,
-                     CalendarAdapter.OnDateClickListener onDateClickListener,
-                     CalendarAdapter.OnEventClickListener onEventClickListener) {
+                     CalendarAdapter.OnDateClickListener onDateClickListener) {
 
         if (day.getDateTime() != null) {
             dayNumber.setText(String.valueOf(day.getDateTime().getDayOfMonth()));
@@ -65,10 +64,6 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
             itemView.setOnClickListener(v -> {
                 if (onDateClickListener != null) {
                     onDateClickListener.onDateClick(LocalDate.from(day.getDateTime()));
-                }
-
-                if (!day.getEvents().isEmpty() && onEventClickListener != null) {
-                    onEventClickListener.onEventClick(day.getEvents().get(0));
                 }
             });
 

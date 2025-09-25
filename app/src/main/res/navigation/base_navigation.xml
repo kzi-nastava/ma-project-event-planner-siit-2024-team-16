@@ -110,7 +110,11 @@
         android:id="@+id/CalendarFragment"
         android:name="com.example.evenmate.fragments.profile.CalendarFragment"
         android:label="Calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_CalendarFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/productsFragment"
         android:name="com.example.evenmate.fragments.asset.ProductsFragment"

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evenmate.R;
 import com.example.evenmate.models.user.CalendarDay;
-import com.example.evenmate.models.user.CalendarItem;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,18 +20,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         void onDateClick(LocalDate date);
     }
 
-    public interface OnEventClickListener {
-        void onEventClick(CalendarItem event);
-    }
-
     private final List<CalendarDay> days = new ArrayList<>();
     private final OnDateClickListener onDateClickListener;
-    private final OnEventClickListener onEventClickListener;
 
-    public CalendarAdapter(OnDateClickListener onDateClickListener,
-                           OnEventClickListener onEventClickListener) {
+    public CalendarAdapter(OnDateClickListener onDateClickListener) {
         this.onDateClickListener = onDateClickListener;
-        this.onEventClickListener = onEventClickListener;
     }
 
     public void updateDays(List<CalendarDay> newDays) {
@@ -52,7 +44,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
         CalendarDay day = days.get(position);
-        holder.bind(day, onDateClickListener, onEventClickListener);
+        holder.bind(day, onDateClickListener);
     }
 
 
