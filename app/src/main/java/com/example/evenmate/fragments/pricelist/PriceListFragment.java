@@ -39,7 +39,13 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
     private MaterialButton btnProducts;
     private MaterialButton btnServices;
     private MaterialButtonToggleGroup toggleType;
+    private MaterialButton btnPrevPage;
+    private MaterialButton btnNextPage;
+    private android.widget.TextView txtPageIndicator;
     private String selectedType = String.valueOf(AssetType.SERVICE);
+    private int currentPage = 0;
+    private int totalPages = 1;
+    private final int PAGE_SIZE = 10;
 
     @Nullable
     @Override
@@ -54,9 +60,14 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
         btnProducts = view.findViewById(R.id.pricelist_btn_products);
         btnServices = view.findViewById(R.id.pricelist_btn_services);
         toggleType = view.findViewById(R.id.toggle_pricelist_type);
+        btnPrevPage = view.findViewById(R.id.btn_prev_page);
+        btnNextPage = view.findViewById(R.id.btn_next_page);
+        txtPageIndicator = view.findViewById(R.id.txt_page_indicator);
         btnProducts.setOnClickListener(v -> switchType(String.valueOf(AssetType.PRODUCT)));
         btnServices.setOnClickListener(v -> switchType(String.valueOf(AssetType.SERVICE)));
         btnDownloadPdf.setOnClickListener(v -> downloadPdf());
+        btnPrevPage.setOnClickListener(v -> goToPage(currentPage - 1));
+        btnNextPage.setOnClickListener(v -> goToPage(currentPage + 1));
         setupViewModel();
         return view;
     }
@@ -64,7 +75,7 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
     private void switchType(String type) {
         if (!type.equals(selectedType)) {
             selectedType = type;
-            viewModel.fetchPriceList(selectedType, null, null);
+            viewModel.fetchPriceList(selectedType, 0, PAGE_SIZE);
         }
     }
 
@@ -107,7 +118,28 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
         viewModel.getPriceList().observe(getViewLifecycleOwner(), this::onPriceListChanged);
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), this::onLoadingChanged);
         viewModel.getError().observe(getViewLifecycleOwner(), this::onError);
-        viewModel.fetchPriceList(selectedType, null, null);
+        viewModel.getTotalPages().observe(getViewLifecycleOwner(), this::onTotalPagesChanged);
+        viewModel.getCurrentPage().observe(getViewLifecycleOwner(), this::onCurrentPageChanged);
+        viewModel.fetchPriceList(selectedType, 0, PAGE_SIZE);
+    }
+
+    private void onTotalPagesChanged(Integer pages) {
+        totalPages = pages != null ? pages : 1;
+        updatePaginationControls();
+    }
+    private void onCurrentPageChanged(Integer page) {
+        currentPage = page != null ? page : 0;
+        updatePaginationControls();
+    }
+    private void goToPage(int page) {
+        if (page >= 0 && page < totalPages) {
+            viewModel.fetchPriceList(selectedType, page, PAGE_SIZE);
+        }
+    }
+    private void updatePaginationControls() {
+        txtPageIndicator.setText("Page " + (currentPage + 1) + " / " + totalPages);
+        btnPrevPage.setEnabled(currentPage > 0);
+        btnNextPage.setEnabled(currentPage < totalPages - 1);
     }
 
     private void onPriceListChanged(List<PriceListItem> items) {

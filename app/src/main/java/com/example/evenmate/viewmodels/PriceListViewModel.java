@@ -17,6 +17,9 @@ public class PriceListViewModel extends ViewModel {
     private final MutableLiveData<List<PriceListItem>> priceList = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
+    private final MutableLiveData<Integer> totalPages = new MutableLiveData<>(1);
+    private final MutableLiveData<Integer> currentPage = new MutableLiveData<>(0);
+    private int lastPageSize = 10;
 
     public LiveData<List<PriceListItem>> getPriceList() {
         return priceList;
@@ -27,15 +30,21 @@ public class PriceListViewModel extends ViewModel {
     public LiveData<String> getError() {
         return error;
     }
+    public LiveData<Integer> getTotalPages() { return totalPages; }
+    public LiveData<Integer> getCurrentPage() { return currentPage; }
 
     public void fetchPriceList(String type, Integer page, Integer size) {
         isLoading.setValue(true);
+        if (size != null) lastPageSize = size;
         ClientUtils.priceListService.getPriceList(type, page, size).enqueue(new Callback<PaginatedResponse<PriceListItem>>() {
             @Override
             public void onResponse(Call<PaginatedResponse<PriceListItem>> call, Response<PaginatedResponse<PriceListItem>> response) {
                 isLoading.setValue(false);
                 if (response.isSuccessful()) {
-                    priceList.setValue(response.body().getContent());
+                    PaginatedResponse<PriceListItem> resp = response.body();
+                    priceList.setValue(resp.getContent());
+                    totalPages.setValue(resp.getTotalPages());
+                    currentPage.setValue(page != null ? page : 0);
                 } else {
                     error.setValue("Failed to load price list");
                 }
@@ -56,7 +65,7 @@ public class PriceListViewModel extends ViewModel {
             public void onResponse(Call<PriceListItem> call, Response<PriceListItem> response) {
                 isLoading.setValue(false);
                 if (response.isSuccessful()) {
-                    fetchPriceList(selectedType, null, null);
+                    fetchPriceList(selectedType, currentPage.getValue(), lastPageSize);
                 } else {
                     error.setValue("Failed to update price list item");
                 }
@@ -69,4 +78,3 @@ public class PriceListViewModel extends ViewModel {
         });
     }
 }
-
