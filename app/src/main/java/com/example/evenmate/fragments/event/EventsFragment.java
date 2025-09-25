@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,6 +81,14 @@ public class EventsFragment extends ListFragment {
                 })
                 .show()
         );
+
+        adapter.setOnItemClickListener(event -> {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("event", event);
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_eventsFragment_to_eventDetailsFragment, bundle);
+        });
+
 
         setListAdapter(adapter);
         setupPagination();

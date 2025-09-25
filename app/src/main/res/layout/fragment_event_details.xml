@@ -1,0 +1,163 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Event Photo -->
+        <ImageView
+            android:id="@+id/eventPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/image"/>
+
+        <!-- Event Name -->
+        <TextView
+            android:id="@+id/eventName"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            android:text="@string/name"
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/eventDescription"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:text="@string/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/favoriteButton"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_favorite"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/favorite"
+                android:layout_height="wrap_content"
+                app:tint="@color/purple"
+                android:layout_width="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/downloadPdfButton"
+                android:src="@drawable/ic_download"
+                android:layout_margin="4dp"
+                android:layout_height="wrap_content"
+                app:tint="@color/grey"
+                android:layout_width="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/download_pdf"/>
+            <ImageButton
+                android:id="@+id/budgetButton"
+                android:src="@drawable/ic_wallet"
+                android:layout_margin="4dp"
+                android:layout_height="wrap_content"
+                app:tint="@color/grey"
+                android:layout_width="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/budget"/>
+            <ImageButton
+                android:id="@+id/btnDeleteEvent"
+                android:src="@drawable/ic_red_delete"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_margin="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/delete"/>
+            <ImageButton
+                android:id="@+id/btnEditEvent"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:adjustViewBounds="true"
+                android:layout_margin="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/edit"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_edit"
+                app:tint="@color/purple"
+                android:visibility="visible"/>
+        </LinearLayout>
+        <!-- Date -->
+        <TextView
+            android:id="@+id/eventDate"
+            android:text="@string/date"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Location -->
+        <TextView
+            android:id="@+id/eventLocation"
+            android:text="@string/location"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Organizer -->
+        <TextView
+            android:id="@+id/eventOrganizer"
+            android:layout_marginTop="8dp"
+            android:text="@string/organizer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Agenda list -->
+        <TextView
+            android:text="@string/agenda"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/agendaRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Chart -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reviews"
+                android:layout_gravity="center_vertical"
+                android:textStyle="bold"/>
+            <ImageButton
+                android:id="@+id/downloadReportPdfButton"
+                android:src="@drawable/ic_download"
+                android:layout_margin="4dp"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                app:tint="@color/grey"
+                android:layout_width="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/download_pdf"/>
+        </LinearLayout>
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/ratingChart"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"/>
+    </LinearLayout>
+</ScrollView>

@@ -73,5 +73,11 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaView
         items.add(item);
         notifyItemInserted(items.size() - 1);
     }
+
+    public void setItems(List<AgendaItem> newItems) {
+        items.clear();
+        items.addAll(newItems);
+        notifyDataSetChanged();
+    }
 }
 

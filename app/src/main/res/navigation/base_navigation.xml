@@ -49,6 +49,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="ALL_EVENTS"/>
+        <action
+            android:id="@+id/action_eventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -70,6 +73,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="YOUR_EVENTS"/>
+        <action
+            android:id="@+id/action_yourEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -148,5 +154,13 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="YOUR_PRODUCTS"/>
+    </fragment>
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.example.evenmate.fragments.event.EventDetailsFragment"
+        android:label="EventDetailsFragment" >
+        <argument
+            android:name="event"
+            app:argType="com.example.evenmate.models.event.Event" />
     </fragment>
 </navigation>

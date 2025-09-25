@@ -153,4 +153,10 @@
     <string name="chat_name">Chat Name</string>
     <string name="sender">Sender</string>
     <string name="message_content">Message content</string>
+    <string name="organizer">Organizer</string>
+    <string name="favorite">Favorite</string>
+    <string name="download_pdf">Download PDF</string>
+    <string name="agenda">Agenda</string>
+    <string name="reviews">Reviews</string>
+    <string name="budget">Budget</string>
 </resources>
