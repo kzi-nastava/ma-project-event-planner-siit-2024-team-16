@@ -4,6 +4,7 @@ import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.commentreview.Comment;
 import com.example.evenmate.models.commentreview.CommentCreate;
 import com.example.evenmate.models.commentreview.Review;
+import com.example.evenmate.models.commentreview.ReviewCreate;
 
 import java.util.List;
 import retrofit2.Call;
@@ -27,9 +28,9 @@ public interface CommentReviewService {
     Call<Comment> commentProvider(@Path("userId") Long userId, @Body CommentCreate comment);
 
     @POST("assets/{assetId}/review")
-    Call<Void> reviewAsset(@Path("assetId") Long assetId, @Body int stars);
+    Call<Void> reviewAsset(@Path("assetId") Long assetId, @Body ReviewCreate review);
 
     @POST("users/{userId}/review")
-    Call<Void> reviewProvider(@Path("userId") Long userId, @Body int stars);
+    Call<Void> reviewProvider(@Path("userId") Long userId, @Body ReviewCreate review);
 }
 
