@@ -69,7 +69,7 @@ public class EventsFragment extends ListFragment {
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                 .setPositiveButton("Delete", (dialog, which) -> {
                     viewModel.deleteEvent(event.getId());
-                    if(viewModel.getDeleteFailed())
+                    if(Boolean.TRUE.equals(viewModel.getDeleteFailed().getValue()))
                         ToastUtils.showCustomToast(requireContext(),
                             viewModel.getDeleteFailed().toString(),
                             true);

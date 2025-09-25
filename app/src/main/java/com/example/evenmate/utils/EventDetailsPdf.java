@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 public class EventDetailsPdf {
+    //todo add invitations to report
     public static PdfDocument getDocument(Event event) {
         PdfDocument pdf = new PdfDocument();
 

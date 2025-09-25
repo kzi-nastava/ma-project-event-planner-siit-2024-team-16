@@ -46,16 +46,13 @@
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageButton
+            <Button
                 android:id="@+id/favoriteButton"
                 android:layout_margin="4dp"
-                android:src="@drawable/ic_favorite"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/favorite"
-                android:layout_height="wrap_content"
-                app:tint="@color/purple"
-                android:layout_width="wrap_content"/>
-
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_favorite"
+                android:contentDescription="@string/favorite"/>
             <ImageButton
                 android:id="@+id/downloadPdfButton"
                 android:src="@drawable/ic_download"
@@ -84,8 +81,8 @@
                 android:contentDescription="@string/delete"/>
             <ImageButton
                 android:id="@+id/btnEditEvent"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:adjustViewBounds="true"
                 android:layout_margin="4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -95,6 +92,15 @@
                 app:tint="@color/purple"
                 android:visibility="visible"/>
         </LinearLayout>
+        <Button
+            android:text="@string/i_m_coming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnComing"
+            android:textSize="12sp"
+            style="@style/GreenOutlinedButton"
+            android:layout_gravity="center"
+            />
         <!-- Date -->
         <TextView
             android:id="@+id/eventDate"

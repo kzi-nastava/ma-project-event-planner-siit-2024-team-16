@@ -8,10 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.AgendaAdapter;
 import com.example.evenmate.auth.AuthManager;
-import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentEventDetailsBinding;
 import com.example.evenmate.models.Review;
 import com.example.evenmate.models.event.Event;
@@ -42,16 +41,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class EventDetailsFragment extends Fragment {
 
     private FragmentEventDetailsBinding binding;
     private EventsViewModel viewModel;
     private Event event;
-    private boolean isFavorite = false;
     private boolean isAdmin;
     private boolean isOrganizer;
     private long userId = -1;
@@ -78,6 +72,11 @@ public class EventDetailsFragment extends Fragment {
                 setupActionButtons();
             }
             setupDetails();
+            setupFragmentResultListener();
+            viewModel.getEvent().observe(getViewLifecycleOwner(), e ->{
+                event = e;
+                setupDetails();
+            });
         } else
             binding.eventName.setText(R.string.no_event_to_display);
     }
@@ -86,13 +85,16 @@ public class EventDetailsFragment extends Fragment {
         binding.actionButtons.setVisibility(View.VISIBLE);
         binding.favoriteButton.setVisibility(View.VISIBLE);
         binding.budgetButton.setVisibility(View.VISIBLE);
+        binding.btnComing.setVisibility(event.getIsPrivate() ? View.GONE : View.VISIBLE);
         binding.downloadPdfButton.setVisibility(isAdmin || isOrganizer ? View.VISIBLE : View.GONE);
         binding.downloadReportPdfButton.setVisibility(isAdmin || isOrganizer ? View.VISIBLE : View.GONE);
         binding.btnDeleteEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
         binding.btnEditEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
 
+        //todo this and calendar!!!
+//        binding.btnComing.setOnClickListener(v);
         binding.btnMap.setOnClickListener(v -> showMap());
-        binding.favoriteButton.setOnClickListener(v -> toggleFavorite());
+        binding.favoriteButton.setOnClickListener(v ->viewModel.changeFavoriteStatus(userId, event.getId()));
         binding.downloadPdfButton.setOnClickListener(v -> generatePdf(false));
         binding.downloadReportPdfButton.setOnClickListener(v -> generatePdf(true));
         binding.btnEditEvent.setOnClickListener(e -> {
@@ -107,7 +109,7 @@ public class EventDetailsFragment extends Fragment {
                 .setPositiveButton("Delete", (dialog, which) -> {
                     //todo nav to previous page
                     viewModel.deleteEvent(event.getId());
-                    if(viewModel.getDeleteFailed())
+                    if(Boolean.TRUE.equals(viewModel.getDeleteFailed().getValue()))
                         ToastUtils.showCustomToast(requireContext(),
                                 viewModel.getDeleteFailed().toString(),
                                 true);
@@ -146,37 +148,26 @@ public class EventDetailsFragment extends Fragment {
                     .into(binding.eventPhoto);
         } else
             binding.eventPhoto.setVisibility(View.GONE);
-        if(userId != -1)
-            checkFavoriteStatus(userId, event.getId(), binding.favoriteButton);
+        if(userId != -1) {
+            viewModel.getFavoriteStatus().observe(getViewLifecycleOwner(), isFavorite -> {
+                binding.favoriteButton.setBackgroundResource(
+                        isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite
+                );
+                binding.favoriteButton.setSelected(isFavorite);
+            });
+            viewModel.checkFavoriteStatus(userId, event.getId());
+        }
         setupAgenda();
         if(isOrganizer || isAdmin)
             renderChart();
     }
 
-    private void checkFavoriteStatus(Long userId, Long eventId, ImageButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.userService.checkFavoriteStatus(userId, eventId);
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    boolean isFavorite = response.body();
-                    btnFavorite.setBackgroundResource(
-                            isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite
-                    );
-                    btnFavorite.setSelected(isFavorite);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
-                ToastUtils.showCustomToast(getContext(),R.string.network_error + t.getMessage(), true);
-            }
-        });
-    }
-
     private void renderChart() {
-        binding.ratingChartLayout.setVisibility(View.VISIBLE);
         List<Review> reviews = event.getReviews();
+        if(reviews.isEmpty()){
+            return;
+        }
+        binding.ratingChartLayout.setVisibility(View.VISIBLE);
         int[] counts = new int[5];
         for (Review r : reviews) {
             counts[r.getStars() - 1]++;
@@ -232,14 +223,18 @@ public class EventDetailsFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void toggleFavorite() {
-        isFavorite = !isFavorite;
-        binding.favoriteButton.setImageResource(isFavorite ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite);
-    }
-
     @Override
-        public void onDestroyView() {
+    public void onDestroyView() {
             super.onDestroyView();
             binding = null;
         }
+
+    private void setupFragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener("event_form_result", this, (requestKey, result) -> {
+            boolean shouldRefresh = result.getBoolean("refresh_events", false);
+            if (shouldRefresh) {
+                viewModel.getEvent(event.getId());
+            }
+        });
+    }
 }
