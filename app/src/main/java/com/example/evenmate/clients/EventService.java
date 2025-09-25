@@ -48,6 +48,13 @@ public interface EventService {
     })
     @POST("events")
     Call<Event> create(@Body EventRequest request);
+    
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("events/{id}/attendees")
+    Call<Void> addAttendee(@Path("id") long id);
 
     @Headers({
             "User-Agent: Mobile-Android",

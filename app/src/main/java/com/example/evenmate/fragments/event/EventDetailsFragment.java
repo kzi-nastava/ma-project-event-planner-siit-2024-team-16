@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,8 +90,7 @@ public class EventDetailsFragment extends Fragment {
         binding.btnDeleteEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
         binding.btnEditEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
 
-        //todo this and calendar!!!
-//        binding.btnComing.setOnClickListener(v);
+        binding.btnComing.setOnClickListener(v -> viewModel.addAttendee(event.getId()));
         binding.btnMap.setOnClickListener(v -> showMap());
         binding.favoriteButton.setOnClickListener(v ->viewModel.changeFavoriteStatus(userId, event.getId()));
         binding.downloadPdfButton.setOnClickListener(v -> generatePdf(false));
@@ -233,7 +231,7 @@ public class EventDetailsFragment extends Fragment {
         getParentFragmentManager().setFragmentResultListener("event_form_result", this, (requestKey, result) -> {
             boolean shouldRefresh = result.getBoolean("refresh_events", false);
             if (shouldRefresh) {
-                viewModel.getEvent(event.getId());
+                viewModel.getEventById(event.getId());
             }
         });
     }
