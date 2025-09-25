@@ -1,6 +1,7 @@
 package com.example.evenmate.fragments.pricelist;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +15,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.PriceListAdapter;
+import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.pricelist.PriceListItem;
 import com.example.evenmate.viewmodels.PriceListViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class PriceListFragment extends Fragment implements PriceListAdapter.OnPriceListActionListener {
     private PriceListViewModel viewModel;
@@ -43,11 +50,13 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
         adapter = new PriceListAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        btnDownloadPdf = view.findViewById(R.id.btn_download_pdf);
         btnProducts = view.findViewById(R.id.pricelist_btn_products);
         btnServices = view.findViewById(R.id.pricelist_btn_services);
         toggleType = view.findViewById(R.id.toggle_pricelist_type);
         btnProducts.setOnClickListener(v -> switchType(String.valueOf(AssetType.PRODUCT)));
         btnServices.setOnClickListener(v -> switchType(String.valueOf(AssetType.SERVICE)));
+        btnDownloadPdf.setOnClickListener(v -> downloadPdf());
         setupViewModel();
         return view;
     }
@@ -57,6 +66,40 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
             selectedType = type;
             viewModel.fetchPriceList(selectedType, null, null);
         }
+    }
+
+    private void downloadPdf() {
+        progressBar.setVisibility(View.VISIBLE);
+        ClientUtils.priceListService.getPriceListPdf(selectedType).enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "price_list_" + selectedType + ".pdf");
+                        InputStream is = response.body().byteStream();
+                        FileOutputStream fos = new FileOutputStream(file);
+                        byte[] buffer = new byte[4096];
+                        int len;
+                        while ((len = is.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
+                        is.close();
+                        Toast.makeText(requireContext(), "PDF downloaded.", Toast.LENGTH_LONG).show();
+                    } catch (Exception ex) {
+                        Toast.makeText(requireContext(), "Failed to download PDF", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Failed to download PDF", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupViewModel() {
