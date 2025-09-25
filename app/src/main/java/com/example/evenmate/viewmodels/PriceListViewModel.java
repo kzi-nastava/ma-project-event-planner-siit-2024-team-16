@@ -48,7 +48,7 @@ public class PriceListViewModel extends ViewModel {
         });
     }
 
-    public void updatePriceListItem(long assetId, double price, double discount) {
+    public void updatePriceListItem(long assetId, double price, double discount, String selectedType) {
         isLoading.setValue(true);
         PriceListItemUpdate update = new PriceListItemUpdate(assetId, price, discount);
         ClientUtils.priceListService.updatePriceListItem(assetId, update).enqueue(new Callback<PriceListItem>() {
@@ -56,7 +56,7 @@ public class PriceListViewModel extends ViewModel {
             public void onResponse(Call<PriceListItem> call, Response<PriceListItem> response) {
                 isLoading.setValue(false);
                 if (response.isSuccessful()) {
-                    fetchPriceList(null, null, null); // TODO: type
+                    fetchPriceList(selectedType, null, null);
                 } else {
                     error.setValue("Failed to update price list item");
                 }

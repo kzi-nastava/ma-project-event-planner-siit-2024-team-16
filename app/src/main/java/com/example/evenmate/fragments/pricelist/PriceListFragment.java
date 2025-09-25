@@ -14,8 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.PriceListAdapter;
+import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.pricelist.PriceListItem;
 import com.example.evenmate.viewmodels.PriceListViewModel;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,11 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
     private PriceListAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    private MaterialButton btnDownloadPdf;
+    private MaterialButton btnProducts;
+    private MaterialButton btnServices;
+    private MaterialButtonToggleGroup toggleType;
+    private String selectedType = String.valueOf(AssetType.SERVICE);
 
     @Nullable
     @Override
@@ -34,8 +43,20 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
         adapter = new PriceListAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        btnProducts = view.findViewById(R.id.pricelist_btn_products);
+        btnServices = view.findViewById(R.id.pricelist_btn_services);
+        toggleType = view.findViewById(R.id.toggle_pricelist_type);
+        btnProducts.setOnClickListener(v -> switchType(String.valueOf(AssetType.PRODUCT)));
+        btnServices.setOnClickListener(v -> switchType(String.valueOf(AssetType.SERVICE)));
         setupViewModel();
         return view;
+    }
+
+    private void switchType(String type) {
+        if (!type.equals(selectedType)) {
+            selectedType = type;
+            viewModel.fetchPriceList(selectedType, null, null);
+        }
     }
 
     private void setupViewModel() {
@@ -43,7 +64,7 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
         viewModel.getPriceList().observe(getViewLifecycleOwner(), this::onPriceListChanged);
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), this::onLoadingChanged);
         viewModel.getError().observe(getViewLifecycleOwner(), this::onError);
-        viewModel.fetchPriceList("SERVICE", null, null);
+        viewModel.fetchPriceList(selectedType, null, null);
     }
 
     private void onPriceListChanged(List<PriceListItem> items) {
@@ -64,9 +85,8 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
     public void onEdit(PriceListItem item) {
         EditPriceListItemDialogFragment dialog = EditPriceListItemDialogFragment.newInstance(item);
         dialog.setListener((price, discount) -> {
-            viewModel.updatePriceListItem(item.getId(), price, discount);
+            viewModel.updatePriceListItem(item.getId(), price, discount, selectedType);
         });
         dialog.show(getParentFragmentManager(), "EditPriceListItemDialog");
     }
 }
-
