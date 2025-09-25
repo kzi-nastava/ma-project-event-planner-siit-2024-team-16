@@ -24,6 +24,7 @@ public class ClientUtils {
     @Getter
     private static Context context;
     private static Retrofit retrofit;
+    public static ProductService productService;
     public static EventTypeService eventTypeService;
     public static EventService eventService;
     public static AuthService authService;
@@ -44,6 +45,7 @@ public class ClientUtils {
         authService = getRetrofit().create(AuthService.class);
         userService = getRetrofit().create(UserService.class);
         categoryService = getRetrofit().create(CategoryService.class);
+        productService = getRetrofit().create(ProductService.class);
         chatService = getRetrofit().create(ChatService.class);
         assetService = getRetrofit().create(AssetService.class);
         priceListService = getRetrofit().create(PriceListService.class);

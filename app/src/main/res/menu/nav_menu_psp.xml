@@ -13,8 +13,8 @@
         <item android:id="@+id/favoriteEventsFragment"
             android:orderInCategory="300"
             android:title="@string/favorite_events" />
-        <item android:id="@+id/providerServicesProductsFragment"
-            android:title="@string/your_ps"
+        <item android:id="@+id/productsFragment"
+            android:title="@string/products"
             android:orderInCategory="400" />
         <item android:id="@+id/profile"
             android:title="@string/your_profile"
@@ -22,11 +22,14 @@
         <item android:id="@+id/CalendarFragment"
             android:title="@string/calendar"
             android:orderInCategory="600"/>
-        <item android:id="@+id/FavoriteProductServiceFragment"
-            android:title="@string/favorite_ps"
+        <item android:id="@+id/favoriteProductsFragment"
+            android:title="@string/favorite_products"
             android:orderInCategory="700"/>
+        <item android:id="@+id/yourProductsFragment"
+            android:title="@string/your_products"
+            android:orderInCategory="800"/>
         <item android:id="@+id/assetsPriceList"
             android:title="@string/price_list"
-            android:orderInCategory="800"/>
+            android:orderInCategory="900"/>
     </group>
 </menu>

@@ -20,7 +20,6 @@ public class Category implements Parcelable {
     private String name;
     private String description;
 
-    // Parcelable implementation
     protected Category(Parcel in) {
         if (in.readByte() == 0) {
             id = null;

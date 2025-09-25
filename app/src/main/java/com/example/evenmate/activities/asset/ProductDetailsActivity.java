@@ -10,15 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.evenmate.R;
 import com.example.evenmate.activities.PageActivity;
 import com.example.evenmate.activities.notifications.NotificationsActivity;
-import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.asset.Product;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProductDetailsActivity extends AppCompatActivity {
     private Product product;
