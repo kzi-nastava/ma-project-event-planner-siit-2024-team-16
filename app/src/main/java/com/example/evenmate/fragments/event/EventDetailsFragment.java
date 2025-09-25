@@ -91,6 +91,7 @@ public class EventDetailsFragment extends Fragment {
         binding.btnDeleteEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
         binding.btnEditEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
 
+        binding.btnMap.setOnClickListener(v -> showMap());
         binding.favoriteButton.setOnClickListener(v -> toggleFavorite());
         binding.downloadPdfButton.setOnClickListener(v -> generatePdf(false));
         binding.downloadReportPdfButton.setOnClickListener(v -> generatePdf(true));
@@ -116,6 +117,11 @@ public class EventDetailsFragment extends Fragment {
         );
     }
 
+    private void showMap() {
+        //todo andjela
+        ToastUtils.showCustomToast(getContext(), "Map", false);
+    }
+
     private void setupAgenda() {
         binding.agendaRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         AgendaAdapter agendaAdapter = new AgendaAdapter(new ArrayList<>(), false);
@@ -127,7 +133,7 @@ public class EventDetailsFragment extends Fragment {
         binding.eventName.setText(event.getName());
         binding.eventDescription.setText(event.getDescription());
         binding.eventDate.setText(String.format("Date: %s", event.getDate()));
-        binding.eventLocation.setText(String.format("Location: %s", event.getAddress()));
+        binding.eventLocation.setText(String.format("Location: %s %s, %s, %s", event.getAddress().getStreetName(), event.getAddress().getStreetNumber(), event.getAddress().getCity(), event.getAddress().getCountry()));
         binding.eventOrganizer.setText(String.format("Organizer: %s %s", event.getOrganizer().getFirstName(), event.getOrganizer().getLastName()));
         if (event.getPhoto() != null) {
             String base64Image = event.getPhoto();
