@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -76,6 +77,28 @@ public class EventDetailsFragment extends Fragment {
                 event = e;
                 setupDetails();
             });
+            viewModel.getDeleteFailed().observe(getViewLifecycleOwner(), failed -> {
+                if (failed == null) return;
+
+                if (failed) {
+                    ToastUtils.showCustomToast(requireContext(),
+                            "Failed to delete event",
+                            true);
+                } else {
+                    ToastUtils.showCustomToast(requireContext(),
+                            "Event deleted successfully",
+                            false);
+
+                    Bundle result = new Bundle();
+                    result.putBoolean("refresh_events", true);
+                    getParentFragmentManager()
+                            .setFragmentResult("event_form_result", result);
+
+                    NavHostFragment.findNavController(requireParentFragment()).popBackStack();
+                }
+
+                viewModel.resetDeleteFailed();
+            });
         } else
             binding.eventName.setText(R.string.no_event_to_display);
     }
@@ -104,15 +127,7 @@ public class EventDetailsFragment extends Fragment {
                 .setTitle("Delete Event")
                 .setMessage(String.format("Are you sure you want to delete %s? This action cannot be undone.", event.getName()))
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    //todo nav to previous page
-                    viewModel.deleteEvent(event.getId());
-                    if(Boolean.TRUE.equals(viewModel.getDeleteFailed().getValue()))
-                        ToastUtils.showCustomToast(requireContext(),
-                                viewModel.getDeleteFailed().toString(),
-                                true);
-                    viewModel.resetDeleteFailed();
-                })
+                .setPositiveButton("Delete", (dialog, which) -> viewModel.deleteEvent(event.getId()))
                 .show()
         );
     }

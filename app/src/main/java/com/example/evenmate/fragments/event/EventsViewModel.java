@@ -31,10 +31,10 @@ public class EventsViewModel extends ViewModel {
     private final MutableLiveData<Integer> currentPage = new MutableLiveData<>(1);
     private final MutableLiveData<Integer> totalPages = new MutableLiveData<>(1);
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> deleteFailed = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> deleteFailed = new MutableLiveData<>(null);
     private final MutableLiveData<Boolean> favoriteStatus = new MutableLiveData<>();
 
-    public void resetDeleteFailed() { deleteFailed.setValue(false); }
+    public void resetDeleteFailed() { deleteFailed.setValue(null); }
 
     public void fetchEvents() {
         int apiPage = currentPage.getValue() != null ? currentPage.getValue() - 1 : 0;
@@ -67,7 +67,7 @@ public class EventsViewModel extends ViewModel {
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                fetchEvents();
+                deleteFailed.setValue(false);
             }
 
             @Override

@@ -53,9 +53,8 @@ public class EventsFragment extends ListFragment {
         } else {
             binding.eventsHeading.setText(R.string.events);
             viewModel.setFetchMode("ALL_EVENTS");
-
         }
-
+        viewModel.fetchEvents();
         adapter = new EventAdapter(getActivity(), new ArrayList<>());
 
         adapter.setOnEditClickListener(event -> {
@@ -174,7 +173,6 @@ public class EventsFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.fetchEvents();
     }
 
     @Override
