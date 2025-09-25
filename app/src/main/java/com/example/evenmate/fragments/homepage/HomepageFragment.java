@@ -117,6 +117,24 @@ public class HomepageFragment extends Fragment {
             }
             filterContainer.setVisibility(View.VISIBLE);
         });
+
+        this.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!fragmentSwitch.isChecked() && allEvents instanceof CardCollection) {
+                    ((CardCollection) allEvents).searchEvents(query);
+                } else if (fragmentSwitch.isChecked() && allServicesAndProducts instanceof CardCollection) {
+//                    ((CardCollection) allServicesAndProducts).searchAssets(query);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
     }
 
     private void switchedFragments(boolean isChecked) {

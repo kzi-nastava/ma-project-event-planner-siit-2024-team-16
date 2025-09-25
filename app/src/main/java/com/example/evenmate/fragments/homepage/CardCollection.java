@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.evenmate.R;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.fragments.filters.EventFilters;
-import com.example.evenmate.fragments.filters.Filters;
+
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.event.Event;
@@ -149,4 +149,31 @@ public class CardCollection extends Fragment {
             }
         });
     }
+
+    public void searchEvents(String keywords) {
+        if (events != null) {
+            Call<PaginatedResponse<Event>> call = ClientUtils.eventService.searchEvents(keywords, currentPage, pageSize);
+            call.enqueue(new Callback<PaginatedResponse<Event>>() {
+                @Override
+                public void onResponse(Call<PaginatedResponse<Event>> call, Response<PaginatedResponse<Event>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        events = response.body().getContent();
+                        loadCards();
+                        Toast.makeText(requireContext(), "Found " + events.size() + " events", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(requireContext(), "No events found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PaginatedResponse<Event>> call, Throwable t) {
+                    Toast.makeText(requireContext(), "Error searching events: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    public void searchAssets(String query) {
+    }
+
 }

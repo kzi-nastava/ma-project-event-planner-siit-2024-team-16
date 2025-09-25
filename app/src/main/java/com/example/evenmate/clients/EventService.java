@@ -81,6 +81,13 @@ public interface EventService {
             @Query("size") int size,
             @Query("sort") String sort
     );
+
+    @GET("events/search")
+    Call<PaginatedResponse<Event>> searchEvents(
+            @Query("keywords") String keywords,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 }
 
 
