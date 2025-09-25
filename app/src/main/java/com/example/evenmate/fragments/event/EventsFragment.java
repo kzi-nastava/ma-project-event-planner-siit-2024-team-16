@@ -92,10 +92,8 @@ public class EventsFragment extends ListFragment {
 
         });
 
-
         setListAdapter(adapter);
         setupPagination();
-
         setupAddEventButton();
         setupFragmentResultListener();
         observeViewModel();
