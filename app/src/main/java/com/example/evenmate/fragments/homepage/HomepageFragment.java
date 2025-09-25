@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -16,16 +17,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.evenmate.R;
+import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.fragments.filters.EventFilters;
+import com.example.evenmate.fragments.filters.FilterSortEvents;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.event.Event;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Consumer;
+
+import retrofit2.Callback;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class HomepageFragment extends Fragment {
 
@@ -35,6 +41,7 @@ public class HomepageFragment extends Fragment {
     private Fragment allServicesAndProducts;
     private SwitchMaterial fragmentSwitch;
     private SearchView searchView;
+    private EventFilters currentFilters = new EventFilters();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,13 +57,16 @@ public class HomepageFragment extends Fragment {
         FragmentManager manager = getChildFragmentManager();
 
         if (savedInstanceState == null) {
-            top5Events = new TopCardSwiper(null,getTop5Events());
-            allEvents = new CardCollection(null,getTop5Events());
+            getTop5Events(top5-> {
+                top5Events = new TopCardSwiper(null, top5);
+                manager.beginTransaction().replace(R.id.top_5, top5Events, "top5Events").commit();
+            });
+            getTop5Events(top5-> {
+                allEvents = new CardCollection(null, top5);
+                manager.beginTransaction().replace(R.id.all, allEvents,"allEvents").commit();
+            });
             top5ServicesAndProducts = new TopCardSwiper(getTop5ServicesAndProducts(),null);
             allServicesAndProducts = new CardCollection(getTop5ServicesAndProducts(),null);
-
-            manager.beginTransaction().replace(R.id.top_5, top5Events, "top5Events").commit();
-            manager.beginTransaction().replace(R.id.all, allEvents,"allEvents").commit();
         } else {
             top5Events = manager.findFragmentByTag("top5Events");
             allEvents = manager.findFragmentByTag( "allEvents");
@@ -83,6 +93,29 @@ public class HomepageFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
+        });
+
+        FrameLayout filterContainer = view.findViewById(R.id.filter_container);
+        Button filterButton = view.findViewById(R.id.filter);
+
+        filterButton.setOnClickListener(v -> {
+            FilterSortEvents filterFragment = (FilterSortEvents) getChildFragmentManager().findFragmentById(R.id.filter_container);
+            if (filterFragment == null) {
+                filterFragment = new FilterSortEvents();
+                filterFragment.setOnFilterApplyListener(filters -> {
+                    if (allEvents instanceof CardCollection) {
+                        CardCollection cardCollection = (CardCollection) allEvents;
+                        cardCollection.eventFilters = filters;
+                        cardCollection.currentPage = 0;
+                        cardCollection.loadNewEvents();
+                    }
+                });
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.filter_container, filterFragment)
+                        .setReorderingAllowed(true)
+                        .commit();
+            }
+            filterContainer.setVisibility(View.VISIBLE);
         });
     }
 
@@ -112,20 +145,25 @@ public class HomepageFragment extends Fragment {
         FrameLayout frameLayout = requireView().findViewById(R.id.search_bar_frame);
         GradientDrawable background = (GradientDrawable) frameLayout.getBackground();
         background.setColor(ContextCompat.getColor(requireContext(), backgroundColor));
-        requireView().findViewById(R.id.sort).setBackgroundColor(requireContext().getColor(backgroundColor));
         requireView().findViewById(R.id.filter).setBackgroundColor(requireContext().getColor(backgroundColor));
     }
 
-    public static List<Event> getTop5Events() {
-        List<Event> events = new ArrayList<>();
-        //after merging, errors appeared here, since this will be changed, I just put it as a comment
-//        events.add(new Event(1L, "wedding", "Miguel and Athena's Wedding", "A beautiful wedding event", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "California", "", "", "@drawable/img_event", 4.3, true));
-//        events.add(new Event(2L, "category2", "Event 2", "Description for Event 2", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc2", "", "", "@drawable/img_event", 4.3, true));
-//        events.add(new Event(3L, "category3", "Event 3", "Description for Event 3", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc3", "", "", "@drawable/img_event", 4.3, false));
-//        events.add(new Event(4L, "category4", "Event 4", "Description for Event 4", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc4", "", "", "@drawable/img_event", 4.3, false));
-//        events.add(new Event(5L, "category5", "Event 5", "Description for Event 5", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "Loc5", "", "", "@drawable/img_event", 4.3, false));
-        return events;
+    public void getTop5Events(Consumer<List<Event>> callback) {
+        ClientUtils.eventService.getTop5Events().enqueue(new Callback<List<Event>>() {
+            @Override
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.accept(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Event>> call, Throwable t) {
+                Toast.makeText(requireContext(), "Error fetching events: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     public static List<Asset> getTop5ServicesAndProducts() {
         List<Asset> assets = new ArrayList<>();

@@ -73,11 +73,11 @@ public class CardAdapter {
         TextView box2 = cardView.findViewById(R.id.box2);
         box2.setText(String.format("%s%s, %s", fragment.getString(R.string.location),event.getAddress().getCountry(),event.getAddress().getCity()));
         TextView box3 = cardView.findViewById(R.id.box3);
-        box3.setText(String.format("%s%s", fragment.getString(R.string.category), event.getType()));
+        box3.setText(String.format("%s%s", fragment.getString(R.string.category), event.getType().getName()));
         TextView box4 = cardView.findViewById(R.id.box4);
         box4.setText(String.format("%s%s", fragment.getString(R.string.max_guests), event.getMaxAttendees()));
         TextView box5 = cardView.findViewById(R.id.box5);
-        box5.setText(String.format("%s%s", fragment.getString(R.string.rating), event.getRating()));
+        box5.setText(String.format("%s%s", fragment.getString(R.string.rating), event.getRating()==null?0.0:event.getRating()));
         // image
         ImageView imageView = cardView.findViewById(R.id.image);
         @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(event.getPhoto(), "drawable", fragment.requireContext().getPackageName());

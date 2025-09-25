@@ -13,11 +13,19 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
+import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.fragments.filters.EventFilters;
+import com.example.evenmate.fragments.filters.Filters;
+import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.event.Event;
 
 import java.util.List;
+import java.util.function.Consumer;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 public class CardCollection extends Fragment {
 
     private LinearLayout cardCollectionHolder;
@@ -25,15 +33,18 @@ public class CardCollection extends Fragment {
     private List<Event> events;
     @Nullable
     private List<Asset> assets;
-    private Button loadMoreButton; // not local because int the future it will have more functionality
-    private Button loadLessButton; // not local because int the future it will have more functionality
+    private Button loadMoreButton;
+    private Button loadLessButton;
+    public EventFilters eventFilters;
+
+    public int currentPage = 0;
+    private final int pageSize = 5;
 
     public CardCollection() {}
-    public CardCollection(@Nullable List<Asset> assets,@Nullable List<Event>events) {
-        this.events=events;
-        this.assets=assets;
+    public CardCollection(@Nullable List<Asset> assets, @Nullable List<Event> events) {
+        this.events = events;
+        this.assets = assets;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,12 +55,18 @@ public class CardCollection extends Fragment {
 
         loadCards();
 
-        if (events!=null) {
-            loadMoreButton.setOnClickListener(v -> loadNewEvents());
-            loadLessButton.setOnClickListener(v -> loadNewEvents());
+        if (events != null) {
+            loadMoreButton.setOnClickListener(v -> {
+                currentPage++;
+                loadNewEvents();
+            });
+            loadLessButton.setOnClickListener(v -> {
+                if (currentPage > 0) currentPage--;
+                loadNewEvents();
+            });
             loadLessButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.green));
             loadMoreButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.green));
-        } else if (assets!=null){
+        } else if (assets != null) {
             loadMoreButton.setOnClickListener(v -> loadNewAssets());
             loadLessButton.setOnClickListener(v -> loadNewAssets());
             loadLessButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.purple));
@@ -61,33 +78,75 @@ public class CardCollection extends Fragment {
 
     private void loadCards() {
         cardCollectionHolder.removeAllViews();
-        if (events!=null){
+        if (events != null) {
             for (Event item : events) {
                 View cardView = getLayoutInflater().inflate(R.layout.item_card_general, cardCollectionHolder, false);
                 new CardAdapter(cardView, this, item);
                 cardCollectionHolder.addView(cardView);
             }
-        }
-        else if(assets!=null){
-            for (Asset item: assets){
-                View cardView = getLayoutInflater().inflate(R.layout.item_card_general,cardCollectionHolder,false);
-                new CardAdapter(cardView,this,item);
+        } else if (assets != null) {
+            for (Asset item : assets) {
+                View cardView = getLayoutInflater().inflate(R.layout.item_card_general, cardCollectionHolder, false);
+                new CardAdapter(cardView, this, item);
                 cardCollectionHolder.addView(cardView);
             }
         }
     }
 
-    private void loadNewEvents() {
-        events = HomepageFragment.getTop5Events();
-        loadCards();
-        Toast.makeText(this.getContext(),R.string.new_page,Toast.LENGTH_SHORT).show();
+    void loadNewEvents() {
+        getEvents(eventsList -> {
+            events = eventsList;
+            loadCards();
+            loadLessButton.setEnabled(currentPage > 0);
+            loadMoreButton.setEnabled(eventsList.size() == pageSize);
+            Toast.makeText(this.getContext(), getString(R.string.new_page) + " " + (currentPage + 1), Toast.LENGTH_SHORT).show();
+        }, eventFilters);
     }
+
     private void loadNewAssets() {
         assets = HomepageFragment.getTop5ServicesAndProducts();
         loadCards();
-        Toast.makeText(this.getContext(),R.string.new_page,Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this.getContext(), R.string.new_page, Toast.LENGTH_SHORT).show();
     }
 
+    public void getEvents(Consumer<List<Event>> callback, @Nullable EventFilters filters) {
+        Call<PaginatedResponse<Event>> call = ClientUtils.eventService.getAllEvents(
+                filters != null ? filters.getMinMaxGuests() : null,
+                filters != null ? filters.getMaxMaxGuests() : null,
+                filters != null ? filters.getDateFrom() : null,
+                filters != null ? filters.getDateTo() : null,
+                filters != null ? filters.getSelectedTypes() : null,
+                filters != null ? filters.getSelectedOrganizers() : null,
+                filters != null ? filters.getSelectedLocations() : null,
+                filters != null ? filters.getMinRating() : null,
+                filters != null ? filters.getMaxRating() : null,
+                filters != null && filters.isShowInPast(),
+                currentPage, pageSize, filters !=null ? filters.getSortOption(): "id,asc"
+        );
 
+        call.enqueue(new Callback<PaginatedResponse<Event>>() {
+            @Override
+            public void onResponse(Call<PaginatedResponse<Event>> call,
+                                   Response<PaginatedResponse<Event>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    PaginatedResponse<Event> body = response.body();
+                    callback.accept(body.getContent());
+                    loadMoreButton.setEnabled(currentPage < body.getTotalPages() - 1);
+                    loadLessButton.setEnabled(currentPage > 0);
+                } else {
+                    callback.accept(List.of());
+                    loadMoreButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PaginatedResponse<Event>> call, Throwable t) {
+                Toast.makeText(requireContext(),
+                        "Failed to load events: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                callback.accept(List.of());
+                loadMoreButton.setEnabled(false);
+            }
+        });
+    }
 }

@@ -81,7 +81,14 @@
                     android:layout_height="match_parent"
                     android:queryHint="@string/search" />
             </FrameLayout>
-            <!-- filters -->
+
+            <FrameLayout
+                android:id="@+id/filter_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:visibility="gone" />
+
             <LinearLayout
                 style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
@@ -89,16 +96,10 @@
                 android:gravity="end">
 
                 <Button
-                    android:id="@+id/sort"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sort" />
-
-                <Button
                     android:id="@+id/filter"
-                    android:layout_width="100dp"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/filter" />
+                    android:text="@string/filter_and_sort" />
 
             </LinearLayout>
             <!-- all -->
