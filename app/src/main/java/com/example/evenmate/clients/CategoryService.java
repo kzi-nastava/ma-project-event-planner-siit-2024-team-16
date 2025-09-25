@@ -17,13 +17,12 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface CategoryService {
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @GET("categories")
-    Call<PaginatedResponse<Category>> getCategories();
-    
     Call<PaginatedResponse<Category>> getCategories(@Query("page") Integer page, @Query("size") Integer size);
 
     @POST("categories")

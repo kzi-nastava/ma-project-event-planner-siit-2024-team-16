@@ -389,7 +389,7 @@ public class FilterSortAssets extends Fragment {
         });
     }
     private void loadCategoriesFromBackend() {
-        ClientUtils.categoryService.getCategories().enqueue(new Callback<PaginatedResponse<Category>>() {
+        ClientUtils.categoryService.getCategories(null,null).enqueue(new Callback<PaginatedResponse<Category>>() {
             @Override
             public void onResponse(Call<PaginatedResponse<Category>> call, retrofit2.Response<PaginatedResponse<Category>> response) {
                 if (response.isSuccessful() && response.body() != null) {

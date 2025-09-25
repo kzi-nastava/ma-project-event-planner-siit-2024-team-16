@@ -21,5 +21,4 @@ public class Service extends Asset{
     private Integer reservationDeadline;
     private Integer cancellationDeadline;
     private String reservationConformation;
-    private ArrayList<String> eventTypes;
 }
