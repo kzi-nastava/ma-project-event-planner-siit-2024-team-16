@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 
 public class EventDetailsPdf {
-    //todo add invitations to report
     public static PdfDocument getDocument(Event event) {
         PdfDocument pdf = new PdfDocument();
 
@@ -79,7 +78,8 @@ public class EventDetailsPdf {
 
         List<AgendaItem> agendaItems = event.getAgendaItems();
         yPosition += 20;
-        drawAgendaTable(agendaItems, pdf, canvas, paint, pageWidth, pageHeight, yPosition);
+        yPosition = drawAgendaTable(agendaItems, pdf, canvas, paint, pageWidth, pageHeight, yPosition);
+        drawInvitationList(event.getInvited(), yPosition, paint, canvas, pdf, page, pageHeight, pageWidth);
 
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
         paint.setTextSize(8);
@@ -108,8 +108,49 @@ public class EventDetailsPdf {
         return lines;
     }
 
-    private static void drawAgendaTable(List<AgendaItem> agendaItems, PdfDocument pdf, Canvas canvas, Paint paint, int pageWidth, int pageHeight, int startY) {
-        if (agendaItems == null || agendaItems.isEmpty()) return;
+    private static void drawInvitationList(List<String> invitations, int yPosition, Paint paint, Canvas canvas, PdfDocument pdf, PdfDocument.Page page, int pageHeight, int pageWidth){
+        if (invitations != null && !invitations.isEmpty()) {
+            yPosition += 40;
+
+            paint.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+            paint.setTextSize(14);
+            canvas.drawText("Invitations:", 20, yPosition, paint);
+
+            yPosition += 25;
+
+            paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+            paint.setTextSize(12);
+
+            for (int i = 0; i < invitations.size(); i++) {
+                String invitation = invitations.get(i);
+
+                String prefix = "• ";
+
+                List<String> lines = splitTextToLines(invitation, pageWidth - 60, paint);
+                if (!lines.isEmpty()) {
+                    canvas.drawText(prefix + lines.get(0), 40, yPosition, paint);
+                    yPosition += 18;
+
+                    for (int j = 1; j < lines.size(); j++) {
+                        canvas.drawText("   " + lines.get(j), 40, yPosition, paint);
+                        yPosition += 18;
+                    }
+                }
+
+                yPosition += 10;
+
+                if (yPosition > pageHeight - 60) {
+                    pdf.finishPage(page);
+                    PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pdf.getPages().size() + 1).create();
+                    page = pdf.startPage(pageInfo);
+                    canvas = page.getCanvas();
+                    yPosition = 40;
+                }
+            }
+        }
+    }
+    private static int drawAgendaTable(List<AgendaItem> agendaItems, PdfDocument pdf, Canvas canvas, Paint paint, int pageWidth, int pageHeight, int startY) {
+        if (agendaItems == null || agendaItems.isEmpty()) return startY;
 
         int xStart = 20;
         int tableWidth = pageWidth - 40;
@@ -183,6 +224,7 @@ public class EventDetailsPdf {
             yPosition += rowHeight;
             rowIndex++;
         }
+        return yPosition;
     }
 
 }
