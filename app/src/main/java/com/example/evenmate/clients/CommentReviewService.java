@@ -28,5 +28,8 @@ public interface CommentReviewService {
 
     @POST("assets/{assetId}/review")
     Call<Void> reviewAsset(@Path("assetId") Long assetId, @Body int stars);
+
+    @POST("users/{userId}/review")
+    Call<Void> reviewProvider(@Path("userId") Long userId, @Body int stars);
 }
 
