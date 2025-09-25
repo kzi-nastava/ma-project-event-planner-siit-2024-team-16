@@ -10,5 +10,8 @@
         <item android:id="@+id/eventsFragment"
             android:title="@string/events_menu"
             android:orderInCategory="200" />
+        <item android:id="@+id/productsFragment"
+            android:title="@string/products"
+            android:orderInCategory="300" />
     </group>
 </menu>

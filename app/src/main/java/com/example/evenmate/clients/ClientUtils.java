@@ -3,8 +3,10 @@ package com.example.evenmate.clients;
 import android.content.Context;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 import com.example.evenmate.BuildConfig;
+import com.example.evenmate.adapters.LocalDateTimeAdapter;
 import com.example.evenmate.adapters.LocalDateTypeAdapter;
 import com.example.evenmate.interceptors.AuthInterceptor;
 import com.google.gson.Gson;
@@ -22,6 +24,7 @@ public class ClientUtils {
     @Getter
     private static Context context;
     private static Retrofit retrofit;
+    public static ProductService productService;
     public static EventTypeService eventTypeService;
     public static EventService eventService;
     public static AuthService authService;
@@ -31,6 +34,8 @@ public class ClientUtils {
     public static  AddressService addressService;
     public static AssetService assetService;
     public static ProviderService providerService;
+    public static ChatService chatService;
+    public static PriceListService priceListService;
 
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
@@ -47,6 +52,9 @@ public class ClientUtils {
         addressService = getRetrofit().create(AddressService.class);
         assetService = getRetrofit().create(AssetService.class);
         providerService = getRetrofit().create(ProviderService.class);
+        productService = getRetrofit().create(ProductService.class);
+        chatService = getRetrofit().create(ChatService.class);
+        priceListService = getRetrofit().create(PriceListService.class);
     }
 
     private static OkHttpClient createHttpClient() {
@@ -68,6 +76,7 @@ public class ClientUtils {
 
     public static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();
     private static Retrofit getRetrofit() {
         if (retrofit == null) {

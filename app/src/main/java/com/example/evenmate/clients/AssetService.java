@@ -40,11 +40,15 @@ public interface AssetService {
     })
     @GET("assets/top5")
     Call<List<Asset>> getTop5();
-
+    
     @GET("assets/search")
     Call<PaginatedResponse<Asset>> search(
             @Query("keywords") String keywords,
             @Query("page") int page,
             @Query("size") int size
     );
+    
+    @PUT("assets/{assetId}/category")
+    Call<Asset> updateAssetCategory(@Path("assetId") Long assetId, @Query("categoryId") Long categoryId);
+
 }

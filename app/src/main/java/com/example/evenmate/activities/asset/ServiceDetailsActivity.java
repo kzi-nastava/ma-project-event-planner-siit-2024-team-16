@@ -28,14 +28,11 @@ import com.example.evenmate.R;
 import com.example.evenmate.activities.EditServiceActivity;
 import com.example.evenmate.activities.PageActivity;
 import com.example.evenmate.activities.notifications.NotificationsActivity;
-import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.asset.Service;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceDetailsActivity extends AppCompatActivity {
@@ -131,7 +128,7 @@ public class ServiceDetailsActivity extends AppCompatActivity {
         imageViewPager.setAdapter(imageAdapter);
         serviceName.setText(service.getName());
         categoryChip.setText(service.getCategory().getName());
-        priceText.setText(String.format("$%s",service.getPrice()));
+        priceText.setText(String.format("$%s",service.getPriceAfterDiscount()));
 
         discountChip.setVisibility(View.VISIBLE);
         discountChip.setText(String.format("%s%%",service.getDiscount()));
@@ -145,7 +142,7 @@ public class ServiceDetailsActivity extends AppCompatActivity {
         reservationTypeText.setText(service.getReservationConformation());
 
         setupStatusChips();
-        setupEventTypesChips(service.getEventTypes());
+//        setupEventTypesChips(service.getEventTypes());
     }
     private String getDuration(){
         if (service.getLength()!=null){

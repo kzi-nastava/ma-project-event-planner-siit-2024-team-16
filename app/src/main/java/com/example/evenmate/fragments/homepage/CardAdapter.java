@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.widget.Button;
 import android.widget.Toast;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +33,7 @@ public class CardAdapter {
         TextView box2 = cardView.findViewById(R.id.box2);
         box2.setText(String.format("%s%s", fragment.getString(R.string.category), asset.getCategory()));
         TextView box3 = cardView.findViewById(R.id.box3);
-        box3.setText(String.format("%s%s", fragment.getString(R.string.price), asset.getPrice()));
+        box3.setText(String.format("%s: %s", fragment.getString(R.string.price), asset.getPrice()));
         TextView box4 = cardView.findViewById(R.id.box4);
         box4.setText(String.format("%s%s", fragment.getString(R.string.rating), asset.getAverageReview()));
         // image

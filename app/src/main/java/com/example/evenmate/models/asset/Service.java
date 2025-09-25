@@ -10,19 +10,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Service extends Asset{
     private String distinctiveness;
-    @Nullable
     private Integer length;
-    @Nullable
     private Integer minLength;
-    @Nullable
     private Integer maxLength;
-    private String reservationDeadline;
-    private String cancellationDeadline;
+    private Integer reservationDeadline;
+    private Integer cancellationDeadline;
     private String reservationConformation;
     private ArrayList<String> eventTypes;
 }

@@ -13,7 +13,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.evenmate.databinding.FragmentEventTypeFormBinding;
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.event.EventType;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 

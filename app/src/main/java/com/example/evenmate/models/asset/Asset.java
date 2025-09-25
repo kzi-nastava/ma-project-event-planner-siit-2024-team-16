@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.user.User;
 
 import java.util.List;
@@ -26,14 +26,14 @@ public class Asset implements Parcelable {
     private Double price;
     private Integer discount;
     private Double priceAfterDiscount;
-    private User provider;
+    private User provider; // TODO: Change to ProductServiceProvider
     private List<String> images;
     private Category category;
     private Double averageReview;
-    private String type;
+    private AssetType type;
     private Boolean isVisible;
-    private Boolean isVisibleToUser;
     private Boolean isAvailable;
+    private Boolean isVisibleToUser;
 
     public ProductRequest toRequest(){
         return new ProductRequest(
@@ -48,8 +48,8 @@ public class Asset implements Parcelable {
                 null,
                 isVisible,
                 isAvailable
-        );
-    }
+            );
+        }
     protected Asset(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
@@ -81,7 +81,7 @@ public class Asset implements Parcelable {
         } else {
             averageReview = in.readDouble();
         }
-        type = in.readString();
+        type = in.readString().equals(AssetType.PRODUCT.toString()) ? AssetType.PRODUCT : AssetType.SERVICE;
         byte tmpIsVisible = in.readByte();
         isVisible = tmpIsVisible == 0 ? null : tmpIsVisible == 1;
         byte tmpIsVisibleToUser = in.readByte();
@@ -144,7 +144,7 @@ public class Asset implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeDouble(averageReview);
         }
-        parcel.writeString(type);
+        parcel.writeString(String.valueOf(type));
         parcel.writeByte((byte) (isVisible == null ? 0 : isVisible ? 1 : 2));
         parcel.writeByte((byte) (isVisibleToUser == null ? 0 : isVisibleToUser ? 1 : 2));
         parcel.writeByte((byte) (isAvailable == null ? 0 : isAvailable ? 1 : 2));

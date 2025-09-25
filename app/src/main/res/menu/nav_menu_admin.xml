@@ -7,20 +7,26 @@
         <item android:id="@+id/HomepageFragment"
             android:title="@string/home"
             android:orderInCategory="100" />
+        <item android:id="@+id/categoryManagementFragment"
+            android:title="@string/category_management"
+            android:orderInCategory="150" />
         <item android:id="@+id/eventsFragment"
             android:title="@string/events_menu"
             android:orderInCategory="200" />
         <item android:id="@+id/favoriteEventsFragment"
             android:title="@string/favorite_events"
             android:orderInCategory="300" />
-        <item android:id="@+id/FavoriteProductServiceFragment"
-            android:title="@string/favorite_ps"
-            android:orderInCategory="400" />
-        <item android:id="@+id/eventTypesFragment"
+         <item android:id="@+id/eventTypesFragment"
             android:title="@string/event_types"
             android:orderInCategory="400" />
         <item android:id="@+id/profile"
             android:title="@string/your_profile"
             android:orderInCategory="500"/>
+        <item android:id="@+id/favoriteProductsFragment"
+            android:title="@string/favorite_products"
+            android:orderInCategory="600"/>
+        <item android:id="@+id/productsFragment"
+            android:title="@string/products"
+            android:orderInCategory="700" />
     </group>
 </menu>
