@@ -51,7 +51,6 @@ public class ProductsFragment extends ListFragment {
             } else {
                 binding.productsHeading.setText(R.string.products);
                 viewModel.setFetchMode("ALL_PRODUCTS");
-
             }
 
             adapter = new ProductAdapter(getActivity(), new ArrayList<>());

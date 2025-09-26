@@ -135,7 +135,6 @@ public class EventTypeFormFragment extends DialogFragment {
         }
     }
 
-    //todo fix refresh
     private void observeViewModel() {
         viewModel.getSuccess().observe(this, success -> {
             if (success) {
