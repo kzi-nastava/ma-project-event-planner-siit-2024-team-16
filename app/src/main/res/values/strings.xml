@@ -194,4 +194,6 @@
     <string name="show_services">Show Services</string>
     <string name="_0_10000">0 – 10000</string>
     <string name="_0_0_5_0">0.0 – 5.0</string>
+    <string name="report">Report</string>
+    <string name="block">Block</string>
 </resources>

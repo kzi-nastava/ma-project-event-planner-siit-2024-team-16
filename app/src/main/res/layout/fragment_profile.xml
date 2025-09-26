@@ -55,6 +55,34 @@
                     android:src="@drawable/ic_delete"
                     app:tint="@color/red" />
 
+                <ImageButton
+                    android:id="@+id/btnBlockUser"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="3dp"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/block"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_block"
+                    app:tint="@color/red" />
+
+                <ImageButton
+                    android:id="@+id/btnReportUser"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="3dp"
+                    android:adjustViewBounds="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/report"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_report"
+                    app:tint="@color/red" />
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/psp_profile_image"
                     android:layout_width="100dp"
@@ -98,6 +126,8 @@
                     tools:text="123 Main St, City, State" />
 
             </LinearLayout>
+
+
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView

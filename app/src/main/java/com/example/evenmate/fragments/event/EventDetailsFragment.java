@@ -115,6 +115,7 @@ public class EventDetailsFragment extends Fragment {
 
         binding.btnComing.setOnClickListener(v -> viewModel.addAttendee(event.getId()));
         binding.btnMap.setOnClickListener(v -> showMap());
+        binding.btnOrganizer.setOnClickListener(v-> showOrganizer());
         binding.favoriteButton.setOnClickListener(v ->viewModel.changeFavoriteStatus(userId, event.getId()));
         binding.downloadPdfButton.setOnClickListener(v -> generatePdf(false));
         binding.downloadReportPdfButton.setOnClickListener(v -> generatePdf(true));
@@ -135,6 +136,13 @@ public class EventDetailsFragment extends Fragment {
     private void showMap() {
         //todo andjela
         ToastUtils.showCustomToast(getContext(), "Map", false);
+    }
+
+    private void showOrganizer(){
+        Bundle bundle = new Bundle();
+        bundle.putString("userId", event.getOrganizer().getId().toString());
+        NavHostFragment.findNavController(this)
+                .navigate(R.id.action_eventDetails_to_profileFragment, bundle);
     }
 
     private void setupAgenda() {
