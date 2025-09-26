@@ -4,6 +4,8 @@ import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.event.EventRequest;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -51,6 +53,41 @@ public interface EventService {
     })
     @DELETE("events/{id}")
     Call<Object> delete(@Path("id") Long id);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("events/top5")
+    Call<List<Event>> getTop5Events();
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("events")
+    Call<PaginatedResponse<Event>> getAllEvents(
+            @Query("minMaxGuests") Integer minMaxGuests,
+            @Query("maxMaxGuests") Integer maxMaxGuests,
+            @Query("dateFrom") String dateFrom,      // format yyyy-MM-dd
+            @Query("dateTo") String dateTo,          // format yyyy-MM-dd
+            @Query("types") List<Long> types,
+            @Query("organizers") List<Long> organizers,
+            @Query("addresses") List<String> addresses,
+            @Query("minRating") Double minRating,
+            @Query("maxRating") Double maxRating,
+            @Query("showInPast") boolean showInPast,
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort
+    );
+
+    @GET("events/search")
+    Call<PaginatedResponse<Event>> searchEvents(
+            @Query("keywords") String keywords,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 }
 
 

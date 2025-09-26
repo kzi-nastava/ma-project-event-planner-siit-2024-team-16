@@ -30,8 +30,11 @@ public class ClientUtils {
     public static AuthService authService;
     public static UserService userService;
     public static CategoryService categoryService;
-    public static ChatService chatService;
+    public static EventOrganizerService eventOrganizerService;
+    public static  AddressService addressService;
     public static AssetService assetService;
+    public static ProviderService providerService;
+    public static ChatService chatService;
     public static PriceListService priceListService;
     public static CommentReviewService commentReviewService;
     public static ServiceService serviceService;
@@ -47,9 +50,12 @@ public class ClientUtils {
         authService = getRetrofit().create(AuthService.class);
         userService = getRetrofit().create(UserService.class);
         categoryService = getRetrofit().create(CategoryService.class);
+        eventOrganizerService = getRetrofit().create(EventOrganizerService.class);
+        addressService = getRetrofit().create(AddressService.class);
+        assetService = getRetrofit().create(AssetService.class);
+        providerService = getRetrofit().create(ProviderService.class);
         productService = getRetrofit().create(ProductService.class);
         chatService = getRetrofit().create(ChatService.class);
-        assetService = getRetrofit().create(AssetService.class);
         priceListService = getRetrofit().create(PriceListService.class);
         commentReviewService = getRetrofit().create(CommentReviewService.class);
         serviceService = getRetrofit().create(ServiceService.class);

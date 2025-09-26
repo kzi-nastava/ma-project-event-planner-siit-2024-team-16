@@ -1,9 +1,10 @@
 package com.example.evenmate.clients;
 
 import com.example.evenmate.models.category.Category;
+import com.example.evenmate.models.PaginatedResponse;
+
 import com.example.evenmate.models.category.CategoryRequest;
 import com.example.evenmate.models.category.CategorySuggestion;
-import com.example.evenmate.models.PaginatedResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -16,6 +17,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface CategoryService {
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
