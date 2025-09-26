@@ -183,4 +183,7 @@
     <string name="services">Services</string>
     <string name="download_pdf">Download PDF</string>
     <string name="page_1">Page 1</string>
+    <string name="waiting_for_token">Waiting for token...</string>
+    <string name="street_street_number_city_country">Street, Street Number, City, Country</string>
+    <string name="photo_url_optional">Photo URL (optional)</string>
 </resources>
