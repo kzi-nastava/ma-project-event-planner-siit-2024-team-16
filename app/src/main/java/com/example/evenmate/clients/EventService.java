@@ -3,6 +3,7 @@ package com.example.evenmate.clients;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.event.EventRequest;
+import com.example.evenmate.models.event.InvitationRequest;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -34,6 +36,12 @@ public interface EventService {
     @GET("events/{id}")
     Call<Event> getById(@Path("id") long id);
 
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("events/{id}")
+    Call<Event> getEvent(@Path("id") long id);
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
@@ -106,6 +114,27 @@ public interface EventService {
             @Query("page") int page,
             @Query("size") int size
     );
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("events/{id}/invite")
+    Call<String> inviteUser(
+            @Path("id") Long eventId,
+            @Body InvitationRequest request
+    );
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @HTTP(method = "DELETE", path = "events/{id}/invite", hasBody = true)
+    Call<String> uninviteUser(
+            @Path("id") Long eventId,
+            @Body InvitationRequest request
+    );
+
 }
 
 
