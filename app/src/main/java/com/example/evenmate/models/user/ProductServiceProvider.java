@@ -6,6 +6,4 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductServiceProvider extends User {
-    private Company company;
-    private Double averageReview;
 }
