@@ -79,4 +79,6 @@ public interface UserService {
     Call<PaginatedResponse<Product>> getFavoriteProducts(@Path("userId") Long userId, @Query("page") int page,
                                                      @Query("size") int size);
 
+    @GET("users/{userId}")
+    Call<User> getById(@Path("userId") Long userId);
 }
