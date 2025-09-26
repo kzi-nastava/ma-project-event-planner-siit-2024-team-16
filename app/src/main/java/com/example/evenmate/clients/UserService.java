@@ -116,4 +116,6 @@ public interface UserService {
     @GET("users/is-blocked/{id}")
     Call<Boolean> isBlocked(@Path("id") Long id);
 
+    @GET("users/{userId}")
+    Call<User> getById(@Path("userId") Long userId);
 }

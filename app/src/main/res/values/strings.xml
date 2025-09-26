@@ -196,4 +196,13 @@
     <string name="_0_0_5_0">0.0 – 5.0</string>
     <string name="report">Report</string>
     <string name="block">Block</string>
+    <string name="user">User</string>
+    <string name="insert_text">Insert text</string>
+    <string name="_5">5</string>
+    <string name="add_a_comment">Add a comment</string>
+    <string name="post">Post</string>
+    <string name="your_rating">Your rating:</string>
+    <string name="average_rating">Average Rating</string>
+    <string name="comments">Comments</string>
+    <string name="_0_0">0.0</string>
 </resources>

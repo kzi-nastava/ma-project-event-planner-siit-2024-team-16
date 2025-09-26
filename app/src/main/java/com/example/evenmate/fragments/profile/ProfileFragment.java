@@ -2,6 +2,7 @@ package com.example.evenmate.fragments.profile;
 
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.example.evenmate.adapters.ProfileAdapter;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentProfileBinding;
+import com.example.evenmate.fragments.commentreview.AverageReviewFragment;
+import com.example.evenmate.fragments.commentreview.CommentsFragment;
 import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.Block;
 import com.example.evenmate.models.user.Company;
@@ -81,6 +84,17 @@ public class ProfileFragment extends Fragment{
         viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         viewModel.setUser(AuthManager.loggedInUser);
         user = viewModel.getUser().getValue();
+        setupCompanyImagesRecycler();
+
+        if (user != null && user.getRole().equalsIgnoreCase("ProductServiceProvider")) {
+            getChildFragmentManager().beginTransaction()
+                .replace(R.id.profile_comments_container, CommentsFragment.newInstance(null, user.getId()))
+                .commit();
+            getChildFragmentManager().beginTransaction()
+                .replace(R.id.profile_avg_review_container, AverageReviewFragment.newInstance(user.getId(), null))
+                .commit();
+        }
+
         setupClickListeners();
         updateUI();
         showProperButtons();
