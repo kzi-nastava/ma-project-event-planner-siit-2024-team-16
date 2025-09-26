@@ -102,6 +102,24 @@ public class Asset implements Parcelable {
                 isAvailable
             );
         }
+        public Product toProduct(){
+            return new Product(
+                id,
+                name,
+                description,
+                price,
+                discount,
+                priceAfterDiscount,
+                provider,
+                images,
+                category,
+                averageReview,
+                type,
+                isVisible,
+                isAvailable,
+                isVisibleToUser
+            );
+        }
 
     @Override
     public int describeContents() {

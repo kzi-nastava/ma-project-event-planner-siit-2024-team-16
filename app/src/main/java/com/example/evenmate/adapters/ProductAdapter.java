@@ -72,7 +72,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_card_general,
                     parent, false);
             itemView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.light_green));
-            itemView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.light_green));
+            itemView.findViewById(R.id.favorite).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.purple));
             itemView.findViewById(R.id.title_frame).setBackgroundTintList(ContextCompat.getColorStateList(getContext(), R.color.green));
         }
         TextView title = itemView.findViewById(R.id.title);
