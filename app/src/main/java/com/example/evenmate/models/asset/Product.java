@@ -1,4 +1,9 @@
 package com.example.evenmate.models.asset;
 
-public class Product extends Asset {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class Product extends Asset{
 }

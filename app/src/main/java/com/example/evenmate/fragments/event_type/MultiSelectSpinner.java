@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.example.evenmate.R;
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 
 import java.util.ArrayList;
 import java.util.List;

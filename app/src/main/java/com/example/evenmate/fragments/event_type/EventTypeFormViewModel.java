@@ -11,7 +11,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.clients.ClientUtils;
@@ -42,7 +42,7 @@ public class EventTypeFormViewModel extends ViewModel {
         errorMessage.setValue(null);
     }
     public void fetchCategories() {
-        Call<PaginatedResponse<Category>> call = ClientUtils.categoryService.getAllForFilters();
+        Call<PaginatedResponse<Category>> call = ClientUtils.categoryService.getCategories(null, null);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<PaginatedResponse<Category>> call, @NonNull Response<PaginatedResponse<Category>> response) {

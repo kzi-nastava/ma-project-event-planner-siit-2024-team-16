@@ -30,7 +30,12 @@ public class ClientUtils {
     public static AuthService authService;
     public static UserService userService;
     public static CategoryService categoryService;
+    public static EventOrganizerService eventOrganizerService;
+    public static  AddressService addressService;
+    public static AssetService assetService;
+    public static ProviderService providerService;
     public static ChatService chatService;
+    public static PriceListService priceListService;
 
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
@@ -43,8 +48,13 @@ public class ClientUtils {
         authService = getRetrofit().create(AuthService.class);
         userService = getRetrofit().create(UserService.class);
         categoryService = getRetrofit().create(CategoryService.class);
+        eventOrganizerService = getRetrofit().create(EventOrganizerService.class);
+        addressService = getRetrofit().create(AddressService.class);
+        assetService = getRetrofit().create(AssetService.class);
+        providerService = getRetrofit().create(ProviderService.class);
         productService = getRetrofit().create(ProductService.class);
         chatService = getRetrofit().create(ChatService.class);
+        priceListService = getRetrofit().create(PriceListService.class);
     }
 
     private static OkHttpClient createHttpClient() {

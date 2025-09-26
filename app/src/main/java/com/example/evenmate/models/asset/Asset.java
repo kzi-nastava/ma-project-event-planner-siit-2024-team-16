@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.user.User;
 
 import java.util.List;
@@ -30,26 +30,11 @@ public class Asset implements Parcelable {
     private List<String> images;
     private Category category;
     private Double averageReview;
-    private String type;
+    private AssetType type;
     private Boolean isVisible;
-    private Boolean isVisibleToUser;
     private Boolean isAvailable;
+    private Boolean isVisibleToUser;
 
-    public ProductRequest toRequest(){
-        return new ProductRequest(
-                id,
-                name,
-                description,
-                price,
-                discount,
-                images,
-                category.getId(),
-                null,
-                null,
-                isVisible,
-                isAvailable
-            );
-        }
     protected Asset(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
@@ -81,13 +66,13 @@ public class Asset implements Parcelable {
         } else {
             averageReview = in.readDouble();
         }
-        type = in.readString();
+        type = AssetType.valueOf(in.readString());
         byte tmpIsVisible = in.readByte();
         isVisible = tmpIsVisible == 0 ? null : tmpIsVisible == 1;
-        byte tmpIsVisibleToUser = in.readByte();
-        isVisibleToUser = tmpIsVisibleToUser == 0 ? null : tmpIsVisibleToUser == 1;
         byte tmpIsAvailable = in.readByte();
         isAvailable = tmpIsAvailable == 0 ? null : tmpIsAvailable == 1;
+        byte tmpIsVisibleToUser = in.readByte();
+        isVisibleToUser = tmpIsVisibleToUser == 0 ? null : tmpIsVisibleToUser == 1;
     }
 
     public static final Creator<Asset> CREATOR = new Creator<>() {
@@ -101,6 +86,22 @@ public class Asset implements Parcelable {
             return new Asset[size];
         }
     };
+
+    public ProductRequest toRequest(){
+        return new ProductRequest(
+                id,
+                name,
+                description,
+                price,
+                discount,
+                images,
+                category.getId(),
+                null,
+                null,
+                isVisible,
+                isAvailable
+            );
+        }
 
     @Override
     public int describeContents() {
@@ -144,9 +145,9 @@ public class Asset implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeDouble(averageReview);
         }
-        parcel.writeString(type);
+        parcel.writeString(type.name());
         parcel.writeByte((byte) (isVisible == null ? 0 : isVisible ? 1 : 2));
-        parcel.writeByte((byte) (isVisibleToUser == null ? 0 : isVisibleToUser ? 1 : 2));
         parcel.writeByte((byte) (isAvailable == null ? 0 : isAvailable ? 1 : 2));
+        parcel.writeByte((byte) (isVisibleToUser == null ? 0 : isVisibleToUser ? 1 : 2));
     }
 }

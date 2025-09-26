@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.evenmate.R;
 import com.example.evenmate.databinding.FragmentProductFormBinding;
-import com.example.evenmate.models.Category;
+import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.asset.ProductRequest;
 import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.utils.ImageUtils;

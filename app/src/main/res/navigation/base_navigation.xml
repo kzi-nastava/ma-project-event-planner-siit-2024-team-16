@@ -144,6 +144,29 @@
             app:argType="long" />
     </fragment>
     <fragment
+        android:id="@+id/categoryManagementFragment"
+        android:name="com.example.evenmate.fragments.category.CategoryManagementFragment"
+        android:label="Category Management"
+        tools:layout="@layout/fragment_category_management" >
+        <action
+            android:id="@+id/action_categoryManagementFragment_to_createCategoryFragment"
+            app:destination="@id/createCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createCategoryFragment"
+        android:name="com.example.evenmate.fragments.category.CategoryManagementFragment"
+        android:label="Create Category" />
+    <fragment
+        android:id="@+id/selectCategoryDialogFragment"
+        android:name="com.example.evenmate.fragments.category.SelectCategoryDialogFragment"
+        android:label="Favorite Products and Services"
+        tools:layout="@layout/dialog_select_category" />
+    <fragment
+        android:id="@+id/assetsPriceList"
+        android:name="com.example.evenmate.fragments.pricelist.PriceListFragment"
+        android:label="Price List"
+        tools:layout="@layout/fragment_price_list" />
+    <fragment
         android:id="@+id/favoriteProductsFragment"
         android:name="com.example.evenmate.fragments.asset.ProductsFragment"
         android:label="@string/favorite_products"

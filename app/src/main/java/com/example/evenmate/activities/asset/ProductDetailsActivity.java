@@ -66,6 +66,5 @@ public class ProductDetailsActivity extends AppCompatActivity {
     }
     public static Product getProductById(Long id){
         return null;
-//        return new Product(id, "Maya's Catering", new ArrayList<>(List.of("https://picsum.photos/400/300", "https://picsum.photos/400/301", "https://picsum.photos/400/302")), "High-quality catering service", 500, "food", 0, "USA", "California", "", "", 4.3, AssetType.SERVICE,true);
     }
 }
