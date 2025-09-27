@@ -172,4 +172,28 @@
             app:argType="string"
             android:defaultValue="YOUR_PRODUCTS"/>
     </fragment>
+    <fragment
+        android:id="@+id/addServiceFragment"
+        android:name="com.example.evenmate.fragments.service.AddServiceFragment"
+        android:label="Add Service"
+        tools:layout="@layout/fragment_add_service" />
+    <fragment
+        android:id="@+id/editServiceFragment"
+        android:name="com.example.evenmate.fragments.service.EditServiceFragment"
+        android:label="Edit Service"
+        tools:layout="@layout/fragment_edit_service" >
+        <argument
+            android:name="service"
+            app:argType="com.example.evenmate.models.service.Service" />
+    </fragment>
+    <fragment
+        android:id="@+id/servicesFragment"
+        android:name="com.example.evenmate.fragments.service.ServicesFragment"
+        android:label="Service Management"
+        tools:layout="@layout/fragment_service_management" >
+        <action android:id="@+id/action_servicesFragment_to_addServiceFragment"
+            app:destination="@id/addServiceFragment" />
+        <action android:id="@+id/action_servicesFragment_to_editServiceFragment"
+            app:destination="@id/editServiceFragment" />
+    </fragment>
 </navigation>
