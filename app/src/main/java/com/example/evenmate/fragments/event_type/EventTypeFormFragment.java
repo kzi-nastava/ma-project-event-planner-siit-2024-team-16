@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.evenmate.databinding.FragmentEventTypeFormBinding;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.event.EventType;
+import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
@@ -134,20 +135,26 @@ public class EventTypeFormFragment extends DialogFragment {
         }
     }
 
-    //todo fix refresh
     private void observeViewModel() {
         viewModel.getSuccess().observe(this, success -> {
             if (success) {
-                Toast.makeText(requireContext(), "Action successful", Toast.LENGTH_SHORT).show();
-                dismissAllowingStateLoss();
+                ToastUtils.showCustomToast(requireContext(), "Action successful", false);
+                sendResultAndDismiss();
             }
         });
 
         viewModel.getErrorMessage().observe(this, error -> {
             if (error != null) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+                ToastUtils.showCustomToast(requireContext(), error, true);
             }
         });
+    }
+
+    private void sendResultAndDismiss() {
+        Bundle result = new Bundle();
+        result.putBoolean("refresh_types", true);
+        getParentFragmentManager().setFragmentResult("type_form_result", result);
+        dismissAllowingStateLoss();
     }
 
     @Override

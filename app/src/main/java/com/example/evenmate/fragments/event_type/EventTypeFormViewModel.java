@@ -43,7 +43,7 @@ public class EventTypeFormViewModel extends ViewModel {
     }
     public void fetchCategories() {
         Call<PaginatedResponse<Category>> call = ClientUtils.categoryService.getCategories(null, null);
-        call.enqueue(new Callback<PaginatedResponse<Category>>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<PaginatedResponse<Category>> call, @NonNull Response<PaginatedResponse<Category>> response) {
                 Log.d("API_DEBUG", "Response code: " + response.code());

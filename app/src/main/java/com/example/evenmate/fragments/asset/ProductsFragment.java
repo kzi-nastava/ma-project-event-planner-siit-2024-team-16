@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,12 +12,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.ProductAdapter;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.databinding.FragmentProductsBinding;
+import com.example.evenmate.fragments.filters.FilterSortAssets;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -27,6 +32,8 @@ public class ProductsFragment extends ListFragment {
         private ProductsViewModel viewModel;
         private ProductAdapter adapter;
         private String fetchMode;
+    private FrameLayout filterContainer;
+
 
         @Nullable
         @Override
@@ -51,8 +58,8 @@ public class ProductsFragment extends ListFragment {
             } else {
                 binding.productsHeading.setText(R.string.products);
                 viewModel.setFetchMode("ALL_PRODUCTS");
-
             }
+            viewModel.fetchProducts();
 
             adapter = new ProductAdapter(getActivity(), new ArrayList<>());
 
@@ -80,13 +87,50 @@ public class ProductsFragment extends ListFragment {
 
             setListAdapter(adapter);
             setupPagination();
-
+            setupFilterAndSearch();
             setupAddProductButton();
             setupFragmentResultListener();
             observeViewModel();
         }
-        private void filter(){
-            //todo andjela
+
+        private void setupFilterAndSearch() {
+            SearchView searchView = binding.getRoot().findViewById(R.id.search_bar);
+            Button filterButton = binding.getRoot().findViewById(R.id.filter);
+            filterContainer = binding.getRoot().findViewById(R.id.filter_container);
+
+            if(this.fetchMode.equals("FAVORITES")){
+                searchView.setVisibility(View.GONE);
+                filterContainer.setVisibility(View.GONE);
+                filterButton.setVisibility(View.GONE);
+                return;
+            }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    viewModel.searchProducts(query);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+
+            filterButton.setOnClickListener(v -> {
+                Fragment filterFragment = getChildFragmentManager().findFragmentById(R.id.filter_container);
+                if (!(filterFragment instanceof FilterSortAssets)) {
+                    filterFragment = new FilterSortAssets();
+                    ((FilterSortAssets) filterFragment).setOnFilterApplyListener(filters -> viewModel.applyFilters(filters));
+                }
+
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.filter_container, filterFragment)
+                        .setReorderingAllowed(true)
+                        .commit();
+
+                filterContainer.setVisibility(View.VISIBLE);
+            });
         }
 
         private void setupPagination() {
@@ -161,7 +205,6 @@ public class ProductsFragment extends ListFragment {
         @Override
         public void onResume() {
             super.onResume();
-            viewModel.fetchProducts();
         }
 
         @Override

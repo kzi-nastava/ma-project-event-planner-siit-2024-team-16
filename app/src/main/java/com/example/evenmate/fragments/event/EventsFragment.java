@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,9 +53,8 @@ public class EventsFragment extends ListFragment {
         } else {
             binding.eventsHeading.setText(R.string.events);
             viewModel.setFetchMode("ALL_EVENTS");
-
         }
-
+        viewModel.fetchEvents();
         adapter = new EventAdapter(getActivity(), new ArrayList<>());
 
         adapter.setOnEditClickListener(event -> {
@@ -68,22 +68,32 @@ public class EventsFragment extends ListFragment {
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                 .setPositiveButton("Delete", (dialog, which) -> {
                     viewModel.deleteEvent(event.getId());
-                    if(viewModel.getDeleteFailed())
+                    if(Boolean.TRUE.equals(viewModel.getDeleteFailed().getValue()))
                         ToastUtils.showCustomToast(requireContext(),
                             viewModel.getDeleteFailed().toString(),
                             true);
-                    else
-                        ToastUtils.showCustomToast(requireContext(),
-                                String.format("%s successfully deleted", event.getName()),
-                                false);
                     viewModel.resetDeleteFailed();
                 })
                 .show()
         );
 
+        adapter.setOnItemClickListener(event -> {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("event", event);
+            if ("FAVORITES".equals(fetchMode))
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_favoriteEventsFragment_to_eventDetailsFragment, bundle);
+            else if ("YOUR_EVENTS".equals(fetchMode))
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_yourEventsFragment_to_eventDetailsFragment, bundle);
+            else
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_eventsFragment_to_eventDetailsFragment, bundle);
+
+        });
+
         setListAdapter(adapter);
         setupPagination();
-
         setupAddEventButton();
         setupFragmentResultListener();
         observeViewModel();
@@ -161,7 +171,6 @@ public class EventsFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.fetchEvents();
     }
 
     @Override

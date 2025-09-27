@@ -6,7 +6,6 @@ import com.example.evenmate.models.user.CalendarItem;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +16,10 @@ public class CalendarUtils {
     public static List<CalendarDay> getDaysForMonth(LocalDateTime month) {
         List<CalendarDay> days = new ArrayList<>();
 
-        // Get first day of the month
         LocalDateTime firstDayOfMonth = month.withDayOfMonth(1);
 
-        // Get first Sunday of the calendar view (might be in previous month)
         LocalDateTime startDate = firstDayOfMonth.minusDays(firstDayOfMonth.getDayOfWeek().getValue() % 7);
 
-        // Generate 42 days (6 weeks * 7 days) to fill the calendar grid
         for (int i = 0; i < 42; i++) {
             LocalDateTime currentDate = startDate.plusDays(i);
             boolean isCurrentMonth = currentDate.getMonth() == month.getMonth() &&
@@ -38,16 +34,14 @@ public class CalendarUtils {
     public static List<CalendarDay> mapEventsToDays(List<CalendarDay> days, List<CalendarItem> events) {
         Log.d(TAG, "Mapping " + events.size() + " events to " + days.size() + " days");
 
-        // Create a copy to avoid modifying the original list
         List<CalendarDay> daysWithEvents = new ArrayList<>();
 
         for (CalendarDay day : days) {
             CalendarDay newDay = new CalendarDay(day.getDateTime(), day.isCurrentMonth());
             newDay.setToday(day.isToday());
 
-            // Find events for this day
             if (day.getDateTime() != null) {
-                LocalDate dayDate = day.getDateTime().toLocalDate(); // Convert to LocalDate for comparison
+                LocalDate dayDate = day.getDateTime().toLocalDate();
 
                 for (CalendarItem event : events) {
                     LocalDate eventDate = parseEventDate(event);
@@ -70,7 +64,6 @@ public class CalendarUtils {
             daysWithEvents.add(newDay);
         }
 
-        // Log summary
         int daysWithEventsCount = 0;
         for (CalendarDay day : daysWithEvents) {
             if (!day.getEvents().isEmpty()) {
@@ -82,22 +75,16 @@ public class CalendarUtils {
         return daysWithEvents;
     }
 
-    /**
-     * Parse event date from various possible formats
-     */
-    private static LocalDate parseEventDate(CalendarItem event) {
+    public static LocalDate parseEventDate(CalendarItem event) {
         if (event.getDateTime() == null) {
             Log.w(TAG, "Event " + event.getName() + " has null dateTime");
             return null;
         }
 
         try {
-            // Get the date string from the event
             String dateTimeStr = event.getDateTime();
             Log.d(TAG, "Parsing date string: '" + dateTimeStr + "' for event: " + event.getName());
 
-            // Your API returns format: "2025-09-28T00:00:00"
-            // This is ISO LocalDateTime format
             try {
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr);
                 LocalDate result = dateTime.toLocalDate();
@@ -106,7 +93,6 @@ public class CalendarUtils {
             } catch (DateTimeParseException e1) {
                 Log.w(TAG, "Failed to parse as LocalDateTime, trying LocalDate");
 
-                // Try just the date part (2025-09-28)
                 try {
                     if (dateTimeStr.contains("T")) {
                         String datePart = dateTimeStr.split("T")[0];
@@ -128,17 +114,5 @@ public class CalendarUtils {
             Log.e(TAG, "Error parsing event date: " + e.getMessage(), e);
             return null;
         }
-    }
-
-    public static String formatMonthYear(LocalDateTime date) {
-        return date.getMonth().name() + " " + date.getYear();
-    }
-
-    public static boolean isSameMonth(LocalDateTime date1, LocalDateTime date2) {
-        return date1.getMonth() == date2.getMonth() && date1.getYear() == date2.getYear();
-    }
-
-    public static long getDaysBetween(LocalDateTime start, LocalDateTime end) {
-        return ChronoUnit.DAYS.between(start, end);
     }
 }

@@ -48,6 +48,13 @@ public class EventAdapter extends ArrayAdapter<Event> {
         void onEditClick(Event event);
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(Event event);
+    }
+
+    @Setter
+    private OnItemClickListener onItemClickListener;
+
     public EventAdapter(Activity context, List<Event> events){
         super(context, R.layout.item_card_general, events);
         this.events = events;
@@ -113,6 +120,12 @@ public class EventAdapter extends ArrayAdapter<Event> {
                     onDeleteClickListener.onDeleteClick(event);
                 }
             });
+            itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(event);
+                }
+            });
+
             User loggedInUser = AuthManager.loggedInUser;
             boolean isLoggedIn = loggedInUser!=null;
             boolean isEventOrganizer = isLoggedIn && loggedInUser.getRole().equals("EventOrganizer");

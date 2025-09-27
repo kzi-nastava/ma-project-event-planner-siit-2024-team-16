@@ -70,6 +70,10 @@ dependencies {
     implementation libs.stompprotocolandroid
     implementation libs.rxjava
     implementation libs.rxandroid
-    implementation libs.converter.scalars
 
+    implementation libs.mpandroidchart
+
+
+    implementation libs.mpandroidchart
+    implementation libs.converter.scalars
 }

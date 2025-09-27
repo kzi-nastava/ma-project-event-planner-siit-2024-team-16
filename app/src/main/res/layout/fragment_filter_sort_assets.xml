@@ -9,20 +9,22 @@
         android:orientation="vertical"
         android:padding="16dp">
         <LinearLayout
+            android:id="@+id/switch_ps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <!-- Switch for service/product -->
-            <Switch
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/show_services"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Show Services"
+                android:text="@string/show_services"
+                android:layout_marginEnd="5dp"
                 android:layout_marginTop="16dp"/>
-            <Switch
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/show_products"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Show Products"
+                android:text="@string/show_products"
                 android:layout_marginTop="16dp"/>
         </LinearLayout>
 
@@ -44,7 +46,7 @@
             android:id="@+id/price_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 - 10000"/>
+            android:text="@string/_0_10000"/>
 
         <!-- Rating Range -->
         <TextView
@@ -64,7 +66,7 @@
             android:id="@+id/rating_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.0 - 5.0"/>
+            android:text="@string/_0_0_5_0"/>
 
         <!-- Available Dates -->
         <LinearLayout
@@ -75,14 +77,17 @@
 
             <Button
                 android:id="@+id/available_from"
+                style="@style/PurpleRoundedButton"
+                android:textAllCaps="false"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/from_date"
-                android:layout_marginEnd="8dp"/>
-
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="@string/from_date" />
             <Button
                 android:id="@+id/available_to"
+                style="@style/PurpleRoundedButton"
+                android:textAllCaps="false"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -93,6 +98,8 @@
         <!-- Multi-choice selectors -->
         <Button
             android:id="@+id/categories_button"
+            style="@style/PurpleRoundedButton"
+            android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -100,6 +107,8 @@
 
         <Button
             android:id="@+id/event_types_button"
+            style="@style/PurpleRoundedButton"
+            android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -107,12 +116,16 @@
 
         <Button
             android:id="@+id/providers_button"
+            style="@style/PurpleRoundedButton"
+            android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/select_provider"
             android:layout_marginTop="8dp"/>
         <Button
             android:id="@+id/locations_button"
+            style="@style/PurpleRoundedButton"
+            android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/select_location"
@@ -122,6 +135,8 @@
         <!-- Apply Sort and Reset -->
         <LinearLayout
             android:layout_width="match_parent"
+            style="@style/PurpleRoundedButton"
+            android:textAllCaps="false"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="24dp">
@@ -129,6 +144,8 @@
             <Button
                 android:id="@+id/filter_button"
                 android:layout_width="0dp"
+                style="@style/GreenRoundedButton"
+                android:textAllCaps="false"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/apply"/>
@@ -136,6 +153,8 @@
             <Button
                 android:id="@+id/sort_button"
                 android:layout_width="0dp"
+                style="@style/GreenRoundedButton"
+                android:textAllCaps="false"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/sort"/>
@@ -144,6 +163,8 @@
                 android:id="@+id/reset_filters_button"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                style="@style/GreenRoundedButton"
+                android:textAllCaps="false"
                 android:layout_height="wrap_content"
                 android:text="@string/reset"
                 android:layout_marginStart="8dp"/>

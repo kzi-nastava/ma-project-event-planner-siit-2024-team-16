@@ -28,6 +28,14 @@ public interface EventService {
             @Query("page") int page,
             @Query("size") int size
     );
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("events/{id}")
+    Call<Event> getById(@Path("id") long id);
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
@@ -43,24 +51,34 @@ public interface EventService {
             @Query("page") int page,
             @Query("size") int size
     );
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @POST("events")
     Call<Event> create(@Body EventRequest request);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("events/{id}/attendees")
+    Call<Void> addAttendee(@Path("id") long id);
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @PUT("events")
     Call<Event> update(@Body EventRequest request);
+
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
     @DELETE("events/{id}")
-    Call<Object> delete(@Path("id") Long id);
+    Call<Void> delete(@Path("id") Long id);
 
     @Headers({
             "User-Agent: Mobile-Android",
