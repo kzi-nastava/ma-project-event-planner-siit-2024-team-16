@@ -15,19 +15,22 @@ public class ServiceUpdate implements Serializable {
     private String description;
     private Double price;
     private Integer discount;
+
+    @Nullable
     private List<String> images;
+
     private Boolean isVisible;
     private Boolean isAvailable;
     private String distinctiveness;
 
     @Nullable
-    private Double length;
+    private Integer length;
 
     @Nullable
-    private Double minLength;
+    private Integer minLength;
 
     @Nullable
-    private Double maxLength;
+    private Integer maxLength;
 
     private Integer reservationDeadline;
     private Integer cancellationDeadline;
