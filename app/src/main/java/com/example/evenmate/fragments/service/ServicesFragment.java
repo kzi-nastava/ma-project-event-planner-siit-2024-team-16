@@ -1,11 +1,11 @@
 package com.example.evenmate.fragments.service;
 
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,7 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.evenmate.R;
-import com.example.evenmate.adapters.ServiceAdapter;
+import com.example.evenmate.adapters.ServiceManagementAdapter;
 import com.example.evenmate.databinding.FragmentServicesBinding;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.event.EventType;
@@ -37,12 +37,15 @@ import java.util.List;
 public class ServicesFragment extends Fragment {
     private FragmentServicesBinding binding;
     private ServicesViewModel viewModel;
-    private ServiceAdapter adapter;
+    private ServiceManagementAdapter adapter;
     private List<Service> services = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
     private List<EventType> eventTypes = new ArrayList<>();
+
     private int currentPage = 0;
     private int pageSize = 10;
+    private int totalPages = 1;
+    private int totalElemens = 0;
 
     private Long selectedCategoryId = null;
     private Long selectedEventTypeId = null;
@@ -61,7 +64,7 @@ public class ServicesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(ServicesViewModel.class);
-        adapter = new ServiceAdapter(services, this::onEditService, this::onDeleteService);
+        adapter = new ServiceManagementAdapter(services, this::onEditService, this::onDeleteService);
         binding.servicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.servicesRecyclerView.setAdapter(adapter);
         setupObservers();
@@ -76,6 +79,17 @@ public class ServicesFragment extends Fragment {
             this.services.clear();
             this.services.addAll(services);
             adapter.notifyDataSetChanged();
+            updateIndicators();
+        });
+        viewModel.getTotalPages().observe(getViewLifecycleOwner(), totalPages -> {
+            this.totalPages = totalPages;
+            updateIndicators();
+            binding.prevPageButton.setEnabled(currentPage > 0);
+            binding.nextPageButton.setEnabled(currentPage < totalPages - 1);
+        });
+        viewModel.getTotalElements().observe(getViewLifecycleOwner(), totalElements -> {
+            this.totalElemens = totalElements;
+            updateIndicators();
         });
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), msg -> {
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
@@ -94,8 +108,19 @@ public class ServicesFragment extends Fragment {
         binding.addServiceFab.setOnClickListener(v -> navigateToAddService());
         binding.filtersButton.setOnClickListener(v -> showFiltersBottomSheet());
         binding.searchInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                fetchServices();
+                return true;
+            }
+            return false;
+        });
+        binding.nextPageButton.setOnClickListener(v -> {
+            currentPage++;
             fetchServices();
-            return true;
+        });
+        binding.prevPageButton.setOnClickListener(v -> {
+            currentPage--;
+            fetchServices();
         });
     }
 
@@ -108,6 +133,7 @@ public class ServicesFragment extends Fragment {
         filters.setCategoryId(selectedCategoryId);
         filters.setEventTypeId(selectedEventTypeId);
         filters.setIsAvailable(isAvailable);
+        currentPage = 0;
         viewModel.fetchServices(currentPage, pageSize, filters);
     }
 
@@ -170,7 +196,7 @@ public class ServicesFragment extends Fragment {
             eventTypeSpinner.setSelection(0);
             minPriceInput.setText("");
             maxPriceInput.setText("");
-            availableSwitch.setChecked(true);
+            availableSwitch.setChecked(false);
         });
 
         applyButton.setOnClickListener(v -> {
@@ -184,6 +210,13 @@ public class ServicesFragment extends Fragment {
         });
 
         bottomSheetDialog.show();
+    }
+
+    private void updateIndicators() {
+        binding.pageIndicator.setText("Page " + (currentPage + 1) + " / " + totalPages);
+        int start = totalElemens == 0 ? 0 : currentPage * pageSize + 1;
+        int end = Math.min((currentPage + 1) * pageSize, totalElemens);
+        binding.totalElementsIndicator.setText(start + " - " + end + " / " + totalElemens);
     }
 
     private int getCategoryIndex(Long categoryId) {
