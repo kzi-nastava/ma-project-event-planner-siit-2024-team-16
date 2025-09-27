@@ -3,14 +3,14 @@ package com.example.evenmate.clients;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.commentreview.Comment;
 import com.example.evenmate.models.commentreview.CommentCreate;
-import com.example.evenmate.models.commentreview.Review;
 import com.example.evenmate.models.commentreview.ReviewCreate;
 
-import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -32,5 +32,18 @@ public interface CommentReviewService {
 
     @POST("users/{userId}/review")
     Call<Void> reviewProvider(@Path("userId") Long userId, @Body ReviewCreate review);
+
+    @PUT("comments/{id}/approve")
+    Call<String> approveComment(@Path("id") Long id);
+
+    @GET("comments")
+    Call<PaginatedResponse<Comment>> getPendingComments(
+            @Query("approved") Boolean approved,
+            @Query("page") Integer page,
+            @Query("size") Integer size
+    );
+
+    @DELETE("comments/{id}")
+    Call<String> deleteComment(@Path("id") Long id);
 }
 

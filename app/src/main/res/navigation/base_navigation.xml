@@ -208,4 +208,10 @@
         android:name="com.example.evenmate.fragments.admin_approvals.ReportApprovalsFragment"
         android:label="@string/reports_approval"
         />
+    <fragment android:id="@+id/comments_approval_fragment"
+        android:name="com.example.evenmate.fragments.admin_approvals.CommentApprovalsFragment"
+        android:label="@string/comments_approval"
+        />
+
+
 </navigation>
