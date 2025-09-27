@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <!-- Report reason -->
+    <TextView
+        android:id="@+id/report_reason"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/report_reason"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/approve_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"/>
+
+    <!-- Reported user -->
+    <TextView
+        android:id="@+id/report_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/user_name_role"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toStartOf="@+id/report_reason"
+        app:layout_constraintEnd_toStartOf="@+id/approve_button"
+        app:layout_constraintTop_toBottomOf="@+id/report_reason"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"/>
+
+    <!-- Approve button -->
+    <ImageButton
+        android:id="@+id/approve_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/approve"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_success"
+        app:tint="@color/green"
+        app:layout_constraintEnd_toStartOf="@+id/delete_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Delete button -->
+    <ImageButton
+        android:id="@+id/delete_button"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:contentDescription="@string/delete"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_delete"
+        app:tint="@color/red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -203,4 +203,9 @@
             android:id="@+id/action_eventDetails_to_profileFragment"
             app:destination="@id/profile" />
     </fragment>
+
+    <fragment android:id="@+id/reports_approval_fragment"
+        android:name="com.example.evenmate.fragments.admin_approvals.ReportApprovalsFragment"
+        android:label="@string/reports_approval"
+        />
 </navigation>

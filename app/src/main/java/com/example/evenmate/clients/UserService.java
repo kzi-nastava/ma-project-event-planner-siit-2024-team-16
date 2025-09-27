@@ -118,4 +118,16 @@ public interface UserService {
 
     @GET("users/{userId}")
     Call<User> getById(@Path("userId") Long userId);
+
+    @GET("users/pending-reports")
+    Call<PaginatedResponse<Report>> getPendingReports(
+            @Query("page") int page,
+            @Query("size") int size
+    );
+
+    @POST("users/approve-report/{id}")
+    Call<Void> approveReport(@Path("id") Long reportId);
+
+    @DELETE("users/report/{id}")
+    Call<Void> deleteReport(@Path("id") Long reportId);
 }

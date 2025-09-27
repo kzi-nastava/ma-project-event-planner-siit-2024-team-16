@@ -205,4 +205,8 @@
     <string name="average_rating">Average Rating</string>
     <string name="comments">Comments</string>
     <string name="_0_0">0.0</string>
+    <string name="pending_reports">PENDING REPORTS</string>
+    <string name="user_name_role">User Name (Role)</string>
+    <string name="report_reason">Report reason</string>
+    <string name="reports_approval">Reports approval</string>
 </resources>
