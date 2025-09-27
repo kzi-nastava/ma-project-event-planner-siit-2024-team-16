@@ -113,14 +113,14 @@ public class AddServiceFragment extends Fragment {
         if (binding.fixedDurationRadio.isChecked()) {
             int hours = Integer.parseInt(binding.fixedHoursInput.getText().toString());
             int minutes = Integer.parseInt(binding.fixedMinutesInput.getText().toString());
-            service.setLength(hours*60 + minutes);
+            service.setLength(hours * 60 + minutes);
         } else {
             int minHours = Integer.parseInt(binding.minHoursInput.getText().toString());
             int minMinutes = Integer.parseInt(binding.minMinutesInput.getText().toString());
             int maxHours = Integer.parseInt(binding.maxHoursInput.getText().toString());
             int maxMinutes = Integer.parseInt(binding.maxMinutesInput.getText().toString());
-            service.setMinLength(minHours*60 + minMinutes);
-            service.setMaxLength(maxHours*60 + maxMinutes);
+            service.setMinLength(minHours * 60 + minMinutes);
+            service.setMaxLength(maxHours * 60 + maxMinutes);
         }
 
         viewModel.addService(service);
@@ -194,160 +194,160 @@ public class AddServiceFragment extends Fragment {
             } else {
                 binding.categoryDescriptionInput.setError(null);
             }
+        }
 
-            if (TextUtils.isEmpty(price)) {
-                binding.priceInput.setError(getString(R.string.required_field));
+        if (TextUtils.isEmpty(price)) {
+            binding.priceInput.setError(getString(R.string.required_field));
+            isValid = false;
+        } else {
+            try {
+                double priceDouble = Double.parseDouble(price);
+                if (priceDouble <= 0) {
+                    binding.priceInput.setError("Price must be greater than 0");
+                    isValid = false;
+                }
+            } catch (NumberFormatException e) {
+                binding.priceInput.setError("Price must be a valid number");
+                isValid = false;
+            }
+        }
+        if (TextUtils.isEmpty(discount)) {
+            binding.discountInput.setError(getString(R.string.required_field));
+            isValid = false;
+        } else {
+            try {
+                int discountDouble = Integer.parseInt(discount);
+                if (discountDouble <= 0) {
+                    binding.discountInput.setError("Discount must be greater than 0");
+                    isValid = false;
+                }
+            } catch (NumberFormatException e) {
+                binding.discountInput.setError("Discount must be a valid number");
+                isValid = false;
+            }
+        }
+
+        if (TextUtils.isEmpty(reservationDeadline)) {
+            binding.reservationDeadlineInput.setError(getString(R.string.required_field));
+            isValid = false;
+        } else {
+            try {
+                int reservationDeadlineInt = Integer.parseInt(reservationDeadline);
+                if (reservationDeadlineInt <= 0) {
+                    binding.reservationDeadlineInput.setError("Reservation deadline must be greater than 0");
+                    isValid = false;
+                }
+            } catch (NumberFormatException e) {
+                binding.reservationDeadlineInput.setError("Reservation deadline must be a valid number");
+                isValid = false;
+            }
+        }
+
+        if (TextUtils.isEmpty(cancellationDeadline)) {
+            binding.cancellationDeadlineInput.setError(getString(R.string.required_field));
+            isValid = false;
+        } else {
+            try {
+                int cancellationDeadlineInt = Integer.parseInt(cancellationDeadline);
+                if (cancellationDeadlineInt <= 0) {
+                    binding.cancellationDeadlineInput.setError("Cancellation deadline must be greater than 0");
+                    isValid = false;
+                }
+            } catch (NumberFormatException e) {
+                binding.cancellationDeadlineInput.setError("Cancellation deadline must be a valid number");
+                isValid = false;
+            }
+        }
+
+        if (binding.fixedDurationRadio.isChecked()) {
+            if (TextUtils.isEmpty(lengthHours) && TextUtils.isEmpty(lengthMinutes)) {
+                binding.fixedHoursInput.setError(getString(R.string.required_field));
+                binding.fixedMinutesInput.setError(getString(R.string.required_field));
                 isValid = false;
             } else {
+                int hours = 0;
+                int minutes = 0;
                 try {
-                    double priceDouble = Double.parseDouble(price);
-                    if (priceDouble <= 0) {
-                        binding.priceInput.setError("Price must be greater than 0");
-                        isValid = false;
-                    }
+                    hours = TextUtils.isEmpty(lengthHours) ? 0 : Integer.parseInt(lengthHours);
+                    binding.fixedHoursInput.setError(null);
                 } catch (NumberFormatException e) {
-                    binding.priceInput.setError("Price must be a valid number");
+                    binding.fixedHoursInput.setError("Hours must be a valid number");
+                    isValid = false;
+                }
+                try {
+                    minutes = TextUtils.isEmpty(lengthMinutes) ? 0 : Integer.parseInt(lengthMinutes);
+                    binding.fixedMinutesInput.setError(null);
+                } catch (NumberFormatException e) {
+                    binding.fixedMinutesInput.setError("Minutes must be a valid number");
+                    isValid = false;
+                }
+                if (hours == 0 && minutes == 0) {
+                    binding.fixedHoursInput.setError("Length cannot be zero");
+                    binding.fixedMinutesInput.setError("Length cannot be zero");
                     isValid = false;
                 }
             }
-            if (TextUtils.isEmpty(discount)) {
-                binding.discountInput.setError(getString(R.string.required_field));
+        } else {
+            if ((TextUtils.isEmpty(minLengthHours) && TextUtils.isEmpty(minLengthMinutes)) ||
+                    (TextUtils.isEmpty(maxLengthHours) && TextUtils.isEmpty(maxLengthMinutes))) {
+                if (TextUtils.isEmpty(minLengthHours) && TextUtils.isEmpty(minLengthMinutes)) {
+                    binding.minHoursInput.setError(getString(R.string.required_field));
+                    binding.minMinutesInput.setError(getString(R.string.required_field));
+                }
+                if (TextUtils.isEmpty(maxLengthHours) && TextUtils.isEmpty(maxLengthMinutes)) {
+                    binding.maxHoursInput.setError(getString(R.string.required_field));
+                    binding.maxMinutesInput.setError(getString(R.string.required_field));
+                }
                 isValid = false;
             } else {
+                int minHours = 0, minMinutes = 0, maxHours = 0, maxMinutes = 0;
                 try {
-                    int discountDouble = Integer.parseInt(discount);
-                    if (discountDouble <= 0) {
-                        binding.discountInput.setError("Discount must be greater than 0");
-                        isValid = false;
-                    }
+                    minHours = TextUtils.isEmpty(minLengthHours) ? 0 : Integer.parseInt(minLengthHours);
+                    binding.minHoursInput.setError(null);
                 } catch (NumberFormatException e) {
-                    binding.discountInput.setError("Discount must be a valid number");
+                    binding.minHoursInput.setError("Hours must be a valid number");
                     isValid = false;
                 }
-            }
-
-            if (TextUtils.isEmpty(reservationDeadline)) {
-                binding.reservationDeadlineInput.setError(getString(R.string.required_field));
-                isValid = false;
-            } else {
                 try {
-                    int reservationDeadlineInt = Integer.parseInt(reservationDeadline);
-                    if (reservationDeadlineInt <= 0) {
-                        binding.reservationDeadlineInput.setError("Reservation deadline must be greater than 0");
-                        isValid = false;
-                    }
+                    minMinutes = TextUtils.isEmpty(minLengthMinutes) ? 0 : Integer.parseInt(minLengthMinutes);
+                    binding.minMinutesInput.setError(null);
                 } catch (NumberFormatException e) {
-                    binding.reservationDeadlineInput.setError("Reservation deadline must be a valid number");
+                    binding.minMinutesInput.setError("Minutes must be a valid number");
                     isValid = false;
                 }
-            }
-
-            if (TextUtils.isEmpty(cancellationDeadline)) {
-                binding.cancellationDeadlineInput.setError(getString(R.string.required_field));
-                isValid = false;
-            } else {
                 try {
-                    int cancellationDeadlineInt = Integer.parseInt(cancellationDeadline);
-                    if (cancellationDeadlineInt <= 0) {
-                        binding.cancellationDeadlineInput.setError("Cancellation deadline must be greater than 0");
-                        isValid = false;
-                    }
+                    maxHours = TextUtils.isEmpty(maxLengthHours) ? 0 : Integer.parseInt(maxLengthHours);
+                    binding.maxHoursInput.setError(null);
                 } catch (NumberFormatException e) {
-                    binding.cancellationDeadlineInput.setError("Cancellation deadline must be a valid number");
+                    binding.maxHoursInput.setError("Hours must be a valid number");
                     isValid = false;
                 }
-            }
-
-            if (binding.fixedDurationRadio.isChecked()) {
-                if (TextUtils.isEmpty(lengthHours) && TextUtils.isEmpty(lengthMinutes)) {
-                    binding.fixedHoursInput.setError(getString(R.string.required_field));
-                    binding.fixedMinutesInput.setError(getString(R.string.required_field));
+                try {
+                    maxMinutes = TextUtils.isEmpty(maxLengthMinutes) ? 0 : Integer.parseInt(maxLengthMinutes);
+                    binding.maxMinutesInput.setError(null);
+                } catch (NumberFormatException e) {
+                    binding.maxMinutesInput.setError("Minutes must be a valid number");
                     isValid = false;
-                } else {
-                    int hours = 0;
-                    int minutes = 0;
-                    try {
-                        hours = TextUtils.isEmpty(lengthHours) ? 0 : Integer.parseInt(lengthHours);
-                        binding.fixedHoursInput.setError(null);
-                    } catch (NumberFormatException e) {
-                        binding.fixedHoursInput.setError("Hours must be a valid number");
-                        isValid = false;
-                    }
-                    try {
-                        minutes = TextUtils.isEmpty(lengthMinutes) ? 0 : Integer.parseInt(lengthMinutes);
-                        binding.fixedMinutesInput.setError(null);
-                    } catch (NumberFormatException e) {
-                        binding.fixedMinutesInput.setError("Minutes must be a valid number");
-                        isValid = false;
-                    }
-                    if (hours == 0 && minutes == 0) {
-                        binding.fixedHoursInput.setError("Length cannot be zero");
-                        binding.fixedMinutesInput.setError("Length cannot be zero");
-                        isValid = false;
-                    }
                 }
-            } else {
-                if ((TextUtils.isEmpty(minLengthHours) && TextUtils.isEmpty(minLengthMinutes)) ||
-                        (TextUtils.isEmpty(maxLengthHours) && TextUtils.isEmpty(maxLengthMinutes))) {
-                    if (TextUtils.isEmpty(minLengthHours) && TextUtils.isEmpty(minLengthMinutes)) {
-                        binding.minHoursInput.setError(getString(R.string.required_field));
-                        binding.minMinutesInput.setError(getString(R.string.required_field));
-                    }
-                    if (TextUtils.isEmpty(maxLengthHours) && TextUtils.isEmpty(maxLengthMinutes)) {
-                        binding.maxHoursInput.setError(getString(R.string.required_field));
-                        binding.maxMinutesInput.setError(getString(R.string.required_field));
-                    }
+                if (minHours == 0 && minMinutes == 0) {
+                    binding.minHoursInput.setError("Minimum length cannot be zero");
+                    binding.minMinutesInput.setError("Minimum length cannot be zero");
                     isValid = false;
-                } else {
-                    int minHours = 0, minMinutes = 0, maxHours = 0, maxMinutes = 0;
-                    try {
-                        minHours = TextUtils.isEmpty(minLengthHours) ? 0 : Integer.parseInt(minLengthHours);
-                        binding.minHoursInput.setError(null);
-                    } catch (NumberFormatException e) {
-                        binding.minHoursInput.setError("Hours must be a valid number");
+                }
+                if (maxHours == 0 && maxMinutes == 0) {
+                    binding.maxHoursInput.setError("Maximum length cannot be zero");
+                    binding.maxMinutesInput.setError("Maximum length cannot be zero");
+                    isValid = false;
+                }
+                if (isValid) {
+                    int totalMinMinutes = minHours * 60 + minMinutes;
+                    int totalMaxMinutes = maxHours * 60 + maxMinutes;
+                    if (totalMinMinutes >= totalMaxMinutes) {
+                        binding.minHoursInput.setError("Minimum length must be less than maximum length");
+                        binding.minMinutesInput.setError("Minimum length must be less than maximum length");
+                        binding.maxHoursInput.setError("Maximum length must be greater than minimum length");
+                        binding.maxMinutesInput.setError("Maximum length must be greater than minimum length");
                         isValid = false;
-                    }
-                    try {
-                        minMinutes = TextUtils.isEmpty(minLengthMinutes) ? 0 : Integer.parseInt(minLengthMinutes);
-                        binding.minMinutesInput.setError(null);
-                    } catch (NumberFormatException e) {
-                        binding.minMinutesInput.setError("Minutes must be a valid number");
-                        isValid = false;
-                    }
-                    try {
-                        maxHours = TextUtils.isEmpty(maxLengthHours) ? 0 : Integer.parseInt(maxLengthHours);
-                        binding.maxHoursInput.setError(null);
-                    } catch (NumberFormatException e) {
-                        binding.maxHoursInput.setError("Hours must be a valid number");
-                        isValid = false;
-                    }
-                    try {
-                        maxMinutes = TextUtils.isEmpty(maxLengthMinutes) ? 0 : Integer.parseInt(maxLengthMinutes);
-                        binding.maxMinutesInput.setError(null);
-                    } catch (NumberFormatException e) {
-                        binding.maxMinutesInput.setError("Minutes must be a valid number");
-                        isValid = false;
-                    }
-                    if (minHours == 0 && minMinutes == 0) {
-                        binding.minHoursInput.setError("Minimum length cannot be zero");
-                        binding.minMinutesInput.setError("Minimum length cannot be zero");
-                        isValid = false;
-                    }
-                    if (maxHours == 0 && maxMinutes == 0) {
-                        binding.maxHoursInput.setError("Maximum length cannot be zero");
-                        binding.maxMinutesInput.setError("Maximum length cannot be zero");
-                        isValid = false;
-                    }
-                    if (isValid) {
-                        int totalMinMinutes = minHours * 60 + minMinutes;
-                        int totalMaxMinutes = maxHours * 60 + maxMinutes;
-                        if (totalMinMinutes >= totalMaxMinutes) {
-                            binding.minHoursInput.setError("Minimum length must be less than maximum length");
-                            binding.minMinutesInput.setError("Minimum length must be less than maximum length");
-                            binding.maxHoursInput.setError("Maximum length must be greater than minimum length");
-                            binding.maxMinutesInput.setError("Maximum length must be greater than minimum length");
-                            isValid = false;
-                        }
                     }
                 }
             }
