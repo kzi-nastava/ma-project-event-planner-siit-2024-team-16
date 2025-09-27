@@ -137,7 +137,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_products">Your products</string>
     <string name="favorite_products">Favorite products</string>
-    <string name="products">Products</string>
     <string name="add_a_product">ADD PRODUCT</string>
     <string name="no_products">No products</string>
     <string name="priceAfterDiscount">"After discount: "</string>
@@ -146,7 +145,6 @@
     <string name="cancel_suggestion">Cancel suggestion</string>
     <string name="suggest_new_category">Suggest</string>
     <string name="pricing">Pricing</string>
-    <string name="discount">Discount</string>
     <string name="product_is_visible">Product is Visible</string>
     <string name="product_is_available">Product is Available</string>
     <string name="can_t_find_the_category_you_want_you_can_suggest_a_new_one">Can\'t find the category you want? You can suggest a new one</string>
@@ -178,8 +176,10 @@
     <string name="update_asset_category">Update Asset Category</string>
     <string name="price_required">Price is required</string>
     <string name="discount_required">Discount is required</string>
+    <string name="discount">Discount</string>
     <string name="discounted_price">Discounted Price</string>
     <string name="price_list">Price List</string>
+    <string name="products">Products</string>
     <string name="services">Services</string>
     <string name="page_1">Page 1</string>
     <string name="organizer">Organizer</string>
