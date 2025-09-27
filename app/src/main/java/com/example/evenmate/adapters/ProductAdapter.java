@@ -93,7 +93,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             category.setText(String.format("%s%s", getContext().getString(R.string.category), product.getCategory() != null ? product.getCategory().getName() : null));
             price.setText(String.format("%s: %s", getContext().getString(R.string.price), product.getPrice()));
             priceAfterDiscount.setText(String.format("%s: %s", getContext().getString(R.string.priceAfterDiscount), product.getPriceAfterDiscount()));
-            if (product.getImages() != null) {
+            if (product.getImages() != null && !product.getImages().isEmpty()) {
                 String base64Image = product.getImages().get(0);
                 if (base64Image.contains(",")) {
                     base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
