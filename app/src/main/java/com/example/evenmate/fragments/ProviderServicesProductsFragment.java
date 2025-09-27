@@ -15,7 +15,7 @@ import com.example.evenmate.R;
 import com.example.evenmate.activities.CreateServiceActivity;
 import com.example.evenmate.activities.asset.ServiceDetailsActivity;
 import com.example.evenmate.adapters.ServiceAdapter;
-import com.example.evenmate.models.Service;
+import com.example.evenmate.models.service.Service;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,60 +50,60 @@ public class ProviderServicesProductsFragment extends Fragment {
     private List<Service> createMockServices() {
         List<Service> services = new ArrayList<>();
 
-        services.add(new Service(
-                "1",
-                "Professional Photography",
-                "Photography",
-                "Service",
-                199.99,
-                true,
-                true,
-                R.drawable.img_service
-        ));
-
-        services.add(new Service(
-                "2",
-                "Wedding Venue",
-                "Venue",
-                "Service",
-                1499.99,
-                true,
-                true,
-                R.drawable.img_service
-        ));
-
-        services.add(new Service(
-                "3",
-                "Catering Package",
-                "Catering",
-                "Product",
-                299.99,
-                false,
-                true,
-                R.drawable.img_service
-        ));
-
-        services.add(new Service(
-                "4",
-                "DJ Services",
-                "Music",
-                "Service",
-                399.99,
-                true,
-                true,
-                R.drawable.img_service
-        ));
-
-        services.add(new Service(
-                "5",
-                "Decoration Set",
-                "Decoration",
-                "Product",
-                199.99,
-                true,
-                true,
-                R.drawable.img_service
-        ));
+//        services.add(new Service(
+//                "1",
+//                "Professional Photography",
+//                "Photography",
+//                "Service",
+//                199.99,
+//                true,
+//                true,
+//                R.drawable.img_service
+//        ));
+//
+//        services.add(new Service(
+//                "2",
+//                "Wedding Venue",
+//                "Venue",
+//                "Service",
+//                1499.99,
+//                true,
+//                true,
+//                R.drawable.img_service
+//        ));
+//
+//        services.add(new Service(
+//                "3",
+//                "Catering Package",
+//                "Catering",
+//                "Product",
+//                299.99,
+//                false,
+//                true,
+//                R.drawable.img_service
+//        ));
+//
+//        services.add(new Service(
+//                "4",
+//                "DJ Services",
+//                "Music",
+//                "Service",
+//                399.99,
+//                true,
+//                true,
+//                R.drawable.img_service
+//        ));
+//
+//        services.add(new Service(
+//                "5",
+//                "Decoration Set",
+//                "Decoration",
+//                "Product",
+//                199.99,
+//                true,
+//                true,
+//                R.drawable.img_service
+//        ));
 
         return services;
     }
