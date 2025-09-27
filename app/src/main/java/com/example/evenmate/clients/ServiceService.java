@@ -3,6 +3,7 @@ package com.example.evenmate.clients;
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.models.service.Service;
 import com.example.evenmate.models.service.ServiceCreate;
+import com.example.evenmate.models.service.ServiceFilter;
 import com.example.evenmate.models.service.ServiceUpdate;
 import com.example.evenmate.models.PaginatedResponse;
 
@@ -24,10 +25,10 @@ public interface ServiceService {
     Call<Service> getById(@Path("id") Long id);
 
     @GET("services")
-    Call<PaginatedResponse<Service>> getAll(@Query("page") Integer page, @Query("size") Integer size, @QueryMap Map<String, Object> filters);
+    Call<PaginatedResponse<Service>> getAll(@Query("page") Integer page, @Query("size") Integer size, @QueryMap Map<String, String> filters);
 
     @GET("types")
-    Call<List<EventType>> getEventTypes();
+    Call<PaginatedResponse<EventType>> getEventTypes(@Query("page") Integer page, @Query("size") Integer size);
 
     @POST("services")
     Call<Service> add(@Body ServiceCreate service);
