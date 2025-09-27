@@ -17,6 +17,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ClientUtils {
     public static final String BASE_URL = "http://" + BuildConfig.IP_ADDR + ":8080";
@@ -84,6 +85,7 @@ public class ClientUtils {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(SERVICE_API_PATH)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(createHttpClient())
                     .build();

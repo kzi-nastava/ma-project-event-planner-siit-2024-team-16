@@ -1,5 +1,6 @@
 package com.example.evenmate.activities.event;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,11 +17,14 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.evenmate.R;
 import com.example.evenmate.activities.PageActivity;
 import com.example.evenmate.activities.notifications.NotificationsActivity;
+import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.fragments.event.InvitationsFragment;
 import com.example.evenmate.models.event.Event;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
@@ -43,21 +47,36 @@ public class EventDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        event = getEventById(eventId);
+        ClientUtils.eventService.getEvent(eventId).enqueue(new Callback<Event>() {
+            @Override
+            public void onResponse(Call<Event> call, Response<Event> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    event = response.body();
+
+                    TextView title = findViewById(R.id.title);
+                    title.setText(event.getName());
+
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.invitations_fragment, new InvitationsFragment(event));
+                    transaction.commit();
+                } else {
+                    Toast.makeText(EventDetailsActivity.this, "Event not found", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Event> call, Throwable t) {
+                Toast.makeText(EventDetailsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_back_arrow);
             actionBar.setTitle("Event Details Page");
         }
-
-        TextView title = findViewById(R.id.title);
-        title.setText(event.getName());
-
-        // invitations
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.invitations_fragment, new InvitationsFragment());
-        transaction.commit();
 
     }
 
@@ -80,11 +99,5 @@ public class EventDetailsActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public static Event getEventById(Long id){
-       // after merging, errors appeared here, since this will be changed, I just put it as a comment
-//        return new Event(id, "wedding", "Miguel and Athena's Wedding", "A beautiful wedding event", 150, false, LocalDateTime.of(2025, 12, 15, 0, 0), new ArrayList<>(), "USA", "California", "", "", "@drawable/img_event", 4.3, true);
-        return new Event();
     }
 }
