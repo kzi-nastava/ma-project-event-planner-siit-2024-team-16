@@ -169,7 +169,7 @@ public class ServicesFragment extends Fragment {
             eventTypeSpinner.setSelection(0);
             minPriceInput.setText("");
             maxPriceInput.setText("");
-            availableSwitch.setChecked(true);
+            availableSwitch.setChecked(false);
         });
 
         applyButton.setOnClickListener(v -> {
