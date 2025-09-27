@@ -53,12 +53,11 @@
     <!-- Delete button -->
     <ImageButton
         android:id="@+id/delete_button"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:contentDescription="@string/delete"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_delete"
-        app:tint="@color/red"
+        android:src="@drawable/ic_red_delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
