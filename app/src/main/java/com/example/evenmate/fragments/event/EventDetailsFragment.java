@@ -152,6 +152,21 @@ public class EventDetailsFragment extends Fragment {
         agendaAdapter.setItems(event.getAgendaItems());
     }
 
+    private void setupInvitations() {
+        if (isOrganizer) {
+            binding.invitationsFragment.setVisibility(View.VISIBLE);
+            binding.invitationsString.setVisibility(View.VISIBLE);
+            if (getChildFragmentManager().findFragmentById(R.id.invitations_fragment) == null) {
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.invitations_fragment, new InvitationsFragment(event))
+                        .commit();
+            }
+        } else {
+            binding.invitationsFragment.setVisibility(View.GONE);
+            binding.invitationsString.setVisibility(View.GONE);
+        }
+    }
+
     private void setupDetails() {
         binding.eventName.setText(event.getName());
         binding.eventDescription.setText(event.getDescription());
@@ -179,6 +194,7 @@ public class EventDetailsFragment extends Fragment {
             viewModel.checkFavoriteStatus(userId, event.getId());
         }
         setupAgenda();
+        setupInvitations();
         if(isOrganizer || isAdmin)
             renderChart();
     }

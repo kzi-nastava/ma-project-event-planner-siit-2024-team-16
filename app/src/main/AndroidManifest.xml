@@ -36,8 +36,6 @@
             android:exported="false" />
         <activity android:name=".activities.notifications.NotificationsActivity"
             android:exported="false"/>
-        <activity android:name=".activities.event.EventDetailsActivity"
-            android:exported="false"/>
         <activity
             android:name=".activities.PageActivity"
             android:exported="false" />
