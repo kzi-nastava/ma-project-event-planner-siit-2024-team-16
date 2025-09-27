@@ -5,5 +5,5 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductServiceProvider extends User{
+public class ProductServiceProvider extends User {
 }

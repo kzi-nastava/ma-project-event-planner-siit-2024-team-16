@@ -86,4 +86,6 @@ public interface UserService {
     Call<PaginatedResponse<Service>> getFavoriteServices(@Path("userId") Long userId, @Query("page") int page,
                                                          @Query("size") int size);
 
+    @GET("users/{userId}")
+    Call<User> getById(@Path("userId") Long userId);
 }

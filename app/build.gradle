@@ -73,4 +73,6 @@ dependencies {
 
     implementation libs.mpandroidchart
 
+    implementation libs.converter.scalars
+
 }

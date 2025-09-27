@@ -53,4 +53,6 @@ public interface AssetService {
     @PUT("assets/{assetId}/category")
     Call<Asset> updateAssetCategory(@Path("assetId") Long assetId, @Query("categoryId") Long categoryId);
 
+    @GET("assets/{assetId}")
+    Call<Asset> getById(@Path("assetId") Long assetId);
 }

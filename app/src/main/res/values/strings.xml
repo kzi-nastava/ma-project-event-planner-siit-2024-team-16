@@ -181,7 +181,6 @@
     <string name="discounted_price">Discounted Price</string>
     <string name="price_list">Price List</string>
     <string name="services">Services</string>
-    <string name="page_1">Page 1</string>
     <string name="organizer">Organizer</string>
     <string name="favorite">Favorite</string>
     <string name="download_pdf">Download PDF</string>
@@ -194,4 +193,14 @@
     <string name="show_services">Show Services</string>
     <string name="_0_10000">0 – 10000</string>
     <string name="_0_0_5_0">0.0 – 5.0</string>
+    <string name="page_1">Page 1</string>
+    <string name="user">User</string>
+    <string name="insert_text">Insert text</string>
+    <string name="_5">5</string>
+    <string name="add_a_comment">Add a comment</string>
+    <string name="post">Post</string>
+    <string name="your_rating">Your rating:</string>
+    <string name="average_rating">Average Rating</string>
+    <string name="comments">Comments</string>
+    <string name="_0_0">0.0</string>
 </resources>
