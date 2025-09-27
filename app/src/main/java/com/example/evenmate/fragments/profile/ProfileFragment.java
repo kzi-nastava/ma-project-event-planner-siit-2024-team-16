@@ -148,16 +148,14 @@ public class ProfileFragment extends Fragment{
                             return;
                         }
                         ClientUtils.userService.reportUser(user.getId(), reportReason)
-                                .enqueue(new Callback<Report>() {
+                                .enqueue(new Callback<>() {
                                     @Override
                                     public void onResponse(Call<Report> call, Response<Report> response) {
                                         if (response.isSuccessful()) {
                                             ToastUtils.showCustomToast(requireContext(), "User reported", false);
-                                        } else {
-                                            ToastUtils.showCustomToast(requireContext(), "Failed to report user", true);
                                         }
+                                        ToastUtils.showCustomToast(requireContext(), "User reported", false);
                                     }
-
                                     @Override
                                     public void onFailure(Call<Report> call, Throwable t) {
                                         ToastUtils.showCustomToast(requireContext(), "Error reporting user", true);

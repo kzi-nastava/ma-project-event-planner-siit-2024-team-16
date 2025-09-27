@@ -10,7 +10,6 @@ import lombok.Setter;
 public class Report {
     private Long id;
     private String reason;
-    private LocalDateTime dateTime;
     private User reportedUser;
     private Boolean isApproved = false;
 }
