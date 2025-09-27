@@ -190,7 +190,7 @@
         android:id="@+id/servicesFragment"
         android:name="com.example.evenmate.fragments.service.ServicesFragment"
         android:label="Service Management"
-        tools:layout="@layout/fragment_service_management" >
+        tools:layout="@layout/fragment_services" >
         <action android:id="@+id/action_servicesFragment_to_addServiceFragment"
             app:destination="@id/addServiceFragment" />
         <action android:id="@+id/action_servicesFragment_to_editServiceFragment"
