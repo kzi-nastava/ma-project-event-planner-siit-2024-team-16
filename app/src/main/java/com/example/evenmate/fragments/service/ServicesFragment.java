@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,11 @@ import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.models.service.Service;
 import com.example.evenmate.models.service.ServiceFilter;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,88 +83,24 @@ public class ServicesFragment extends Fragment {
         viewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             this.categories.clear();
             this.categories.addAll(categories);
-            List<String> categoryNames = new ArrayList<>();
-            categoryNames.add(getString(R.string.select_category));
-            for (Category c : categories) categoryNames.add(c.getName());
-            ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categoryNames);
-            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            binding.categoryDropdown.setAdapter(categoryAdapter);
         });
         viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             this.eventTypes.clear();
             this.eventTypes.addAll(eventTypes);
-            List<String> eventTypeNames = new ArrayList<>();
-            eventTypeNames.add(getString(R.string.select_event_type));
-            for (EventType e : eventTypes) eventTypeNames.add(e.getName());
-            ArrayAdapter<String> eventTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, eventTypeNames);
-            eventTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            binding.eventTypeDropdown.setAdapter(eventTypeAdapter);
         });
     }
 
     private void setupUI() {
         binding.addServiceFab.setOnClickListener(v -> navigateToAddService());
+        binding.filtersButton.setOnClickListener(v -> showFiltersBottomSheet());
         binding.searchInput.setOnEditorActionListener((v, actionId, event) -> {
             fetchServices();
             return true;
         });
-        binding.minPriceInput.setOnEditorActionListener((v, actionId, event) -> {
-            fetchServices();
-            return true;
-        });
-        binding.maxPriceInput.setOnEditorActionListener((v, actionId, event) -> {
-            fetchServices();
-            return true;
-        });
-        binding.categoryDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    selectedCategoryId = null;
-                } else {
-                    selectedCategoryId = categories.get(position - 1).getId();
-                }
-                fetchServices();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                selectedCategoryId = null;
-            }
-        });
-        binding.eventTypeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    selectedEventTypeId = null;
-                } else {
-                    selectedEventTypeId = eventTypes.get(position - 1).getId();
-                }
-                fetchServices();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                selectedEventTypeId = null;
-            }
-        });
-        binding.availableSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            isAvailable = isChecked;
-            fetchServices();
-        });
-        binding.nextPageButton.setOnClickListener(v -> {
-            currentPage++;
-            fetchServices();
-        });
-        binding.prevPageButton.setOnClickListener(v -> {
-            if (currentPage > 0) currentPage--;
-            fetchServices();
-        });
-        binding.availableSwitch.setChecked(true);
     }
 
     private void fetchServices() {
         String searchQuery = binding.searchInput.getText().toString().trim();
-        minPrice = TextUtils.isEmpty(binding.minPriceInput.getText().toString()) ? null : Double.parseDouble(binding.minPriceInput.getText().toString());
-        maxPrice = TextUtils.isEmpty(binding.maxPriceInput.getText().toString()) ? null : Double.parseDouble(binding.maxPriceInput.getText().toString());
         ServiceFilter filters = new ServiceFilter();
         filters.setName(searchQuery);
         filters.setMinPrice(minPrice);
@@ -189,5 +130,72 @@ public class ServicesFragment extends Fragment {
             .setPositiveButton(R.string.delete, (dialog, which) -> viewModel.deleteService(service.getId()))
             .setNegativeButton(R.string.cancel, null)
             .show();
+    }
+
+    private void showFiltersBottomSheet() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+        View sheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_service_filters, null);
+        bottomSheetDialog.setContentView(sheetView);
+
+        Spinner categorySpinner = sheetView.findViewById(R.id.filterCategoryDropdown);
+        Spinner eventTypeSpinner = sheetView.findViewById(R.id.filterEventTypeDropdown);
+        TextInputEditText minPriceInput = sheetView.findViewById(R.id.filterMinPriceInput);
+        TextInputEditText maxPriceInput = sheetView.findViewById(R.id.filterMaxPriceInput);
+        SwitchMaterial availableSwitch = sheetView.findViewById(R.id.filterAvailableSwitch);
+        MaterialButton clearButton = sheetView.findViewById(R.id.clearFiltersButton);
+        MaterialButton applyButton = sheetView.findViewById(R.id.applyFiltersButton);
+
+        List<String> categoryNames = new ArrayList<>();
+        categoryNames.add(getString(R.string.select_category));
+        for (Category c : categories) categoryNames.add(c.getName());
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, categoryNames);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(categoryAdapter);
+        categorySpinner.setSelection(selectedCategoryId == null ? 0 : getCategoryIndex(selectedCategoryId));
+
+        List<String> eventTypeNames = new ArrayList<>();
+        eventTypeNames.add(getString(R.string.select_event_type));
+        for (EventType e : eventTypes) eventTypeNames.add(e.getName());
+        ArrayAdapter<String> eventTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, eventTypeNames);
+        eventTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        eventTypeSpinner.setAdapter(eventTypeAdapter);
+        eventTypeSpinner.setSelection(selectedEventTypeId == null ? 0 : getEventTypeIndex(selectedEventTypeId));
+
+        minPriceInput.setText(minPrice == null ? "" : String.valueOf(minPrice));
+        maxPriceInput.setText(maxPrice == null ? "" : String.valueOf(maxPrice));
+        availableSwitch.setChecked(isAvailable != null && isAvailable);
+
+        clearButton.setOnClickListener(v -> {
+            categorySpinner.setSelection(0);
+            eventTypeSpinner.setSelection(0);
+            minPriceInput.setText("");
+            maxPriceInput.setText("");
+            availableSwitch.setChecked(true);
+        });
+
+        applyButton.setOnClickListener(v -> {
+            selectedCategoryId = categorySpinner.getSelectedItemPosition() == 0 ? null : categories.get(categorySpinner.getSelectedItemPosition() - 1).getId();
+            selectedEventTypeId = eventTypeSpinner.getSelectedItemPosition() == 0 ? null : eventTypes.get(eventTypeSpinner.getSelectedItemPosition() - 1).getId();
+            minPrice = minPriceInput.getText().toString().isEmpty() ? null : Double.parseDouble(minPriceInput.getText().toString());
+            maxPrice = maxPriceInput.getText().toString().isEmpty() ? null : Double.parseDouble(maxPriceInput.getText().toString());
+            isAvailable = availableSwitch.isChecked();
+            fetchServices();
+            bottomSheetDialog.dismiss();
+        });
+
+        bottomSheetDialog.show();
+    }
+
+    private int getCategoryIndex(Long categoryId) {
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getId().equals(categoryId)) return i + 1;
+        }
+        return 0;
+    }
+    private int getEventTypeIndex(Long eventTypeId) {
+        for (int i = 0; i < eventTypes.size(); i++) {
+            if (eventTypes.get(i).getId().equals(eventTypeId)) return i + 1;
+        }
+        return 0;
     }
 }
