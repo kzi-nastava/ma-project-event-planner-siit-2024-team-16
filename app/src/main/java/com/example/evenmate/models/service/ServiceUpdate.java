@@ -16,8 +16,8 @@ public class ServiceUpdate implements Serializable {
     private Double price;
     private Integer discount;
     private List<String> images;
-    private boolean isVisible;
-    private boolean isAvailable;
+    private Boolean isVisible;
+    private Boolean isAvailable;
     private String distinctiveness;
 
     @Nullable
