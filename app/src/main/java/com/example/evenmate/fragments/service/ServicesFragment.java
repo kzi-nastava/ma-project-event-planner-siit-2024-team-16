@@ -1,9 +1,11 @@
 package com.example.evenmate.fragments.service;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -93,8 +95,11 @@ public class ServicesFragment extends Fragment {
         binding.addServiceFab.setOnClickListener(v -> navigateToAddService());
         binding.filtersButton.setOnClickListener(v -> showFiltersBottomSheet());
         binding.searchInput.setOnEditorActionListener((v, actionId, event) -> {
-            fetchServices();
-            return true;
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                fetchServices();
+                return true;
+            }
+            return false;
         });
     }
 
