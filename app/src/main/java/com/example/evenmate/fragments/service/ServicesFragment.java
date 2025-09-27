@@ -1,11 +1,9 @@
 package com.example.evenmate.fragments.service;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -20,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.evenmate.R;
 import com.example.evenmate.adapters.ServiceAdapter;
+import com.example.evenmate.adapters.ServiceManagementAdapter;
 import com.example.evenmate.databinding.FragmentServicesBinding;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.event.EventType;
@@ -37,7 +36,7 @@ import java.util.List;
 public class ServicesFragment extends Fragment {
     private FragmentServicesBinding binding;
     private ServicesViewModel viewModel;
-    private ServiceAdapter adapter;
+    private ServiceManagementAdapter adapter;
     private List<Service> services = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
     private List<EventType> eventTypes = new ArrayList<>();
@@ -61,7 +60,7 @@ public class ServicesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(ServicesViewModel.class);
-        adapter = new ServiceAdapter(services, this::onEditService, this::onDeleteService);
+        adapter = new ServiceManagementAdapter(services, this::onEditService, this::onDeleteService);
         binding.servicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.servicesRecyclerView.setAdapter(adapter);
         setupObservers();
