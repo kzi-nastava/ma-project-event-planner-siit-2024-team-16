@@ -72,8 +72,9 @@ dependencies {
     implementation libs.rxandroid
 
     implementation libs.mpandroidchart
-    implementation libs.converter.scalars
 
     implementation libs.osmdroid.android
 
+    implementation libs.mpandroidchart
+    implementation libs.converter.scalars
 }

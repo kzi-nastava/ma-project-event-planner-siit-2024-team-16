@@ -8,7 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.view.View;
 
-import com.example.evenmate.models.Review;
+import com.example.evenmate.models.commentreview.Review;
 import com.example.evenmate.models.event.Event;
 
 import java.text.SimpleDateFormat;

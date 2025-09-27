@@ -27,7 +27,7 @@ import com.example.evenmate.adapters.AgendaAdapter;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.databinding.FragmentEventDetailsBinding;
 import com.example.evenmate.fragments.map.MapFragment;
-import com.example.evenmate.models.Review;
+import com.example.evenmate.models.commentreview.Review;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.EventDetailsPdf;

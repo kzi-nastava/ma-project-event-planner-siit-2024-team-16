@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.example.evenmate.models.Address;
-import com.example.evenmate.models.Review;
+import com.example.evenmate.models.commentreview.Review;
 import com.example.evenmate.models.user.User;
 
 import java.time.LocalDate;
