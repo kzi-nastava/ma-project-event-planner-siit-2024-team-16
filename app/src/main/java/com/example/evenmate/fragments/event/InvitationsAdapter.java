@@ -7,21 +7,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
+import com.example.evenmate.models.event.Event;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import java.util.function.Consumer;
 
 public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.InvitationViewHolder> {
 
     private final List<String> contacts;
-    private final OnContactRemovedListener removeListener;
+    private final Consumer<String> removeListener;
+    private final Event event;
 
-    public InvitationsAdapter(List<String> contacts, OnContactRemovedListener removeListener) {
-        this.contacts = contacts;
+    public InvitationsAdapter(Event event, List<String> contacts, Consumer<String> removeListener) {
+        this.contacts = contacts != null ? contacts : new ArrayList<>();
         this.removeListener = removeListener;
+        this.event = event;
     }
 
     @NonNull
@@ -38,16 +44,17 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         holder.deleteButton.setOnClickListener(v -> {
             showDeleteConfirmation(v.getContext(), confirmed -> {
                 if (confirmed) {
-                    // TODO call BE
-                    removeListener.onContactRemoved(contact);
-                    Toast.makeText(v.getContext(), "Invitation deleted", Toast.LENGTH_SHORT).show();
+                    removeListener.accept(contact);
                 }
             });
         });
-
     }
+
     @Override
-    public int getItemCount() {return contacts.size();}
+    public int getItemCount() {
+        return contacts.size();
+    }
+
     public static class InvitationViewHolder extends RecyclerView.ViewHolder {
         TextView contactName;
         Button deleteButton;
@@ -57,9 +64,5 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
             contactName = itemView.findViewById(R.id.contact_name);
             deleteButton = itemView.findViewById(R.id.delete_invitation);
         }
-    }
-
-    public interface OnContactRemovedListener {
-        void onContactRemoved(String contact);
     }
 }
