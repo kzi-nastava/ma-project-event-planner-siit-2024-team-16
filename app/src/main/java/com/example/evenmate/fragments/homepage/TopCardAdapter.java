@@ -15,8 +15,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evenmate.R;
-import com.example.evenmate.activities.asset.ProductDetailsActivity;
-import com.example.evenmate.activities.asset.ServiceDetailsActivity;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.event.Event;
@@ -51,18 +49,20 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             String rating=asset.getAverageReview() != null? asset.getAverageReview().toString() : "0.0";
             holder.setAll(asset.getName(),asset.getProvider().getAddress().getCountry(),asset.getCategory().getName(),asset.getPrice().toString(),rating,null,asset.getImages().get(0));
             // click
-            if (asset.getType().equals(AssetType.SERVICE)){
+            if (asset.getType().equals(AssetType.SERVICE)) {
                 holder.itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(holder.itemView.getContext(), ServiceDetailsActivity.class);
-                    intent.putExtra("SERVICE_ID", asset.getId());
-                    holder.itemView.getContext().startActivity(intent);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("SERVICE_ID", asset.getId());
+                    Navigation.findNavController(v)
+                            .navigate(R.id.action_homeFragment_to_serviceDetailsFragment, bundle);
                 });
             }
-            else if(asset.getType().equals(AssetType.PRODUCT)){
+            else if (asset.getType().equals(AssetType.PRODUCT)) {
                 holder.itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(holder.itemView.getContext(), ProductDetailsActivity.class);
-                    intent.putExtra("PRODUCT_ID", asset.getId());
-                    holder.itemView.getContext().startActivity(intent);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("PRODUCT_ID", asset.getId());
+                    Navigation.findNavController(v)
+                            .navigate(R.id.action_homeFragment_to_productDetailsFragment, bundle);
                 });
             }
         }

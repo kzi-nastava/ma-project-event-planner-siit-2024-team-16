@@ -14,8 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.evenmate.R;
-import com.example.evenmate.activities.asset.ProductDetailsActivity;
-import com.example.evenmate.activities.asset.ServiceDetailsActivity;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.event.Event;
@@ -45,20 +43,24 @@ public class CardAdapter {
         Button favorite = cardView.findViewById(R.id.favorite);
         favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
         // click
-        if (asset.getType().equals(AssetType.SERVICE)){
+        if (asset.getType().equals(AssetType.SERVICE)) {
             cardView.setOnClickListener(v -> {
-                Intent intent = new Intent(fragment.requireContext(), ServiceDetailsActivity.class);
-                intent.putExtra("SERVICE_ID", asset.getId());
-                fragment.startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putLong("SERVICE_ID", asset.getId());
+                Navigation.findNavController(v)
+                        .navigate(R.id.action_homeFragment_to_serviceDetailsFragment, bundle);
             });
         }
-        else if(asset.getType().equals(AssetType.PRODUCT)){
+        else if (asset.getType().equals(AssetType.PRODUCT)) {
             cardView.setOnClickListener(v -> {
-                Intent intent = new Intent(fragment.getContext(), ProductDetailsActivity.class);
-                intent.putExtra("PRODUCT_ID", asset.getId());
-                fragment.startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putLong("PRODUCT_ID", asset.getId());
+                Navigation.findNavController(v)
+                        .navigate(R.id.action_homeFragment_to_productDetailsFragment, bundle);
             });
-        }    }
+        }
+
+    }
     public CardAdapter(View cardView, Fragment fragment, Event event){
         // right colors
         cardView.findViewById(R.id.card).setBackgroundTintList(ContextCompat.getColorStateList(fragment.requireContext(), R.color.light_green));

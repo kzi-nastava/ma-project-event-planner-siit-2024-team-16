@@ -1,7 +1,7 @@
 package com.example.evenmate.clients;
 
 import com.example.evenmate.models.PaginatedResponse;
-import com.example.evenmate.models.Service;
+import com.example.evenmate.models.asset.Service;
 import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.user.Block;

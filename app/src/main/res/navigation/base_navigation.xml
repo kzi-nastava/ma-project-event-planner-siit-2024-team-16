@@ -93,6 +93,12 @@
             android:id="@+id/action_homeFragment_to_eventDetailsFragment"
             app:destination="@+id/eventDetailsFragment"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_serviceDetailsFragment"
+            app:destination="@+id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailsFragment"
+            app:destination="@+id/productDetailsFragment"/>
     </fragment>
 
     <fragment
@@ -201,6 +207,31 @@
 
         <action
             android:id="@+id/action_eventDetails_to_profileFragment"
+            app:destination="@id/profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.example.evenmate.fragments.service.ServiceDetailsFragment"
+        android:label="ServiceDetailsFragment" >
+        <argument
+            android:name="service"
+            app:argType="com.example.evenmate.models.asset.Service" />
+        <action
+            android:id="@+id/action_serviceDetails_to_profileFragment"
+            app:destination="@id/profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.evenmate.fragments.asset.ProductDetailsFragment"
+        android:label="ProductDetailsFragment" >
+        <argument
+            android:name="product"
+            app:argType="com.example.evenmate.models.asset.Product" />
+
+        <action
+            android:id="@+id/action_productDetails_to_profileFragment"
             app:destination="@id/profile" />
     </fragment>
 
