@@ -221,4 +221,5 @@
     <string name="min_price">Min Price</string>
     <string name="max_price">Max Price</string>
     <string name="event_type">Event Type</string>
+    <string name="clear">Clear</string>
 </resources>
