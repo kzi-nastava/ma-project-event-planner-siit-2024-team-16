@@ -124,6 +124,10 @@
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     tools:text="123 Main St, City, State" />
+                <FrameLayout
+                    android:id="@+id/user_address_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp" />
 
             </LinearLayout>
 
@@ -193,6 +197,11 @@
                     android:layout_marginTop="4dp"
                     android:textAlignment="center"
                     tools:text="456 Business Ave, Corporate City" />
+                <FrameLayout
+                    android:id="@+id/company_address_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="8dp"/>
 
                 <TextView
                     android:id="@+id/company_description"

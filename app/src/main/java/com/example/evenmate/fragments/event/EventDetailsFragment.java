@@ -8,9 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.view.FrameMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,16 +26,20 @@ import com.example.evenmate.R;
 import com.example.evenmate.adapters.AgendaAdapter;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.databinding.FragmentEventDetailsBinding;
+import com.example.evenmate.fragments.map.MapFragment;
 import com.example.evenmate.models.Review;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.EventDetailsPdf;
 import com.example.evenmate.utils.EventReportPdf;
+import com.example.evenmate.utils.MapUtils;
 import com.example.evenmate.utils.ToastUtils;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -71,6 +77,7 @@ public class EventDetailsFragment extends Fragment {
                 userId = user.getId();
                 setupActionButtons();
             }
+            setupActionButtonsAll();
             setupDetails();
             setupFragmentResultListener();
             viewModel.getEvent().observe(getViewLifecycleOwner(), e ->{
@@ -99,10 +106,16 @@ public class EventDetailsFragment extends Fragment {
 
                 viewModel.resetDeleteFailed();
             });
+            binding.mapContainer.setVisibility(ViewGroup.GONE);
         } else
             binding.eventName.setText(R.string.no_event_to_display);
     }
 
+    private void setupActionButtonsAll(){
+        binding.btnMap.setOnClickListener(v -> showMap());
+        binding.btnOrganizer.setOnClickListener(v-> showOrganizer());
+
+    }
     private void setupActionButtons() {
         binding.actionButtons.setVisibility(View.VISIBLE);
         binding.favoriteButton.setVisibility(View.VISIBLE);
@@ -114,8 +127,6 @@ public class EventDetailsFragment extends Fragment {
         binding.btnEditEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
 
         binding.btnComing.setOnClickListener(v -> viewModel.addAttendee(event.getId()));
-        binding.btnMap.setOnClickListener(v -> showMap());
-        binding.btnOrganizer.setOnClickListener(v-> showOrganizer());
         binding.favoriteButton.setOnClickListener(v ->viewModel.changeFavoriteStatus(userId, event.getId()));
         binding.downloadPdfButton.setOnClickListener(v -> generatePdf(false));
         binding.downloadReportPdfButton.setOnClickListener(v -> generatePdf(true));
@@ -134,8 +145,24 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void showMap() {
-        //todo andjela
-        ToastUtils.showCustomToast(getContext(), "Map", false);
+        binding.mapContainer.setVisibility(ViewGroup.VISIBLE);
+        String fullAddress = MapUtils.buildFullAddress(event.getAddress());
+
+        new Thread(() -> {
+            GeoPoint location = MapUtils.getGeoPointFromAddress(requireContext(), fullAddress);
+            if (location != null) {
+                requireActivity().runOnUiThread(() -> {
+                    MapFragment fragment = MapFragment.newInstance(fullAddress, event.getName());
+                    getChildFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.mapContainer, fragment)
+                            .commit();
+                });
+            } else {
+                requireActivity().runOnUiThread(() ->
+                        ToastUtils.showCustomToast(getContext(), "Address not found", true));
+            }
+        }).start();
     }
 
     private void showOrganizer(){
