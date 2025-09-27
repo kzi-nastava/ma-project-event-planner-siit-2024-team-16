@@ -25,6 +25,8 @@ public class ServicesViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<List<Category>> categories = new MutableLiveData<>();
     private final MutableLiveData<List<EventType>> eventTypes = new MutableLiveData<>();
+    private final MutableLiveData<Integer> totalPages = new MutableLiveData<>();
+    private final MutableLiveData<Integer> totalElements = new MutableLiveData<>();
 
     public LiveData<List<Service>> getServices() {
         return services;
@@ -42,12 +44,22 @@ public class ServicesViewModel extends ViewModel {
         return eventTypes;
     }
 
+    public LiveData<Integer> getTotalPages() {
+        return totalPages;
+    }
+
+    public LiveData<Integer> getTotalElements() {
+        return totalElements;
+    }
+
     public void fetchServices(int page, int size, ServiceFilter filters) {
         ClientUtils.serviceService.getAll(page, size, filters.toQueryMap()).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<PaginatedResponse<Service>> call, Response<PaginatedResponse<Service>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     services.postValue(response.body().getContent());
+                    totalPages.postValue(response.body().getTotalPages());
+                    totalElements.postValue(response.body().getTotalElements());
                 } else {
                     errorMessage.postValue("Failed to fetch services.");
                 }
