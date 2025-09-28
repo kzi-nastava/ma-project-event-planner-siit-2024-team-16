@@ -181,6 +181,7 @@
     <string name="price_list">Price List</string>
     <string name="products">Products</string>
     <string name="services">Services</string>
+    <string name="page_1">Page 1</string>
     <string name="organizer">Organizer</string>
     <string name="favorite">Favorite</string>
     <string name="download_pdf">Download PDF</string>
@@ -193,7 +194,8 @@
     <string name="show_services">Show Services</string>
     <string name="_0_10000">0 – 10000</string>
     <string name="_0_0_5_0">0.0 – 5.0</string>
-    <string name="page_1">Page 1</string>
+    <string name="report">Report</string>
+    <string name="block">Block</string>
     <string name="user">User</string>
     <string name="insert_text">Insert text</string>
     <string name="_5">5</string>
@@ -203,6 +205,14 @@
     <string name="average_rating">Average Rating</string>
     <string name="comments">Comments</string>
     <string name="_0_0">0.0</string>
+    <string name="pending_reports">PENDING REPORTS</string>
+    <string name="user_name_role">User Name (Role)</string>
+    <string name="report_reason">Report reason</string>
+    <string name="reports_approval">Reports approval</string>
+    <string name="pending_comments">PENDING COMMENTS</string>
+    <string name="comment_text">Comment text</string>
+    <string name="comment_user_date">Comment User Date</string>
+    <string name="comments_approval">Comments approval</string>
     <string name="service_name">Service Name</string>
     <string name="add_event_type">Add Event Type</string>
     <string name="distinctiveness">Distinctiveness</string>

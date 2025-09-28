@@ -4,7 +4,9 @@ import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.service.Service;
 import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.event.Event;
+import com.example.evenmate.models.user.Block;
 import com.example.evenmate.models.user.CalendarItem;
+import com.example.evenmate.models.user.Report;
 import com.example.evenmate.models.user.UpdateUserRequest;
 import com.example.evenmate.models.user.User;
 
@@ -86,6 +88,46 @@ public interface UserService {
     Call<PaginatedResponse<Service>> getFavoriteServices(@Path("userId") Long userId, @Query("page") int page,
                                                          @Query("size") int size);
 
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("users/{id}")
+    Call<User> getUserById(@Path("id") Long id);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("users/{id}/report")
+    Call<Report> reportUser(@Path("id") Long id, @Body String reportReason);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("users/block/{blocked_id}")
+    Call<Block> blockUser(@Path("blocked_id") Long blockedId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("users/is-blocked/{id}")
+    Call<Boolean> isBlocked(@Path("id") Long id);
+
     @GET("users/{userId}")
     Call<User> getById(@Path("userId") Long userId);
+
+    @GET("users/pending-reports")
+    Call<PaginatedResponse<Report>> getPendingReports(
+            @Query("page") int page,
+            @Query("size") int size
+    );
+
+    @POST("users/approve-report/{id}")
+    Call<Void> approveReport(@Path("id") Long reportId);
+
+    @DELETE("users/report/{id}")
+    Call<Void> deleteReport(@Path("id") Long reportId);
 }

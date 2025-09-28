@@ -88,7 +88,12 @@
         android:label="Home"
         app:popUpTo="@+id/home"
         app:popUpToInclusive="true"
-        tools:layout="@layout/fragment_homepage" />
+        tools:layout="@layout/fragment_homepage">
+        <action
+            android:id="@+id/action_homeFragment_to_eventDetailsFragment"
+            app:destination="@+id/eventDetailsFragment"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/profile"
@@ -217,5 +222,20 @@
         <argument
             android:name="event"
             app:argType="com.example.evenmate.models.event.Event" />
+
+        <action
+            android:id="@+id/action_eventDetails_to_profileFragment"
+            app:destination="@id/profile" />
     </fragment>
+
+    <fragment android:id="@+id/reports_approval_fragment"
+        android:name="com.example.evenmate.fragments.admin_approvals.ReportApprovalsFragment"
+        android:label="@string/reports_approval"
+        />
+    <fragment android:id="@+id/comments_approval_fragment"
+        android:name="com.example.evenmate.fragments.admin_approvals.CommentApprovalsFragment"
+        android:label="@string/comments_approval"
+        />
+
+
 </navigation>

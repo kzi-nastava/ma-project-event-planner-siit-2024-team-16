@@ -2,6 +2,7 @@ package com.example.evenmate.fragments.homepage;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 import android.view.View;
@@ -10,11 +11,11 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.evenmate.R;
 import com.example.evenmate.activities.asset.ProductDetailsActivity;
 import com.example.evenmate.activities.asset.ServiceDetailsActivity;
-import com.example.evenmate.activities.event.EventDetailsActivity;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.event.Event;
@@ -90,9 +91,10 @@ public class CardAdapter {
         favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
         // click
         cardView.setOnClickListener(v -> {
-            Intent intent = new Intent(fragment.requireContext(), EventDetailsActivity.class);
-            intent.putExtra("EVENT_ID", event.getId());
-            fragment.startActivity(intent);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("event", event);
+            Navigation.findNavController(v)
+                    .navigate(R.id.action_homeFragment_to_eventDetailsFragment, bundle);
         });
     }
     public void makeFavorite(Fragment fragment, Button favorite) {
