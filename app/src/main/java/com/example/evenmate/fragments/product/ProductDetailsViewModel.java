@@ -43,9 +43,38 @@ public class ProductDetailsViewModel extends ViewModel {
         });
     }
 
-    public void toggleFavorite() {
-        // TODO: 
-        isFavorite.setValue(!Boolean.TRUE.equals(isFavorite.getValue()));
+    public void isFavorite(Long productId) {
+        ClientUtils.productService.isFavorite(productId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    isFavorite.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Log.e("ProductDetailsViewModel", "Failed to check favorite status", t);
+                Toast.makeText(ClientUtils.getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void toggleFavorite(Long productId) {
+        ClientUtils.productService.toggleFavorite(productId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    isFavorite.setValue(!Boolean.TRUE.equals(isFavorite.getValue()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+                Log.e("ProductDetailsViewModel", "Failed to toggle favorite", throwable);
+                Toast.makeText(ClientUtils.getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void purchaseProduct() {

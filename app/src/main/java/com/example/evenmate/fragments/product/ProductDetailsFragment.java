@@ -39,6 +39,7 @@ public class ProductDetailsFragment extends Fragment {
         long productId = getArguments() != null ? getArguments().getLong(ARG_PRODUCT_ID, -1) : -1;
         if (productId != -1) {
             viewModel.fetchProductById(productId);
+            viewModel.isFavorite(productId);
         }
 
         Button btnFavorite = view.findViewById(R.id.btn_favorite);
@@ -81,7 +82,7 @@ public class ProductDetailsFragment extends Fragment {
             btnFavorite.setText(isFavorite ? "Unfavorite" : "Favorite");
         });
 
-        btnFavorite.setOnClickListener(v -> viewModel.toggleFavorite());
+        btnFavorite.setOnClickListener(v -> viewModel.toggleFavorite(productId));
         btnPurchase.setOnClickListener(v -> viewModel.purchaseProduct());
         btnChat.setOnClickListener(v -> viewModel.initiateChat());
         layoutProviderInfo.setOnClickListener(v -> {
