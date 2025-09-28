@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/base_navigation"
     app:startDestination="@+id/HomepageFragment">
+    <!-- todo back <- -->
     <fragment
         android:id="@+id/nav_auth"
         android:name="com.example.evenmate.fragments.auth.LoginFragment"
@@ -49,6 +50,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="ALL_EVENTS"/>
+        <action
+            android:id="@+id/action_eventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -60,6 +64,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="FAVORITES"/>
+        <action
+            android:id="@+id/action_favoriteEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/yourEventsFragment"
@@ -70,6 +77,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="YOUR_EVENTS"/>
+        <action
+            android:id="@+id/action_yourEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -100,7 +110,11 @@
         android:id="@+id/CalendarFragment"
         android:name="com.example.evenmate.fragments.profile.CalendarFragment"
         android:label="Calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_CalendarFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/productsFragment"
         android:name="com.example.evenmate.fragments.asset.ProductsFragment"
@@ -195,5 +209,13 @@
             app:destination="@id/addServiceFragment" />
         <action android:id="@+id/action_servicesFragment_to_editServiceFragment"
             app:destination="@id/editServiceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.example.evenmate.fragments.event.EventDetailsFragment"
+        android:label="EventDetailsFragment" >
+        <argument
+            android:name="event"
+            app:argType="com.example.evenmate.models.event.Event" />
     </fragment>
 </navigation>

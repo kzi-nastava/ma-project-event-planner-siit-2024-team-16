@@ -4,17 +4,21 @@ package com.example.evenmate.fragments.asset;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.fragments.filters.AssetFilters;
 import com.example.evenmate.models.PaginatedResponse;
+import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.asset.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.Setter;
 import retrofit2.Call;
@@ -110,5 +114,57 @@ public class ProductsViewModel extends ViewModel {
 
     public LiveData<String> getErrorMessage() {
         return errorMessage;
+    }
+
+    public void applyFilters(@Nullable AssetFilters filters) {
+        String type = "PRODUCT";
+        Call<PaginatedResponse<Asset>> call = ClientUtils.assetService.getAll(
+                filters != null ? filters.getSelectedLocations() : null,
+                filters != null ? filters.getSelectedCategories() : null,
+                filters != null ? filters.getSelectedTypes() : null,
+                filters != null ? filters.getSelectedProviders() : null,
+                filters != null ? filters.getDateFrom() : null,
+                filters != null ? filters.getDateTo() : null,
+                filters != null ? filters.getMinPrice() : null,
+                filters != null ? filters.getMaxPrice() : null,
+                filters != null ? filters.getMinRating() : null,
+                filters != null ? filters.getMaxRating() : null,
+                type,
+                currentPage.getValue() - 1,
+                PAGE_SIZE,
+                filters != null ? filters.getSortOption() : null
+        );
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<PaginatedResponse<Asset>> call, @NonNull Response<PaginatedResponse<Asset>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    products.setValue(response.body().getContent().stream().map(Asset::toProduct).collect(Collectors.toList()));
+                    totalPages.setValue(response.body().getTotalPages());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<PaginatedResponse<Asset>> call, @NonNull Throwable t) {
+                errorMessage.setValue(t.getMessage());
+            }
+        });
+    }
+    public void searchProducts(String keywords) {
+        Call<PaginatedResponse<Asset>> call = ClientUtils.assetService.search(keywords, currentPage.getValue()-1, PAGE_SIZE);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<PaginatedResponse<Asset>> call, @NonNull Response<PaginatedResponse<Asset>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    products.setValue(response.body().getContent().stream().map(Asset::toProduct).collect(Collectors.toList()));
+                    totalPages.setValue(response.body().getTotalPages());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<PaginatedResponse<Asset>> call, @NonNull Throwable t) {
+                errorMessage.setValue(t.getMessage());
+            }
+        });
     }
 }

@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
@@ -39,7 +39,7 @@ public class FilterSortAssets extends Fragment {
     private Button availableFromButton;
     private Button availableToButton;
     private Button sortButton;
-    private Switch showOnlyServicesSwitch, showOnlyProductsSwitch;
+    private SwitchCompat showOnlyServicesSwitch, showOnlyProductsSwitch;
     private RangeSlider priceRangeSlider, ratingRangeSlider;
     private TextView priceValue, ratingValue;
     private TextView categoriesButton, typesButton, providersButton, locationsButton;
@@ -47,16 +47,16 @@ public class FilterSortAssets extends Fragment {
     private boolean[] selectedCategoriesArray, selectedTypesArray, selectedProvidersArray, selectedLocationsArray;
     private String[] categoriesNames, typesNames, providersNames, locationsNames;
 
-    private List<Long> selectedCategories = new ArrayList<>();
-    private List<Long> selectedTypes = new ArrayList<>();
-    private List<Long> selectedProviders = new ArrayList<>();
-    private List<String> selectedLocations = new ArrayList<>();
+    private final List<Long> selectedCategories = new ArrayList<>();
+    private final List<Long> selectedTypes = new ArrayList<>();
+    private final List<Long> selectedProviders = new ArrayList<>();
+    private final List<String> selectedLocations = new ArrayList<>();
 
-    private HashMap<Long, String> providersMap = new HashMap<>();
-    private HashMap<Long, String> typesMap = new HashMap<>();
-    private HashMap<Long, String> categoriesMap = new HashMap<>();
+    private final HashMap<Long, String> providersMap = new HashMap<>();
+    private final HashMap<Long, String> typesMap = new HashMap<>();
+    private final HashMap<Long, String> categoriesMap = new HashMap<>();
     private OnFilterApplyListener listener;
-    private HashMap<String, String> sortOptionsMap = new HashMap<>(){{
+    private final HashMap<String, String> sortOptionsMap = new HashMap<>(){{
         put("id,asc", "Date added ↑");
         put("id,desc", "Date added ↓");
         put("name,asc", "Asset name ↑");
@@ -124,7 +124,7 @@ public class FilterSortAssets extends Fragment {
         priceRangeSlider.addOnChangeListener((slider, value, fromUser) -> {
             float min = priceRangeSlider.getValues().get(0);
             float max = priceRangeSlider.getValues().get(1);
-            priceValue.setText((int) min + " - " + (int) max);
+            priceValue.setText(String.format("%d - %d", (int) min, (int) max));
         });
 
         ratingRangeSlider.addOnChangeListener((slider, value, fromUser) -> {
@@ -142,7 +142,7 @@ public class FilterSortAssets extends Fragment {
     private void showDatePicker(Button button) {
         Calendar c = Calendar.getInstance();
         new DatePickerDialog(requireContext(),
-                (_view, year, month, day) -> button.setText(year + "-" + (month + 1) + "-" + day),
+                (_view, year, month, day) -> button.setText(String.format("%d-%d-%d", year, month + 1, day)),
                 c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
 
@@ -260,7 +260,7 @@ public class FilterSortAssets extends Fragment {
 
     private void resetFilters() {
         priceRangeSlider.setValues(0f, 10000f);
-        priceValue.setText("0 - 10000");
+        priceValue.setText(R.string._0_10000);
         ratingRangeSlider.setValues(0f, 5f);
         ratingValue.setText("0.0 - 5.0");
         showOnlyServicesSwitch.setChecked(false);
@@ -291,7 +291,7 @@ public class FilterSortAssets extends Fragment {
     private void loadTypesFromBackend() {
         ClientUtils.eventTypeService.getActiveTypes(true).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<PaginatedResponse<EventType>> call, retrofit2.Response<PaginatedResponse<EventType>> response) {
+            public void onResponse(@NonNull Call<PaginatedResponse<EventType>> call, @NonNull retrofit2.Response<PaginatedResponse<EventType>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<EventType> typesList = response.body().getContent();
 
@@ -310,16 +310,16 @@ public class FilterSortAssets extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PaginatedResponse<EventType>> call, Throwable throwable) {
+            public void onFailure(@NonNull Call<PaginatedResponse<EventType>> call, @NonNull Throwable throwable) {
                 Toast.makeText(requireContext(), "Error fetching types: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadProvidersFromBackend() {
-        ClientUtils.providerService.getAll().enqueue(new Callback<List<ProductServiceProvider>>() {
+        ClientUtils.providerService.getAll().enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<ProductServiceProvider>> call, retrofit2.Response<List<ProductServiceProvider>> response) {
+            public void onResponse(@NonNull Call<List<ProductServiceProvider>> call, @NonNull retrofit2.Response<List<ProductServiceProvider>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<ProductServiceProvider> providersList = response.body();
 
@@ -338,16 +338,16 @@ public class FilterSortAssets extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<ProductServiceProvider>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<ProductServiceProvider>> call, @NonNull Throwable t) {
                 Toast.makeText(requireContext(), "Error fetching providers: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadLocationsFromBackend() {
-        ClientUtils.addressService.getAllAddresses().enqueue(new Callback<List<Location>>() {
+        ClientUtils.addressService.getAllAddresses().enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<Location>> call, retrofit2.Response<List<Location>> response) {
+            public void onResponse(@NonNull Call<List<Location>> call, @NonNull retrofit2.Response<List<Location>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Location> locationsList = response.body();
 
@@ -364,14 +364,13 @@ public class FilterSortAssets extends Fragment {
                         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                         builder.setTitle("Select Locations");
 
-                        builder.setMultiChoiceItems(locationsNames, selectedLocationsArray, (dialog, which, isChecked) -> {
-                            selectedLocationsArray[which] = isChecked;
-                        });
+                        builder.setMultiChoiceItems(locationsNames, selectedLocationsArray, (dialog, which, isChecked) -> selectedLocationsArray[which] = isChecked);
 
                         builder.setPositiveButton("OK", (dialog, which) -> {
                             selectedLocations.clear();
                             for (int i = 0; i < locationsNames.length; i++) {
-                                if (selectedLocationsArray[i]) selectedLocations.add(locationsNames[i]);
+                                if (selectedLocationsArray[i])
+                                    selectedLocations.add(locationsNames[i]);
                             }
                             locationsButton.setText(selectedLocations.isEmpty() ? "Select Locations" : TextUtils.join(", ", selectedLocations));
                         });
@@ -383,15 +382,15 @@ public class FilterSortAssets extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Location>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Location>> call, @NonNull Throwable t) {
                 Toast.makeText(requireContext(), "Error fetching locations: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
     private void loadCategoriesFromBackend() {
-        ClientUtils.categoryService.getCategories(null,null).enqueue(new Callback<PaginatedResponse<Category>>() {
+        ClientUtils.categoryService.getCategories(null,null).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<PaginatedResponse<Category>> call, retrofit2.Response<PaginatedResponse<Category>> response) {
+            public void onResponse(@NonNull Call<PaginatedResponse<Category>> call, @NonNull retrofit2.Response<PaginatedResponse<Category>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Category> categoryList = response.body().getContent();
 
@@ -410,7 +409,7 @@ public class FilterSortAssets extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PaginatedResponse<Category>> call, Throwable throwable) {
+            public void onFailure(@NonNull Call<PaginatedResponse<Category>> call, @NonNull Throwable throwable) {
                 Toast.makeText(requireContext(), "Error fetching categories: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

@@ -38,6 +38,7 @@ public class EventTypesFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(EventTypesViewModel.class);
+        viewModel.fetchEventTypes();
 
         adapter = new EventTypeAdapter(getActivity(), new ArrayList<>());
         adapter.setOnStatusClickListener(eventType ->
@@ -48,11 +49,11 @@ public class EventTypesFragment extends ListFragment {
                 dialogFragment.show(getParentFragmentManager(), "EditEventType");
             }
         );
+
         setListAdapter(adapter);
         setupPagination();
-
         setupAddEventTypeButton();
-
+        setupFragmentResultListener();
         observeViewModel();
     }
 
@@ -108,10 +109,18 @@ public class EventTypesFragment extends ListFragment {
         });
     }
 
+    private void setupFragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener("type_form_result", this, (requestKey, result) -> {
+            boolean shouldRefresh = result.getBoolean("refresh_types", false);
+            if (shouldRefresh) {
+                viewModel.fetchEventTypes();
+            }
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.fetchEventTypes();
     }
 
     @Override

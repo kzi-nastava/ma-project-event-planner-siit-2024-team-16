@@ -26,7 +26,7 @@ public class Asset implements Parcelable {
     private Double price;
     private Integer discount;
     private Double priceAfterDiscount;
-    private User provider; // TODO: Change to ProductServiceProvider
+    private User provider;
     private List<String> images;
     private Category category;
     private Double averageReview;
@@ -35,21 +35,6 @@ public class Asset implements Parcelable {
     private Boolean isAvailable;
     private Boolean isVisibleToUser;
 
-    public ProductRequest toRequest(){
-        return new ProductRequest(
-                id,
-                name,
-                description,
-                price,
-                discount,
-                images,
-                category.getId(),
-                null,
-                null,
-                isVisible,
-                isAvailable
-            );
-        }
     protected Asset(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
@@ -81,13 +66,13 @@ public class Asset implements Parcelable {
         } else {
             averageReview = in.readDouble();
         }
-        type = in.readString().equals(AssetType.PRODUCT.toString()) ? AssetType.PRODUCT : AssetType.SERVICE;
+        type = AssetType.valueOf(in.readString());
         byte tmpIsVisible = in.readByte();
         isVisible = tmpIsVisible == 0 ? null : tmpIsVisible == 1;
-        byte tmpIsVisibleToUser = in.readByte();
-        isVisibleToUser = tmpIsVisibleToUser == 0 ? null : tmpIsVisibleToUser == 1;
         byte tmpIsAvailable = in.readByte();
         isAvailable = tmpIsAvailable == 0 ? null : tmpIsAvailable == 1;
+        byte tmpIsVisibleToUser = in.readByte();
+        isVisibleToUser = tmpIsVisibleToUser == 0 ? null : tmpIsVisibleToUser == 1;
     }
 
     public static final Creator<Asset> CREATOR = new Creator<>() {
@@ -101,6 +86,40 @@ public class Asset implements Parcelable {
             return new Asset[size];
         }
     };
+
+    public ProductRequest toRequest(){
+        return new ProductRequest(
+                id,
+                name,
+                description,
+                price,
+                discount,
+                images,
+                category.getId(),
+                null,
+                null,
+                isVisible,
+                isAvailable
+            );
+        }
+        public Product toProduct(){
+            return new Product(
+                id,
+                name,
+                description,
+                price,
+                discount,
+                priceAfterDiscount,
+                provider,
+                images,
+                category,
+                averageReview,
+                type,
+                isVisible,
+                isAvailable,
+                isVisibleToUser
+            );
+        }
 
     @Override
     public int describeContents() {
@@ -144,9 +163,9 @@ public class Asset implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeDouble(averageReview);
         }
-        parcel.writeString(String.valueOf(type));
+        parcel.writeString(type.name());
         parcel.writeByte((byte) (isVisible == null ? 0 : isVisible ? 1 : 2));
-        parcel.writeByte((byte) (isVisibleToUser == null ? 0 : isVisibleToUser ? 1 : 2));
         parcel.writeByte((byte) (isAvailable == null ? 0 : isAvailable ? 1 : 2));
+        parcel.writeByte((byte) (isVisibleToUser == null ? 0 : isVisibleToUser ? 1 : 2));
     }
 }

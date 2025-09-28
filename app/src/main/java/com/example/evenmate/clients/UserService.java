@@ -1,6 +1,7 @@
 package com.example.evenmate.clients;
 
 import com.example.evenmate.models.PaginatedResponse;
+import com.example.evenmate.models.service.Service;
 import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.user.CalendarItem;
@@ -70,7 +71,6 @@ public interface UserService {
     @PUT("users")
     Call<User> update(@Body UpdateUserRequest request);
 
-    //todo backend
     @Headers({
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
@@ -78,6 +78,13 @@ public interface UserService {
     @GET("users/{userId}/favorite-products")
     Call<PaginatedResponse<Product>> getFavoriteProducts(@Path("userId") Long userId, @Query("page") int page,
                                                      @Query("size") int size);
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("users/{userId}/favorite-services")
+    Call<PaginatedResponse<Service>> getFavoriteServices(@Path("userId") Long userId, @Query("page") int page,
+                                                         @Query("size") int size);
 
     @GET("users/{userId}")
     Call<User> getById(@Path("userId") Long userId);
