@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.asset.Product;
+import com.example.evenmate.models.chat.Chat;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,10 +79,25 @@ public class ProductDetailsViewModel extends ViewModel {
     }
 
     public void purchaseProduct() {
-        // TODO:
+        // TODO: Show dialog
     }
 
-    public void initiateChat() {
-        // TODO:
+    public void initiateChat(Long providerId) {
+        ClientUtils.chatService.initiateChat(providerId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Chat> call, Response<Chat> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(ClientUtils.getContext(), "Chat initiated, check your chats.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ClientUtils.getContext(), "Failed to initiate chat", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Chat> call, Throwable throwable) {
+                Log.e("ProductDetailsViewModel", "Failed to initiate chat", throwable);
+                Toast.makeText(ClientUtils.getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

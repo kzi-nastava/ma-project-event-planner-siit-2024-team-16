@@ -17,10 +17,12 @@ import androidx.navigation.Navigation;
 import com.example.evenmate.R;
 import com.example.evenmate.fragments.commentreview.AverageReviewFragment;
 import com.example.evenmate.fragments.commentreview.CommentsFragment;
+import com.example.evenmate.models.asset.Product;
 
 public class ProductDetailsFragment extends Fragment {
     private static final String ARG_PRODUCT_ID = "product_id";
     private ProductDetailsViewModel viewModel;
+    private Product product;
 
     public static ProductDetailsFragment newInstance(Long productId) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
@@ -55,6 +57,7 @@ public class ProductDetailsFragment extends Fragment {
         TextView priceNew = view.findViewById(R.id.product_price_new);
 
         viewModel.getProduct().observe(getViewLifecycleOwner(), product -> {
+            this.product = product;
             name.setText(product.getName());
             category.setText(product.getCategory().getName());
             description.setText(product.getDescription());
@@ -84,7 +87,7 @@ public class ProductDetailsFragment extends Fragment {
 
         btnFavorite.setOnClickListener(v -> viewModel.toggleFavorite(productId));
         btnPurchase.setOnClickListener(v -> viewModel.purchaseProduct());
-        btnChat.setOnClickListener(v -> viewModel.initiateChat());
+        btnChat.setOnClickListener(v -> viewModel.initiateChat(product.getProvider().getId()));
         layoutProviderInfo.setOnClickListener(v -> {
             Bundle args = new Bundle();
             args.putLong("userId", viewModel.getProduct().getValue().getProvider().getId());
