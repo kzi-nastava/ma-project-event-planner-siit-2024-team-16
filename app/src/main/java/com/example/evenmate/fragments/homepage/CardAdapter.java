@@ -39,8 +39,12 @@ public class CardAdapter {
         box4.setText(String.format("%s%s", fragment.getString(R.string.rating), asset.getAverageReview()));
         // image
         ImageView imageView = cardView.findViewById(R.id.image);
-        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(asset.getImages().get(0), "drawable", fragment.requireContext().getPackageName());
-        imageView.setImageResource(imageResId);
+
+        if (!asset.getImages().isEmpty()) {
+            int imageResId = fragment.getResources().getIdentifier(asset.getImages().get(0), "drawable", fragment.requireContext().getPackageName());
+            imageView.setImageResource(imageResId);
+        }
+
         // favorite
         Button favorite = cardView.findViewById(R.id.favorite);
         favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));

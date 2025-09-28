@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
-import com.example.evenmate.models.Service;
+import com.example.evenmate.models.service.Service;
 import com.google.android.material.chip.Chip;
 import java.util.List;
 import java.util.Locale;
@@ -40,11 +40,11 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceV
         Service service = services.get(position);
 
         holder.serviceName.setText(service.getName());
-        holder.serviceCategory.setText(service.getCategory());
+        holder.serviceCategory.setText(service.getCategory().getName());
         holder.servicePrice.setText(String.format(Locale.getDefault(), "$%.2f", service.getPrice()));
-        holder.serviceType.setText(service.getType());
-        holder.serviceStatus.setText(service.isAvailable() ? "Available" : "Unavailable");
-        holder.serviceImage.setImageResource(service.getImageResourceId());
+        holder.serviceType.setText(String.valueOf(service.getType()));
+        holder.serviceStatus.setText(service.getIsAvailable() ? "Available" : "Unavailable");
+//        holder.serviceImage.setImageResource(service.getImageResourceId());
 
         holder.itemView.setOnClickListener(v -> listener.onServiceClick(service));
     }
