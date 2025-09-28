@@ -1,6 +1,5 @@
 package com.example.evenmate.fragments.homepage;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +47,7 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             Asset asset = this.assets.get(position);
             // text
             String rating=asset.getAverageReview() != null? asset.getAverageReview().toString() : "0.0";
-            holder.setAll(asset.getName(),asset.getProvider().getAddress().getCountry(),asset.getCategory().getName(),asset.getPrice().toString(),rating,null,asset.getImages().get(0));
+            holder.setAll(asset.getName(),asset.getProvider().getAddress().getCountry(),asset.getCategory().getName(),asset.getPrice().toString(),rating,null, !asset.getImages().isEmpty() ? asset.getImages().get(0) : null);
             // click
             if (asset.getType().equals(AssetType.SERVICE)){
                 holder.itemView.setOnClickListener(v -> {
@@ -100,16 +99,19 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             box5 = itemView.findViewById(R.id.box5);
             image = itemView.findViewById(R.id.image);
         }
-        public void setAll(String title, String box1, String box2, String box3, String box4, @Nullable String box5, String image){
+        public void setAll(String title, String box1, String box2, String box3, String box4, @Nullable String box5, @Nullable String image){
             this.title.setText(title);
             this.box1.setText(box1);
             this.box2.setText(box2);
             this.box3.setText(box3);
             this.box4.setText(box4);
             this.box5.setText(box5);
-            String drawableName = Objects.requireNonNull(image).replace("@drawable/", "");
-            @SuppressLint("DiscouragedApi") int resourceId = this.itemView.getContext().getResources().getIdentifier(drawableName, "drawable", this.itemView.getContext().getPackageName());
-            this.image.setImageResource(resourceId);
+
+            if (image != null) {
+                String drawableName = Objects.requireNonNull(image).replace("@drawable/", "");
+                int resourceId = this.itemView.getContext().getResources().getIdentifier(drawableName, "drawable", this.itemView.getContext().getPackageName());
+                this.image.setImageResource(resourceId);
+            }
         }
 
     }
