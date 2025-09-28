@@ -1,6 +1,7 @@
 package com.example.evenmate.fragments.homepage;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.evenmate.R;
 import com.example.evenmate.activities.asset.ProductDetailsActivity;
 import com.example.evenmate.activities.asset.ServiceDetailsActivity;
-import com.example.evenmate.activities.event.EventDetailsActivity;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.event.Event;
@@ -71,9 +72,10 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             holder.setAll(event.getName(),event.getDate().toString(),event.getAddress().getCountry(),event.getType().getName(),String.format("%s",event.getMaxAttendees()),rating,event.getPhoto());
             // click
             holder.itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(holder.itemView.getContext(), EventDetailsActivity.class);
-                intent.putExtra("EVENT_ID", event.getId());
-                holder.itemView.getContext().startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("event", event);
+                Navigation.findNavController(v)
+                        .navigate(R.id.action_homeFragment_to_eventDetailsFragment, bundle);
             });
         }
     }

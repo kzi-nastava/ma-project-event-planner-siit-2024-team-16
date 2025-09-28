@@ -99,6 +99,9 @@ public class CardCollection extends Fragment {
     }
 
     private void loadCards() {
+        if (!isAdded() || getContext() == null) {
+            return;
+        }
         cardCollectionHolder.removeAllViews();
         if (events != null) {
             for (Event item : events) {
@@ -121,9 +124,13 @@ public class CardCollection extends Fragment {
             loadCards();
             loadLessButton.setEnabled(currentPage > 0);
             loadMoreButton.setEnabled(eventsList.size() == pageSize);
-            Toast.makeText(this.getContext(), getString(R.string.new_page) + " " + (currentPage + 1), Toast.LENGTH_SHORT).show();
+
+            if (isAdded()) {
+                Toast.makeText(getContext(), getString(R.string.new_page) + " " + (currentPage + 1), Toast.LENGTH_SHORT).show();
+            }
         }, eventFilters);
     }
+
     public void getEvents(Consumer<List<Event>> callback, @Nullable EventFilters filters) {
         Call<PaginatedResponse<Event>> call = ClientUtils.eventService.getAllEvents(
                 filters != null ? filters.getMinMaxGuests() : null,
@@ -193,7 +200,10 @@ public class CardCollection extends Fragment {
             loadCards();
             loadLessButton.setEnabled(currentPage > 0);
             loadMoreButton.setEnabled(assetsList.size() == pageSize);
-            Toast.makeText(this.getContext(), getString(R.string.new_page) + " " + (currentPage + 1), Toast.LENGTH_SHORT).show();
+
+            if (isAdded()) {
+                Toast.makeText(getContext(), getString(R.string.new_page) + " " + (currentPage + 1), Toast.LENGTH_SHORT).show();
+            }
         }, assetFilters);
     }
     public void getAssets(Consumer<List<Asset>> callback, @Nullable AssetFilters filters) {
