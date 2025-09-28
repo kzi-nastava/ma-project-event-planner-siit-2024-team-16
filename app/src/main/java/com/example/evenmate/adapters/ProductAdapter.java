@@ -48,6 +48,12 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         void onEditClick(Product product);
     }
 
+    @Setter
+    private OnCardClickListener onCardClickListener;
+    public interface OnCardClickListener {
+        void onCardClick(Product product);
+    }
+
     public ProductAdapter(Activity context, List<Product> products){
         super(context, R.layout.item_card_general, products);
         this.products = products;
@@ -113,6 +119,11 @@ public class ProductAdapter extends ArrayAdapter<Product> {
                     onDeleteClickListener.onDeleteClick(product);
                 }
             });
+            itemView.findViewById(R.id.card).setOnClickListener(v -> {
+                if (onCardClickListener != null) {
+                    onCardClickListener.onCardClick(product);
+                }
+            });
             User loggedInUser = AuthManager.loggedInUser;
             boolean isLoggedIn = loggedInUser!=null;
             boolean isProvider = isLoggedIn && loggedInUser.getRole().equals("ProductServiceProvider");
@@ -174,4 +185,3 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         });
     }
 }
-
