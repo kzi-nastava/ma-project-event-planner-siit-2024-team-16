@@ -72,6 +72,12 @@ public interface ProductService {
 
     @GET("products/{productId}")
     Call<Product> getById(@Path("productId") Long productId);
+
+    @GET("products/{productId}/favorite")
+    Call<Boolean> isFavorite(@Path("productId") Long productId);
+
+    @PUT("products/{productId}/favorite")
+    Call<Void> toggleFavorite(@Path("productId") Long productId);
 }
 
 
