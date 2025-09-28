@@ -106,6 +106,20 @@ public class ProfileFragment extends Fragment{
         setupClickListeners();
         updateUI();
         showProperButtons();
+
+        viewModel.getDeleteFailed().observe(getViewLifecycleOwner(), failed -> {
+            if (failed == null) return;
+            if (failed) {
+                ToastUtils.showCustomToast(requireContext(), "Delete failed: user has future events", true);
+            } else {
+                ToastUtils.showCustomToast(requireContext(), String.format("%s successfully deleted", user.getFirstName() + " " + user.getLastName()), false);
+                viewModel.resetDeleteFailed();
+                AuthManager.loggedInUser = null;
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigate(R.id.action_profile_to_HomepageFragment);
+            }
+        });
+
     }
 
     private void showProperButtons() {

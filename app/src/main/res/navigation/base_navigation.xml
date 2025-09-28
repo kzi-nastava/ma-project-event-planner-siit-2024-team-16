@@ -275,4 +275,27 @@
         <action android:id="@+id/action_servicesFragment_to_editServiceFragment"
             app:destination="@id/editServiceFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.example.evenmate.fragments.event.EventDetailsFragment"
+        android:label="EventDetailsFragment" >
+        <argument
+            android:name="event"
+            app:argType="com.example.evenmate.models.event.Event" />
+
+        <action
+            android:id="@+id/action_eventDetails_to_profileFragment"
+            app:destination="@id/profile" />
+    </fragment>
+
+    <fragment android:id="@+id/reports_approval_fragment"
+        android:name="com.example.evenmate.fragments.admin_approvals.ReportApprovalsFragment"
+        android:label="@string/reports_approval"
+        />
+    <fragment android:id="@+id/comments_approval_fragment"
+        android:name="com.example.evenmate.fragments.admin_approvals.CommentApprovalsFragment"
+        android:label="@string/comments_approval"
+        />
+
+
 </navigation>
