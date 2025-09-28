@@ -10,5 +10,17 @@
         android:layout_height="wrap_content"
         android:text="Service details fragment"
         android:textSize="18sp" />
+    <Button
+        android:id="@+id/reserve_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reserve_service"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="32dp"/>
+    <FrameLayout
+        android:padding="15dp"
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </FrameLayout>
