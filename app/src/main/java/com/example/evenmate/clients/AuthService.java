@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 import com.example.evenmate.models.user.LoginRequest;
 import com.example.evenmate.models.user.TokenResponse;
@@ -26,4 +27,11 @@ public interface AuthService {
     })
     @POST("auth/login")
     Call<TokenResponse> login(@Body LoginRequest request);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @POST("auth/register/{token}")
+    Call<User> quickRegister(@Path("token") String token, @Body User request);
 }

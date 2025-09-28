@@ -238,4 +238,7 @@
     <string name="max_price">Max Price</string>
     <string name="event_type">Event Type</string>
     <string name="clear">Clear</string>
+    <string name="waiting_for_token">Waiting for token...</string>
+    <string name="street_street_number_city_country">Street, Street Number, City, Country</string>
+    <string name="photo_url_optional">Photo URL (optional)</string>
 </resources>
