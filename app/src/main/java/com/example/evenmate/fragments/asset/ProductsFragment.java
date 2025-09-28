@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -84,6 +86,12 @@ public class ProductsFragment extends ListFragment {
                     })
                     .show()
             );
+            adapter.setOnCardClickListener(product -> {
+                Bundle args = new Bundle();
+                args.putLong("product_id", product.getId());
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.navigate(R.id.action_productsFragment_to_productDetailsFragment, args);
+            });
 
             setListAdapter(adapter);
             setupPagination();
