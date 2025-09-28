@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.evenmate.R;
 import com.example.evenmate.activities.CreateServiceActivity;
+import com.example.evenmate.adapters.ServiceAdapter;
 import com.example.evenmate.models.service.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +35,14 @@ public class ProviderServicesProductsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.servicesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-//        ServiceAdapter adapter = new ServiceAdapter(createMockServices(), service -> {
-////            navController.navigate(R.id.action_providerServicesProducts_to_serviceDetails, args);
-//            startActivity(new Intent(requireContext(), ServiceDetailsActivity.class));
-//        });
-//        recyclerView.setAdapter(adapter);
+        ServiceAdapter adapter = new ServiceAdapter(createMockServices(), service -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong("SERVICE_ID", service.getId());
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_providerServicesProducts_to_serviceDetailsFragment, bundle);
+        });
+        recyclerView.setAdapter(adapter);
+
 
         // Setup FAB
         view.findViewById(R.id.create_service_floating_button).setOnClickListener(v ->

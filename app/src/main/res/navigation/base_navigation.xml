@@ -27,7 +27,15 @@
         android:label="Your Products and Services"
         app:popUpTo="@+id/nav_products"
         app:popUpToInclusive="true"
-        tools:layout="@layout/fragment_provider_services_products" />
+        tools:layout="@layout/fragment_provider_services_products" >
+        <action
+            android:id="@+id/action_providerServicesProducts_to_serviceDetailsFragment"
+            app:destination="@+id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_providerServicesProducts_to_editServiceFragment"
+            app:destination="@+id/editServiceFragment"/>
+    </fragment>
+
     <fragment
         android:id="@+id/eventTypesFragment"
         android:name="com.example.evenmate.fragments.event_type.EventTypesFragment"
@@ -128,7 +136,7 @@
     </fragment>
     <fragment
         android:id="@+id/productsFragment"
-        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
         android:label="@string/products"
         tools:layout="@layout/fragment_products" >
         <argument
@@ -179,7 +187,7 @@
         tools:layout="@layout/fragment_price_list" />
     <fragment
         android:id="@+id/favoriteProductsFragment"
-        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
         android:label="@string/favorite_products"
         tools:layout="@layout/fragment_products" >
         <argument
@@ -189,7 +197,7 @@
     </fragment>
     <fragment
         android:id="@+id/yourProductsFragment"
-        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
         android:label="@string/your_products"
         tools:layout="@layout/fragment_products" >
         <argument
@@ -224,7 +232,7 @@
 
     <fragment
         android:id="@+id/productDetailsFragment"
-        android:name="com.example.evenmate.fragments.asset.ProductDetailsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductDetailsFragment"
         android:label="ProductDetailsFragment" >
         <argument
             android:name="product"

@@ -1,7 +1,11 @@
 package com.example.evenmate.fragments.homepage;
 
+import static java.security.AccessController.getContext;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.asset.AssetType;
@@ -101,18 +106,31 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             box5 = itemView.findViewById(R.id.box5);
             image = itemView.findViewById(R.id.image);
         }
-        public void setAll(String title, String box1, String box2, String box3, String box4, @Nullable String box5, @Nullable String image){
-            this.title.setText(title);
-            this.box1.setText(box1);
-            this.box2.setText(box2);
-            this.box3.setText(box3);
-            this.box4.setText(box4);
-            this.box5.setText(box5);
+        public void setAll(String titleText, String box1Text, String box2Text, String box3Text, String box4Text, @Nullable String box5Text, @Nullable String imageStr) {
+            title.setText(titleText);
+            box1.setText(box1Text);
+            box2.setText(box2Text);
+            box3.setText(box3Text);
+            box4.setText(box4Text);
+            box5.setText(box5Text != null ? box5Text : "");
+            Context context = itemView.getContext();
 
-            if (image != null) {
-                String drawableName = Objects.requireNonNull(image).replace("@drawable/", "");
-                int resourceId = this.itemView.getContext().getResources().getIdentifier(drawableName, "drawable", this.itemView.getContext().getPackageName());
-                this.image.setImageResource(resourceId);
+            if (imageStr != null && !imageStr.isEmpty()) {
+                if (imageStr.startsWith("http") || imageStr.contains("/")) {
+                    Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(image);
+                } else {
+                    try {
+                        if (imageStr.contains(",")) {
+                            imageStr = imageStr.substring(imageStr.indexOf(",") + 1);
+                        }
+                        byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
+                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(image);
+                    } catch (IllegalArgumentException e) {
+                        image.setImageResource(R.drawable.no_img);
+                    }
+                }
+            } else {
+                image.setImageResource(R.drawable.no_img);
             }
         }
 

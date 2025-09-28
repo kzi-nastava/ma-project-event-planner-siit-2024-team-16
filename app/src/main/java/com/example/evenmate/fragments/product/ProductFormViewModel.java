@@ -1,4 +1,4 @@
-package com.example.evenmate.fragments.asset;
+package com.example.evenmate.fragments.product;
 import android.util.Log;
 
 import androidx.annotation.NonNull;

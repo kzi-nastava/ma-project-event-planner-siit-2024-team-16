@@ -1,8 +1,8 @@
 package com.example.evenmate.fragments.homepage;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.Button;
 import android.widget.Toast;
 import android.view.View;
@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.asset.AssetType;
@@ -37,11 +38,21 @@ public class CardAdapter {
         box4.setText(String.format("%s%s", fragment.getString(R.string.rating), asset.getAverageReview()));
         // image
         ImageView imageView = cardView.findViewById(R.id.image);
-
-        if (!asset.getImages().isEmpty()) {
-            int imageResId = fragment.getResources().getIdentifier(asset.getImages().get(0), "drawable", fragment.requireContext().getPackageName());
-            imageView.setImageResource(imageResId);
-        }
+        if (asset.getImages() != null && !asset.getImages().isEmpty()) {
+            String imageStr = asset.getImages().get(0);
+            Context context = fragment.getContext();
+            if (context != null) {
+                if (imageStr.contains("http") || imageStr.contains("/")) {
+                    Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(imageView);
+                } else {
+                    try {
+                        if (imageStr.contains(",")) {imageStr = imageStr.substring(imageStr.indexOf(",") + 1);}
+                        byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
+                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(imageView);
+                    } catch (IllegalArgumentException e) {imageView.setImageResource(R.drawable.no_img);}
+                }
+            } else {imageView.setImageResource(R.drawable.no_img);}
+        } else {imageView.setImageResource(R.drawable.no_img);}
 
         // favorite
         Button favorite = cardView.findViewById(R.id.favorite);
@@ -86,8 +97,24 @@ public class CardAdapter {
         box5.setText(String.format("%s%s", fragment.getString(R.string.rating), event.getRating()==null?0.0:event.getRating()));
         // image
         ImageView imageView = cardView.findViewById(R.id.image);
-        @SuppressLint("DiscouragedApi") int imageResId = fragment.getResources().getIdentifier(event.getPhoto(), "drawable", fragment.requireContext().getPackageName());
-        imageView.setImageResource(imageResId);
+        if (event.getPhoto() != null && !event.getPhoto().isEmpty()) {
+            String imageStr = event.getPhoto();
+            Context context = fragment.getContext();
+            if (context != null) {
+                if (imageStr.contains("http") || imageStr.contains("/")) {
+                    Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(imageView);
+                } else {
+                    try {
+                        if (imageStr.contains(",")) {
+                            imageStr = imageStr.substring(imageStr.indexOf(",") + 1);
+                        }
+                        byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
+                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(imageView);
+                    } catch (IllegalArgumentException e) {imageView.setImageResource(R.drawable.no_img);}
+                }
+            } else {imageView.setImageResource(R.drawable.no_img);}
+        } else {imageView.setImageResource(R.drawable.no_img);}
+
         // favorite
         Button favorite = cardView.findViewById(R.id.favorite);
         favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
