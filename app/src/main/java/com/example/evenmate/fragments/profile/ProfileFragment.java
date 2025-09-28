@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,13 +27,17 @@ import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.FragmentProfileBinding;
 import com.example.evenmate.fragments.commentreview.AverageReviewFragment;
 import com.example.evenmate.fragments.commentreview.CommentsFragment;
+import com.example.evenmate.fragments.map.MapFragment;
 import com.example.evenmate.models.Address;
 import com.example.evenmate.models.user.Block;
 import com.example.evenmate.models.user.Company;
 import com.example.evenmate.models.user.Report;
 import com.example.evenmate.models.user.User;
+import com.example.evenmate.utils.MapUtils;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import org.osmdroid.util.GeoPoint;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,24 +66,26 @@ public class ProfileFragment extends Fragment{
         if (getArguments() != null && getArguments().containsKey("userId")) {
             String userIdStr = getArguments().getString("userId");
             Long userId = userIdStr != null ? Long.parseLong(userIdStr) : null;
-            if (userId != null && !userId.equals(AuthManager.loggedInUser.getId())) {
-                ClientUtils.userService.getUserById(userId).enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        user = response.body();
-                        if (user != null) {
-                            setupClickListeners();
-                            updateUI();
-                            showProperButtons();
+            if (userId != null) {
+                if (AuthManager.loggedInUser == null || !userId.equals(AuthManager.loggedInUser.getId())) {
+                    ClientUtils.userService.getUserById(userId).enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            user = response.body();
+                            if (user != null) {
+                                setupClickListeners();
+                                updateUI();
+                                showProperButtons();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-                        ToastUtils.showCustomToast(requireContext(), "Cannot load user", true);
-                    }
-                });
-                return;
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            ToastUtils.showCustomToast(requireContext(), "Cannot load user", true);
+                        }
+                    });
+                    return;
+                }
             }
         }
 
@@ -101,7 +109,7 @@ public class ProfileFragment extends Fragment{
     }
 
     private void showProperButtons() {
-        if (user.getId().equals(AuthManager.loggedInUser.getId())) {
+        if (AuthManager.loggedInUser != null && user.getId().equals(AuthManager.loggedInUser.getId())) {
             binding.btnEditProfile.setVisibility(View.VISIBLE);
             binding.btnDeleteUser.setVisibility(View.VISIBLE);
             binding.btnReportUser.setVisibility(View.GONE);
@@ -112,6 +120,8 @@ public class ProfileFragment extends Fragment{
             binding.btnReportUser.setVisibility(View.VISIBLE);
             binding.btnBlockUser.setVisibility(View.VISIBLE);
         }
+        binding.companyAddressMap.setVisibility(ViewGroup.GONE);
+        binding.userAddressMap.setVisibility(ViewGroup.GONE);
     }
 
     private void setupClickListeners() {
@@ -193,6 +203,40 @@ public class ProfileFragment extends Fragment{
                             checkBlockStatus();
                         }
                     });
+        });
+
+        TextView addressView = binding.address;
+        addressView.setOnClickListener(v -> {
+            String fullAddress = addressView.getText().toString();
+            if (fullAddress != null && !fullAddress.trim().isEmpty()) {
+                binding.userAddressMap.setVisibility(ViewGroup.VISIBLE);
+                MapFragment mapFragment = MapFragment.newInstance(fullAddress, "User Address");
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.user_address_map, mapFragment)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                Toast.makeText(getContext(), "Address not available", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        TextView companyAddressView = binding.companyAddress;
+        companyAddressView.setOnClickListener(v -> {
+            String fullAddress = companyAddressView.getText().toString();
+            if (fullAddress != null && !fullAddress.trim().isEmpty()) {
+                binding.companyAddressMap.setVisibility(ViewGroup.VISIBLE);
+                MapFragment mapFragment = MapFragment.newInstance(fullAddress, "Company Address");
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.company_address_map, mapFragment)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                Toast.makeText(getContext(), "Address not available", Toast.LENGTH_SHORT).show();
+            }
         });
 
     }
