@@ -245,4 +245,6 @@
     <string name="waiting_for_token">Waiting for token...</string>
     <string name="street_street_number_city_country">Street, Street Number, City, Country</string>
     <string name="photo_url_optional">Photo URL (optional)</string>
+    <string name="purchase">Purchase</string>
+    <string name="company">Company</string>
 </resources>

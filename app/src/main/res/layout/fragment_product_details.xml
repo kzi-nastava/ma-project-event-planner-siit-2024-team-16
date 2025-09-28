@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btn_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/favorite"/>
+
+        <TextView
+            android:id="@+id/product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/product_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"/>
+
+        <FrameLayout
+            android:id="@+id/product_average_review_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_purchase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/purchase"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btn_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/chat"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tv_description_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/description"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+        <TextView
+            android:id="@+id/product_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout_provider_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/darker_gray"
+            android:padding="8dp"
+            android:layout_marginTop="16dp">
+            <TextView
+                android:id="@+id/tv_provider_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/company"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/product_provider_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/product_provider_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+            <TextView
+                android:id="@+id/product_price_old"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/product_price_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/product_comments_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>
+
