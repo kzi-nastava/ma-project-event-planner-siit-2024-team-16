@@ -209,6 +209,10 @@
     <string name="user_name_role">User Name (Role)</string>
     <string name="report_reason">Report reason</string>
     <string name="reports_approval">Reports approval</string>
+    <string name="pending_comments">PENDING COMMENTS</string>
+    <string name="comment_text">Comment text</string>
+    <string name="comment_user_date">Comment User Date</string>
+    <string name="comments_approval">Comments approval</string>
     <string name="service_name">Service Name</string>
     <string name="add_event_type">Add Event Type</string>
     <string name="distinctiveness">Distinctiveness</string>

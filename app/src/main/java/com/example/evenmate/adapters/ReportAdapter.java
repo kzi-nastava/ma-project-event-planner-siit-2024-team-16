@@ -60,11 +60,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportView
         return reports.size();
     }
 
-    public void setReports(List<Report> reports) {
-        this.reports = reports;
-        notifyDataSetChanged();
-    }
-
     private void approveReport(Report report) {
         ClientUtils.userService.approveReport(report.getId()).enqueue(new Callback<Void>() {
             @Override
