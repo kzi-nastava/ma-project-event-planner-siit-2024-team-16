@@ -185,6 +185,8 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="YOUR_PRODUCTS"/>
+        <action android:id="@+id/action_productsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/addServiceFragment"
@@ -217,5 +219,16 @@
         <argument
             android:name="event"
             app:argType="com.example.evenmate.models.event.Event" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductDetailsFragment"
+        android:label="ProductDetailsFragment" >
+        <argument
+            android:name="product_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_profileFragment"
+            app:destination="@id/profile" />
     </fragment>
 </navigation>
