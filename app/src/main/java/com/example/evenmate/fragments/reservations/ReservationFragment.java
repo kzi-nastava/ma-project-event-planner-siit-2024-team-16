@@ -1,6 +1,7 @@
 package com.example.evenmate.fragments.reservations;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.example.evenmate.models.event.Event;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.asset.ReservationRequest;
 import com.example.evenmate.models.asset.Reservation;
+
+import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -129,7 +132,12 @@ public class ReservationFragment extends Fragment {
                         String errorMessage = "Failed to create reservation";
                         if (response.errorBody() != null) {
                             try {
-                                errorMessage = response.errorBody().string();
+                                String errorJson = response.errorBody() != null ? response.errorBody().string() : null;
+                                if (errorJson != null) {
+                                    JSONObject obj = new JSONObject(errorJson);
+                                    String rawMsg = obj.optString("message");
+                                    errorMessage= rawMsg.replaceAll(".*\"(.*)\".*", "$1");
+                                }
                             } catch (Exception ignored) {}
                         }
                         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show();

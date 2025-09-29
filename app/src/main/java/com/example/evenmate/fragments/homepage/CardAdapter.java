@@ -56,7 +56,7 @@ public class CardAdapter {
 
         // favorite
         Button favorite = cardView.findViewById(R.id.favorite);
-        favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
+        favorite.setVisibility(View.GONE);
         // click
         if (asset.getType().equals(AssetType.SERVICE)) {
             cardView.setOnClickListener(v -> {
@@ -117,7 +117,7 @@ public class CardAdapter {
 
         // favorite
         Button favorite = cardView.findViewById(R.id.favorite);
-        favorite.setOnClickListener(v -> makeFavorite(fragment, favorite));
+        favorite.setVisibility(View.GONE);
         // click
         cardView.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -125,10 +125,5 @@ public class CardAdapter {
             Navigation.findNavController(v)
                     .navigate(R.id.action_homeFragment_to_eventDetailsFragment, bundle);
         });
-    }
-    public void makeFavorite(Fragment fragment, Button favorite) {
-        favorite.setSelected(!favorite.isSelected());
-        String message = favorite.isSelected() ? "SELECTED A FAVORITE" : "UN-SELECTED A FAVORITE";
-        Toast.makeText(fragment.getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
