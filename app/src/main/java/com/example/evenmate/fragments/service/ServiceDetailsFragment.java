@@ -131,6 +131,6 @@ public class ServiceDetailsFragment extends Fragment {
         bundle.putLong("service_id", service.getId());
 
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-        navController.navigate(R.id.action_serviceDetailsFragment_to_reservationFragment);
+        navController.navigate(R.id.action_serviceDetailsFragment_to_reservationFragment,bundle);
     }
 }
