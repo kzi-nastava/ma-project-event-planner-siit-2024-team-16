@@ -17,7 +17,6 @@ import com.example.evenmate.adapters.CategorySuggestionAdapter;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.category.CategoryRequest;
 import com.example.evenmate.models.category.CategorySuggestion;
-import com.example.evenmate.viewmodels.CategoryViewModel;
 import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 import java.util.List;

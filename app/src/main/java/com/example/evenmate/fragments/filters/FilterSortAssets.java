@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.evenmate.R;
 import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.fragments.product.ProductsFragment;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.Location;
 import com.example.evenmate.models.PaginatedResponse;
@@ -39,6 +41,7 @@ public class FilterSortAssets extends Fragment {
     private Button availableFromButton;
     private Button availableToButton;
     private Button sortButton;
+    private LinearLayout switchPs;
     private SwitchCompat showOnlyServicesSwitch, showOnlyProductsSwitch;
     private RangeSlider priceRangeSlider, ratingRangeSlider;
     private TextView priceValue, ratingValue;
@@ -104,6 +107,7 @@ public class FilterSortAssets extends Fragment {
         locationsButton = view.findViewById(R.id.locations_button);
 
         sortButton = view.findViewById(R.id.sort_button);
+        switchPs = view.findViewById(R.id.switch_ps);
 
         loadCategoriesFromBackend();
         loadProvidersFromBackend();
@@ -114,10 +118,18 @@ public class FilterSortAssets extends Fragment {
         setupDatePickers();
         setupSortDialog();
         setupApplyButton(view);
+        setupSwitch();
 
         resetButton.setOnClickListener(v -> resetFilters());
 
         return view;
+    }
+
+    private void setupSwitch() {
+        Fragment parent = getParentFragment();
+        if (parent instanceof ProductsFragment) {
+            switchPs.setVisibility(View.GONE);
+        }
     }
 
     private void setupRangeSliderListeners() {

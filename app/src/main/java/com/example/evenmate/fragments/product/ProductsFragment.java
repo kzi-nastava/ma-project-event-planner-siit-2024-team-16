@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -84,6 +86,12 @@ public class ProductsFragment extends ListFragment {
                     })
                     .show()
             );
+            adapter.setOnCardClickListener(product -> {
+                Bundle args = new Bundle();
+                args.putLong("product_id", product.getId());
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.navigate(R.id.action_productsFragment_to_productDetailsFragment, args);
+            });
 
             setListAdapter(adapter);
             setupPagination();
@@ -94,10 +102,9 @@ public class ProductsFragment extends ListFragment {
         }
 
         private void setupFilterAndSearch() {
-            SearchView searchView = binding.getRoot().findViewById(R.id.search_bar);
-            Button filterButton = binding.getRoot().findViewById(R.id.filter);
-            filterContainer = binding.getRoot().findViewById(R.id.filter_container);
-
+            SearchView searchView = binding.searchBar;
+            Button filterButton = binding.filter;
+            filterContainer = binding.filterContainer;
             if(this.fetchMode.equals("FAVORITES")){
                 searchView.setVisibility(View.GONE);
                 filterContainer.setVisibility(View.GONE);

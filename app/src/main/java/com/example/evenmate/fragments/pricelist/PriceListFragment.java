@@ -18,7 +18,7 @@ import com.example.evenmate.adapters.PriceListAdapter;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.pricelist.PriceListItem;
-import com.example.evenmate.viewmodels.PriceListViewModel;
+import com.example.evenmate.utils.ErrorUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import java.io.File;
@@ -102,7 +102,7 @@ public class PriceListFragment extends Fragment implements PriceListAdapter.OnPr
                         Toast.makeText(requireContext(), "Failed to download PDF", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Failed to download PDF", Toast.LENGTH_SHORT).show();
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
             @Override

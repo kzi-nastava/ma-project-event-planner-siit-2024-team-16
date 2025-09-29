@@ -1,5 +1,7 @@
 package com.example.evenmate.fragments.homepage;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Base64;
@@ -42,13 +44,13 @@ public class CardAdapter {
             String imageStr = asset.getImages().get(0);
             Context context = fragment.getContext();
             if (context != null) {
-                if (imageStr.contains("http") || imageStr.contains("/")) {
+                if (imageStr.contains("http")) {
                     Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(imageView);
                 } else {
                     try {
                         if (imageStr.contains(",")) {imageStr = imageStr.substring(imageStr.indexOf(",") + 1);}
                         byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
-                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(imageView);
+                        Glide.with(context).asBitmap().load(decoded).into(imageView);
                     } catch (IllegalArgumentException e) {imageView.setImageResource(R.drawable.no_img);}
                 }
             } else {imageView.setImageResource(R.drawable.no_img);}
@@ -61,7 +63,7 @@ public class CardAdapter {
         if (asset.getType().equals(AssetType.SERVICE)) {
             cardView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
-                bundle.putLong("SERVICE_ID", asset.getId());
+                bundle.putLong("service_id", asset.getId());
                 Navigation.findNavController(v)
                         .navigate(R.id.action_homeFragment_to_serviceDetailsFragment, bundle);
             });
@@ -69,7 +71,7 @@ public class CardAdapter {
         else if (asset.getType().equals(AssetType.PRODUCT)) {
             cardView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
-                bundle.putLong("PRODUCT_ID", asset.getId());
+                bundle.putLong("product_id", asset.getId());
                 Navigation.findNavController(v)
                         .navigate(R.id.action_homeFragment_to_productDetailsFragment, bundle);
             });
@@ -101,7 +103,7 @@ public class CardAdapter {
             String imageStr = event.getPhoto();
             Context context = fragment.getContext();
             if (context != null) {
-                if (imageStr.contains("http") || imageStr.contains("/")) {
+                if (imageStr.contains("http")) {
                     Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(imageView);
                 } else {
                     try {

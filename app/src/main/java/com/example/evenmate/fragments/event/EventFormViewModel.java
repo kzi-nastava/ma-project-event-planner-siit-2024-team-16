@@ -14,6 +14,8 @@ import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.event.EventRequest;
 import com.example.evenmate.models.event.EventType;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -77,7 +79,19 @@ public class EventFormViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     success.postValue("Event successfully created.");
                 } else {
-                    errorMessage.postValue("Failed to add event. Code: " + response.code());
+                    try {
+                        String errorJson = response.errorBody() != null ? response.errorBody().string() : null;
+                        if (errorJson != null) {
+                            JSONObject obj = new JSONObject(errorJson);
+                            String rawMsg = obj.optString("message");
+                            String cleanMsg = rawMsg.replaceAll(".*\"(.*)\".*", "$1");
+                            errorMessage.postValue(cleanMsg);
+                            Log.d("ref", cleanMsg);
+                        }
+                    } catch (Exception e) {
+                        errorMessage.postValue("Failed to parse error body");
+
+                    }
                 }
             }
 
@@ -96,7 +110,19 @@ public class EventFormViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     success.postValue("Event successfully updated.");
                 } else {
-                    errorMessage.postValue("Failed to update event. Code: " + response.code());
+                    try {
+                        String errorJson = response.errorBody() != null ? response.errorBody().string() : null;
+                        if (errorJson != null) {
+                            JSONObject obj = new JSONObject(errorJson);
+                            String rawMsg = obj.optString("message");
+                            String cleanMsg = rawMsg.replaceAll(".*\"(.*)\".*", "$1");
+                            errorMessage.postValue(cleanMsg);
+                            Log.d("ref", cleanMsg);
+                        }
+                    } catch (Exception e) {
+                        errorMessage.postValue("Failed to parse error body");
+
+                    }
                 }
             }
 

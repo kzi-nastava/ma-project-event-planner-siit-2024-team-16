@@ -104,7 +104,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
             if (event.getPhoto() != null && !event.getPhoto().isEmpty()) {
                 String imageStr = event.getPhoto();
                 Context context = this.getContext();
-                if (imageStr.contains("http") || imageStr.contains("/")) {
+                if (imageStr.contains("http")) {
                     Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(imageView);
                 } else {
                     try {
@@ -112,7 +112,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
                             imageStr = imageStr.substring(imageStr.indexOf(",") + 1);
                         }
                         byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
-                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(imageView);
+                        Glide.with(context).asBitmap().load(decoded).into(imageView);
                     } catch (IllegalArgumentException e) {imageView.setImageResource(R.drawable.no_img);}
                 }
             } else {imageView.setImageResource(R.drawable.no_img);}

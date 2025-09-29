@@ -19,6 +19,7 @@ import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.commentreview.Comment;
 import com.example.evenmate.models.commentreview.CommentCreate;
+import com.example.evenmate.utils.ErrorUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
@@ -108,35 +109,37 @@ public class CommentsFragment extends Fragment {
             return;
         }
         if (assetId != null) {
-            ClientUtils.commentReviewService.commentAsset(assetId, new CommentCreate(text)).enqueue(new Callback<Comment>() {
+            ClientUtils.commentReviewService.commentAsset(assetId, new CommentCreate(text)).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Comment> call, Response<Comment> response) {
+                public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
+                        Toast.makeText(requireContext(), "Comment added successfully", Toast.LENGTH_SHORT).show();
                         inputComment.setText("");
                         loadComments();
                     } else {
-                        Toast.makeText(requireContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
+                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                     }
                 }
                 @Override
-                public void onFailure(Call<Comment> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     Log.e("CommentsFragment", "Failed to add comment", t);
                     Toast.makeText(requireContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
                 }
             });
         } else if (userId != null) {
-            ClientUtils.commentReviewService.commentProvider(userId, new CommentCreate(text)).enqueue(new Callback<Comment>() {
+            ClientUtils.commentReviewService.commentProvider(userId, new CommentCreate(text)).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Comment> call, Response<Comment> response) {
+                public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
+                        Toast.makeText(requireContext(), "Comment added successfully", Toast.LENGTH_SHORT).show();
                         inputComment.setText("");
                         loadComments();
                     } else {
-                        Toast.makeText(requireContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
+                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                     }
                 }
                 @Override
-                public void onFailure(Call<Comment> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     Log.e("CommentsFragment", "Failed to add comment", t);
                     Toast.makeText(requireContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
                 }

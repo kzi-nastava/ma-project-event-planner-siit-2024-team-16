@@ -56,7 +56,7 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             if (asset.getType().equals(AssetType.SERVICE)) {
                 holder.itemView.setOnClickListener(v -> {
                     Bundle bundle = new Bundle();
-                    bundle.putLong("SERVICE_ID", asset.getId());
+                    bundle.putLong("service_id", asset.getId());
                     Navigation.findNavController(v)
                             .navigate(R.id.action_homeFragment_to_serviceDetailsFragment, bundle);
                 });
@@ -64,7 +64,7 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             else if (asset.getType().equals(AssetType.PRODUCT)) {
                 holder.itemView.setOnClickListener(v -> {
                     Bundle bundle = new Bundle();
-                    bundle.putLong("PRODUCT_ID", asset.getId());
+                    bundle.putLong("product_id", asset.getId());
                     Navigation.findNavController(v)
                             .navigate(R.id.action_homeFragment_to_productDetailsFragment, bundle);
                 });
@@ -116,7 +116,7 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
             Context context = itemView.getContext();
 
             if (imageStr != null && !imageStr.isEmpty()) {
-                if (imageStr.startsWith("http") || imageStr.contains("/")) {
+                if (imageStr.contains("http")) {
                     Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(image);
                 } else {
                     try {
@@ -124,14 +124,10 @@ public class TopCardAdapter extends RecyclerView.Adapter<TopCardAdapter.CardView
                             imageStr = imageStr.substring(imageStr.indexOf(",") + 1);
                         }
                         byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
-                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(image);
-                    } catch (IllegalArgumentException e) {
-                        image.setImageResource(R.drawable.no_img);
-                    }
+                        Glide.with(context).asBitmap().load(decoded).into(image);
+                    } catch (IllegalArgumentException e) {image.setImageResource(R.drawable.no_img);}
                 }
-            } else {
-                image.setImageResource(R.drawable.no_img);
-            }
+            } else {image.setImageResource(R.drawable.no_img);}
         }
 
     }

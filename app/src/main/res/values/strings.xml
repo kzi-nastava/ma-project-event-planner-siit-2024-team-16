@@ -28,7 +28,7 @@
     <string name="search">Search…</string>
     <string name="sort">SORT</string>
     <string name="filter">FILTER</string>
-    <string name="chat">chat</string>
+    <string name="chat">Chat</string>
     <string name="location">"Location: "</string>
     <string name="category">"Category: "</string>
     <string name="date">"Date: "</string>
@@ -250,4 +250,19 @@
     <string name="waiting_for_token">Waiting for token...</string>
     <string name="street_street_number_city_country">Street, Street Number, City, Country</string>
     <string name="photo_url_optional">Photo URL (optional)</string>
+    <string name="purchase">Purchase</string>
+    <string name="company">Company</string>
+    <string name="reserve">Reserve</string>
+    <string name="length">Length</string>
+    <string name="event">Event</string>
+    <string name="budget_planner">Budget Planner</string>
+    <string name="details">Details</string>
+    <string name="amount">Amount</string>
+    <string name="input_amount">Input amount</string>
+    <string name="assets">Assets</string>
+    <string name="total_amount">Total Amount:</string>
+    <string name="edit_budget_item">Edit Budget Item</string>
+    <string name="budget_planning">Budget Planning</string>
+    <string name="max_budget">Max Budget:</string>
+    <string name="add_item">Add Item</string>
 </resources>

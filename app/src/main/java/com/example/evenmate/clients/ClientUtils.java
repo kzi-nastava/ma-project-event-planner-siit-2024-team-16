@@ -21,6 +21,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ClientUtils {
     public static final String BASE_URL = "http://" + BuildConfig.IP_ADDR + ":8080";
+    public static final String WEBSOCKET_URL = "ws://" + BuildConfig.IP_ADDR + ":8080/ws";
+
     public static final String SERVICE_API_PATH = BASE_URL + "/api/v1/";
     @Getter
     private static Context context;
@@ -39,6 +41,7 @@ public class ClientUtils {
     public static PriceListService priceListService;
     public static CommentReviewService commentReviewService;
     public static ServiceService serviceService;
+    public static BudgetService budgetService;
 
     public static void init(Context appContext) {
         context = appContext.getApplicationContext();
@@ -60,6 +63,7 @@ public class ClientUtils {
         priceListService = getRetrofit().create(PriceListService.class);
         commentReviewService = getRetrofit().create(CommentReviewService.class);
         serviceService = getRetrofit().create(ServiceService.class);
+        budgetService = getRetrofit().create(BudgetService.class);
     }
 
     private static OkHttpClient createHttpClient() {

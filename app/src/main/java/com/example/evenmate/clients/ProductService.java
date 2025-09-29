@@ -3,6 +3,7 @@ package com.example.evenmate.clients;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.asset.ProductRequest;
+import com.example.evenmate.models.asset.PurchaseRequest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -56,19 +57,17 @@ public interface ProductService {
     @DELETE("products/{id}")
     Call<Object> delete(@Path("id") Long id);
 
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
-    @PUT("products/{productId}/favorite")
-    Call<Void> favoriteProductToggle(@Path("productId") Long productId);
+    @GET("products/{productId}")
+    Call<Product> getById(@Path("productId") Long productId);
 
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
     @GET("products/{productId}/favorite")
-    Call<Boolean> checkIsProductFavorite(@Path("productId") Long productId);
+    Call<Boolean> isFavorite(@Path("productId") Long productId);
+
+    @PUT("products/{productId}/favorite")
+    Call<Void> toggleFavorite(@Path("productId") Long productId);
+
+    @POST("products/{productId}/buy")
+    Call<Void> buyProduct(@Path("productId") Long productId, @Body PurchaseRequest purchaseRequest);
 }
 
 

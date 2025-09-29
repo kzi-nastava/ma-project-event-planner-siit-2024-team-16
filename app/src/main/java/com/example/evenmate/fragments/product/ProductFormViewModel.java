@@ -11,6 +11,7 @@ import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.asset.ProductRequest;
+import com.example.evenmate.utils.ErrorUtils;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class ProductFormViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     success.postValue("Product successfully created.");
                 } else {
-                    errorMessage.postValue("Failed to add product. Code: " + response.code());
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -87,7 +88,7 @@ public class ProductFormViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     success.postValue("Product successfully updated.");
                 } else {
-                    errorMessage.postValue("Failed to update product. Code: " + response.code());
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 

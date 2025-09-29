@@ -126,12 +126,12 @@ public class HomepageFragment extends Fragment {
         if (isChecked) {
             manager.beginTransaction().replace(R.id.top_5, top5ServicesAndProducts,"top5ServicesAndProducts").commit();
             manager.beginTransaction().replace(R.id.all, allServicesAndProducts,"allServicesAndProducts").commit();
-            Toast.makeText(requireContext(), R.string.services_and_products, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(requireContext(), R.string.services_and_products, Toast.LENGTH_SHORT).show();
             searchView.setQuery("", false);
         } else {
             manager.beginTransaction().replace(R.id.top_5, top5Events,"top5Events").commit();
             manager.beginTransaction().replace(R.id.all, allEvents,"allEvents").commit();
-            Toast.makeText(requireContext(), R.string.events, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(requireContext(), R.string.events, Toast.LENGTH_SHORT).show();
             searchView.setQuery("", false);
         }
         updateSwitchColors(isChecked);

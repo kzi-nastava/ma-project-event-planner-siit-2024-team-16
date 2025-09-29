@@ -48,6 +48,12 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         void onEditClick(Product product);
     }
 
+    @Setter
+    private OnCardClickListener onCardClickListener;
+    public interface OnCardClickListener {
+        void onCardClick(Product product);
+    }
+
     public ProductAdapter(Activity context, List<Product> products){
         super(context, R.layout.item_card_general, products);
         this.products = products;
@@ -96,7 +102,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
 
             if (product.getImages() != null && !product.getImages().isEmpty()) {
                 String imageStr = product.getImages().get(0);
-                if (imageStr.contains("http") || imageStr.contains("/")) {
+                if (imageStr.contains("http")) {
                     Glide.with(getContext()).load(imageStr).placeholder(R.drawable.no_img).into(imageView);
                 } else {
                     try {
@@ -104,7 +110,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
                             imageStr = imageStr.substring(imageStr.indexOf(",") + 1);
                         }
                         byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
-                        Glide.with(getContext()).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(imageView);
+                        Glide.with(getContext()).asBitmap().load(decoded).into(imageView);
                     } catch (IllegalArgumentException e) {
                         imageView.setImageResource(R.drawable.no_img);
                     }
@@ -121,6 +127,11 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             btnDelete.setOnClickListener(v -> {
                 if (onDeleteClickListener != null) {
                     onDeleteClickListener.onDeleteClick(product);
+                }
+            });
+            itemView.findViewById(R.id.card).setOnClickListener(v -> {
+                if (onCardClickListener != null) {
+                    onCardClickListener.onCardClick(product);
                 }
             });
             User loggedInUser = AuthManager.loggedInUser;
@@ -143,7 +154,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     }
 
     private void checkFavoriteStatus(Long productId, MaterialButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.productService.checkIsProductFavorite(productId);
+        retrofit2.Call<Boolean> call = ClientUtils.productService.isFavorite(productId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
@@ -165,7 +176,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     }
 
     private void changeFavoriteStatus(Long productId, MaterialButton btnFavorite) {
-        retrofit2.Call<Void> call = ClientUtils.productService.favoriteProductToggle(productId);
+        retrofit2.Call<Void> call = ClientUtils.productService.toggleFavorite(productId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
@@ -184,4 +195,3 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         });
     }
 }
-

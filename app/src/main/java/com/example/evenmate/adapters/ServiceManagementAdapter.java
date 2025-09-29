@@ -18,6 +18,7 @@ public class ServiceManagementAdapter extends RecyclerView.Adapter<ServiceManage
     private final List<Service> services;
     private final EditListener editListener;
     private final DeleteListener deleteListener;
+    private final ClickListener clickListener;
 
     public interface EditListener {
         void onEdit(Service service);
@@ -25,11 +26,15 @@ public class ServiceManagementAdapter extends RecyclerView.Adapter<ServiceManage
     public interface DeleteListener {
         void onDelete(Service service);
     }
+    public interface ClickListener {
+        void onClick(Service service);
+    }
 
-    public ServiceManagementAdapter(List<Service> services, EditListener editListener, DeleteListener deleteListener) {
+    public ServiceManagementAdapter(List<Service> services, EditListener editListener, DeleteListener deleteListener, ClickListener clickListener) {
         this.services = services;
         this.editListener = editListener;
         this.deleteListener = deleteListener;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -47,6 +52,7 @@ public class ServiceManagementAdapter extends RecyclerView.Adapter<ServiceManage
         holder.servicePrice.setText(String.format("%s %.2f", holder.itemView.getContext().getString(R.string.price), service.getPrice()));
         holder.editButton.setOnClickListener(v -> editListener.onEdit(service));
         holder.deleteButton.setOnClickListener(v -> deleteListener.onDelete(service));
+        holder.itemView.setOnClickListener(v -> clickListener.onClick(service));
     }
 
     @Override

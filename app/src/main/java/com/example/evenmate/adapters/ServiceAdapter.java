@@ -52,13 +52,13 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceV
             String imageStr = service.getImages().get(0);
             Context context = holder.itemView.getContext();
             if (context != null) {
-                if (imageStr.contains("http") || imageStr.contains("/")) {
+                if (imageStr.contains("http")) {
                     Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(holder.serviceImage);
                 } else {
                     try {
                         if (imageStr.contains(",")) {imageStr = imageStr.substring(imageStr.indexOf(",") + 1);}
                         byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
-                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(holder.serviceImage);
+                        Glide.with(context).asBitmap().load(decoded).into(holder.serviceImage);
                     } catch (IllegalArgumentException e) {holder.serviceImage.setImageResource(R.drawable.no_img);}
                 }
             } else {holder.serviceImage.setImageResource(R.drawable.no_img);}

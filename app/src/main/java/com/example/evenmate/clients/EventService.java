@@ -1,6 +1,7 @@
 package com.example.evenmate.clients;
 
 import com.example.evenmate.models.PaginatedResponse;
+import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.event.EventRequest;
 import com.example.evenmate.models.event.InvitationRequest;
@@ -42,8 +43,8 @@ public interface EventService {
     })
     @GET("events/by-organizer")
     Call<PaginatedResponse<Event>> getEventsByOrganizer(
-            @Query("page") int page,
-            @Query("size") int size
+            @Query("page") Integer page,
+            @Query("size") Integer size
     );
 
     @Headers({
@@ -129,6 +130,8 @@ public interface EventService {
             @Body InvitationRequest request
     );
 
+    @GET("events/{id}/recommended-categories")
+    Call<List<Category>> getRecommendedCategories(@Path("id") Long eventId);
 }
 
 

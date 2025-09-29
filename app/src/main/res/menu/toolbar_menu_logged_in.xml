@@ -12,4 +12,9 @@
         android:title="@string/notifications"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
+    <item
+        android:id="@+id/action_chat"
+        android:icon="@drawable/ic_chat"
+        android:title="@string/open_chat"
+        app:showAsAction="always" />
 </menu>

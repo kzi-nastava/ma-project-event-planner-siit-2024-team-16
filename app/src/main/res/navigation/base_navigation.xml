@@ -103,10 +103,10 @@
             />
         <action
             android:id="@+id/action_homeFragment_to_serviceDetailsFragment"
-            app:destination="@+id/serviceDetailsFragment"/>
+            app:destination="@id/serviceDetailsFragment"/>
         <action
             android:id="@+id/action_homeFragment_to_productDetailsFragment"
-            app:destination="@+id/productDetailsFragment"/>
+            app:destination="@id/productDetailsFragment"/>
     </fragment>
 
     <fragment
@@ -143,6 +143,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="ALL_PRODUCTS"/>
+        <action
+            android:id="@+id/action_productsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatListFragment"
@@ -204,53 +207,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="YOUR_PRODUCTS"/>
+        <action android:id="@+id/action_productsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/eventDetailsFragment"
-        android:name="com.example.evenmate.fragments.event.EventDetailsFragment"
-        android:label="EventDetailsFragment" >
-        <argument
-            android:name="event"
-            app:argType="com.example.evenmate.models.event.Event" />
-
-        <action
-            android:id="@+id/action_eventDetails_to_profileFragment"
-            app:destination="@id/profile" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/serviceDetailsFragment"
-        android:name="com.example.evenmate.fragments.service.ServiceDetailsFragment"
-        android:label="ServiceDetailsFragment" >
-        <argument
-            android:name="service"
-            app:argType="com.example.evenmate.models.asset.Service" />
-        <action
-            android:id="@+id/action_serviceDetails_to_profileFragment"
-            app:destination="@id/profile" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/productDetailsFragment"
-        android:name="com.example.evenmate.fragments.product.ProductDetailsFragment"
-        android:label="ProductDetailsFragment" >
-        <argument
-            android:name="product"
-            app:argType="com.example.evenmate.models.asset.Product" />
-
-        <action
-            android:id="@+id/action_productDetails_to_profileFragment"
-            app:destination="@id/profile" />
-    </fragment>
-
-    <fragment android:id="@+id/reports_approval_fragment"
-        android:name="com.example.evenmate.fragments.admin_approvals.ReportApprovalsFragment"
-        android:label="@string/reports_approval"
-        />
-    <fragment android:id="@+id/comments_approval_fragment"
-        android:name="com.example.evenmate.fragments.admin_approvals.CommentApprovalsFragment"
-        android:label="@string/comments_approval"
-        />
     <fragment
         android:id="@+id/addServiceFragment"
         android:name="com.example.evenmate.fragments.service.AddServiceFragment"
@@ -274,6 +233,8 @@
             app:destination="@id/addServiceFragment" />
         <action android:id="@+id/action_servicesFragment_to_editServiceFragment"
             app:destination="@id/editServiceFragment" />
+        <action android:id="@+id/action_servicesFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventDetailsFragment"
@@ -286,8 +247,43 @@
         <action
             android:id="@+id/action_eventDetails_to_profileFragment"
             app:destination="@id/profile" />
+        <action
+            android:id="@+id/action_eventDetails_to_budgetPlannerFragment"
+            app:destination="@id/budgetPlannerFragment" />
     </fragment>
-
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductDetailsFragment"
+        android:label="ProductDetailsFragment" >
+        <argument
+            android:name="product_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_profileFragment"
+            app:destination="@id/profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.example.evenmate.fragments.service.ServiceDetailsFragment"
+        android:label="ServiceDetailsFragment" >
+        <argument
+            android:name="service_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_profileFragment"
+            app:destination="@id/profile" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_reservationFragment"
+            app:destination="@id/reservationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reservationFragment"
+        android:name="com.example.evenmate.fragments.reservations.ReservationFragment"
+        android:label="ReservationFragment" >
+        <argument
+            android:name="service_id"
+            app:argType="long" />
+    </fragment>
     <fragment android:id="@+id/reports_approval_fragment"
         android:name="com.example.evenmate.fragments.admin_approvals.ReportApprovalsFragment"
         android:label="@string/reports_approval"
@@ -296,6 +292,21 @@
         android:name="com.example.evenmate.fragments.admin_approvals.CommentApprovalsFragment"
         android:label="@string/comments_approval"
         />
-
-
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.evenmate.fragments.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
+  <fragment
+        android:id="@+id/budgetPlannerFragment"
+        android:name="com.example.evenmate.fragments.budget.BudgetPlannerFragment"
+        android:label="@string/budget_planner"
+        tools:layout="@layout/fragment_budget_planner" >
+        <action
+            android:id="@+id/action_budgetPlannerFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_budgetPlannerFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
 </navigation>

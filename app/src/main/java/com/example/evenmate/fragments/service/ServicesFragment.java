@@ -64,7 +64,7 @@ public class ServicesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(ServicesViewModel.class);
-        adapter = new ServiceManagementAdapter(services, this::onEditService, this::onDeleteService);
+        adapter = new ServiceManagementAdapter(services, this::onEditService, this::onDeleteService, this::onClickService);
         binding.servicesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.servicesRecyclerView.setAdapter(adapter);
         setupObservers();
@@ -156,6 +156,13 @@ public class ServicesFragment extends Fragment {
             .setPositiveButton(R.string.delete, (dialog, which) -> viewModel.deleteService(service.getId()))
             .setNegativeButton(R.string.cancel, null)
             .show();
+    }
+
+    private void onClickService(Service service) {
+        Bundle args = new Bundle();
+        args.putSerializable("service_id", service.getId());
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        navController.navigate(R.id.action_servicesFragment_to_serviceDetailsFragment, args);
     }
 
     private void showFiltersBottomSheet() {
