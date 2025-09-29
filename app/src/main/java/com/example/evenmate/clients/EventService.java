@@ -42,8 +42,8 @@ public interface EventService {
     })
     @GET("events/by-organizer")
     Call<PaginatedResponse<Event>> getEventsByOrganizer(
-            @Query("page") int page,
-            @Query("size") int size
+            @Query("page") Integer page,
+            @Query("size") Integer size
     );
 
     @Headers({

@@ -3,6 +3,7 @@ package com.example.evenmate.clients;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.asset.ProductRequest;
+import com.example.evenmate.models.asset.PurchaseRequest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -78,6 +79,9 @@ public interface ProductService {
 
     @PUT("products/{productId}/favorite")
     Call<Void> toggleFavorite(@Path("productId") Long productId);
+
+    @POST("products/{productId}/buy")
+    Call<Void> buyProduct(@Path("productId") Long productId, @Body PurchaseRequest purchaseRequest);
 }
 
 
