@@ -28,6 +28,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.evenmate.R;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.clients.NotificationService;
 import com.example.evenmate.databinding.ActivityPageBinding;
 import com.example.evenmate.fragments.NotificationsFragment;
 import com.example.evenmate.fragments.auth.LoginCallback;
@@ -107,6 +108,15 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
             navController.navigate(R.id.chatListFragment);
         });
         updateChatButtonVisibility();
+        if (AuthManager.loggedInUser != null) {
+            startNotificationService(AuthManager.loggedInUser.getId());
+        }
+
+    }
+    private void startNotificationService(long userId) {
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        serviceIntent.putExtra("USER_ID", userId);
+        startService(serviceIntent);
     }
 
     @Override
@@ -152,6 +162,8 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
     private void handleLogout() {
         AuthManager.getInstance(this).logout();
         ToastUtils.showCustomToast(this, "Successfully logged out", false);
+
+        stopService(new Intent(this, NotificationService.class));
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         NavOptions navOptions = new NavOptions.Builder()
