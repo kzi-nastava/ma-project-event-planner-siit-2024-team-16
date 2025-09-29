@@ -244,6 +244,9 @@
         <action
             android:id="@+id/action_eventDetails_to_profileFragment"
             app:destination="@id/profile" />
+        <action
+            android:id="@+id/action_eventDetails_to_budgetPlannerFragment"
+            app:destination="@id/budgetPlannerFragment" />
     </fragment>
     <fragment
         android:id="@+id/productDetailsFragment"
@@ -291,5 +294,16 @@
         android:name="com.example.evenmate.fragments.NotificationsFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications" />
-
+  <fragment
+        android:id="@+id/budgetPlannerFragment"
+        android:name="com.example.evenmate.fragments.budget.BudgetPlannerFragment"
+        android:label="@string/budget_planner"
+        tools:layout="@layout/fragment_budget_planner" >
+        <action
+            android:id="@+id/action_budgetPlannerFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_budgetPlannerFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
 </navigation>

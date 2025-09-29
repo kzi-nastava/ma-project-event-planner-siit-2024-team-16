@@ -64,8 +64,11 @@ public class ProfileFragment extends Fragment{
         setupCompanyImagesRecycler();
 
         if (getArguments() != null && getArguments().containsKey("userId")) {
-            String userIdStr = getArguments().getString("userId");
-            Long userId = userIdStr != null ? Long.parseLong(userIdStr) : null;
+            Long userId = null;
+            if (getArguments() != null && getArguments().containsKey("userId")) {
+                userId = getArguments().getLong("userId", -1);
+                if (userId == -1) userId = null;
+            }
             if (userId != null) {
                 if (AuthManager.loggedInUser == null || !userId.equals(AuthManager.loggedInUser.getId())) {
                     ClientUtils.userService.getUserById(userId).enqueue(new Callback<User>() {
