@@ -57,20 +57,6 @@ public interface ProductService {
     @DELETE("products/{id}")
     Call<Object> delete(@Path("id") Long id);
 
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
-    @PUT("products/{productId}/favorite")
-    Call<Void> favoriteProductToggle(@Path("productId") Long productId);
-
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
-    @GET("products/{productId}/favorite")
-    Call<Boolean> checkIsProductFavorite(@Path("productId") Long productId);
-
     @GET("products/{productId}")
     Call<Product> getById(@Path("productId") Long productId);
 
