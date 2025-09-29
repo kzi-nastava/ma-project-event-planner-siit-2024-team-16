@@ -42,7 +42,9 @@ public class ProductDetailsFragment extends Fragment {
         long productId = getArguments() != null ? getArguments().getLong(ARG_PRODUCT_ID, -1) : -1;
         if (productId != -1) {
             viewModel.fetchProductById(productId);
-            viewModel.isFavorite(productId);
+            if (AuthManager.loggedInUser != null) {
+                viewModel.isFavorite(productId);
+            }
         }
 
         Button btnFavorite = view.findViewById(R.id.btn_favorite);
@@ -72,7 +74,7 @@ public class ProductDetailsFragment extends Fragment {
                 priceOld.setVisibility(View.GONE);
                 priceNew.setText(String.valueOf(product.getPrice()));
             }
-            btnFavorite.setEnabled(AuthManager.loggedInUser != null);
+            btnFavorite.setVisibility(AuthManager.loggedInUser != null ? View.VISIBLE : View.GONE);
             btnPurchase.setEnabled(product.getIsAvailable() && AuthManager.loggedInUser != null && AuthManager.loggedInUser.getRole().equals("EventOrganizer"));
             btnChat.setEnabled(AuthManager.loggedInUser != null && !AuthManager.loggedInUser.getId().equals(product.getProvider().getId()));
 
