@@ -87,7 +87,7 @@ public class ProductDetailsFragment extends Fragment {
         });
 
         btnFavorite.setOnClickListener(v -> viewModel.toggleFavorite(productId));
-        btnPurchase.setOnClickListener(v -> viewModel.purchaseProduct());
+        btnPurchase.setOnClickListener(v -> purchaseProduct(productId));
         btnChat.setOnClickListener(v -> viewModel.initiateChat(product.getProvider().getId()));
         layoutProviderInfo.setOnClickListener(v -> {
             Bundle args = new Bundle();
@@ -98,5 +98,14 @@ public class ProductDetailsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void purchaseProduct(Long productId) {
+        viewModel.fetchEvents();
+        viewModel.getEvents().observe(getViewLifecycleOwner(), events -> {
+            ProductPurchaseDialogFragment dialog = new ProductPurchaseDialogFragment(events, eventId -> viewModel.purchaseProduct(productId, eventId));
+            dialog.show(getParentFragmentManager(), "ProductPurchaseDialog");
+            viewModel.getEvents().removeObservers(getViewLifecycleOwner());
+        });
     }
 }
