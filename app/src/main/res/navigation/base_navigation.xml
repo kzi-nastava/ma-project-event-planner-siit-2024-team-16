@@ -286,4 +286,10 @@
         android:name="com.example.evenmate.fragments.admin_approvals.CommentApprovalsFragment"
         android:label="@string/comments_approval"
         />
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.evenmate.fragments.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
+
 </navigation>

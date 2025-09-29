@@ -26,17 +26,23 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.evenmate.R;
-import com.example.evenmate.activities.notifications.NotificationsActivity;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.databinding.ActivityPageBinding;
+import com.example.evenmate.fragments.NotificationsFragment;
 import com.example.evenmate.fragments.auth.LoginCallback;
+import com.example.evenmate.models.user.Notification;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.List;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PageActivity extends AppCompatActivity implements LoginCallback {
 
@@ -133,11 +139,12 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
             }
         }
         if (item.getItemId() == R.id.action_notifications) {
-            Intent intent = new Intent(this, NotificationsActivity.class);
-            startActivity(intent);
+            navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+            navController.navigate(R.id.notificationsFragment);
             Toast.makeText(this, "Notifications clicked!", Toast.LENGTH_SHORT).show();
             return true;
         }
+
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
@@ -180,8 +187,24 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
     public static void updateNotificationIcon(Menu menu, Context context) {
         MenuItem item = menu.findItem(R.id.action_notifications);
         if (item == null) return;
-        int iconRes = NotificationsActivity.getUnreadNotifications().isEmpty() ? R.drawable.ic_notification : R.drawable.ic_new_notification;
-        item.setIcon(resizeIcon(Objects.requireNonNull(ContextCompat.getDrawable(context, iconRes)), context));
+        ClientUtils.userService.getAllNotifications().enqueue(new Callback<List<Notification>>() {
+            @Override
+            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    boolean hasUnread = false;
+                    for (Notification n : response.body()) {
+                        if (!n.isRead()) {
+                            hasUnread = true;
+                            break;
+                        }
+                    }
+                    int iconRes = hasUnread ? R.drawable.ic_new_notification : R.drawable.ic_notification;
+                    item.setIcon(resizeIcon(Objects.requireNonNull(ContextCompat.getDrawable(context, iconRes)), context));
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Notification>> call, Throwable t) {t.printStackTrace();}
+        });
     }
 
     private static Drawable resizeIcon(Drawable drawable, Context context) {
