@@ -151,7 +151,6 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
         if (item.getItemId() == R.id.action_notifications) {
             navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
             navController.navigate(R.id.notificationsFragment);
-            Toast.makeText(this, "Notifications clicked!", Toast.LENGTH_SHORT).show();
             return true;
         }
 
