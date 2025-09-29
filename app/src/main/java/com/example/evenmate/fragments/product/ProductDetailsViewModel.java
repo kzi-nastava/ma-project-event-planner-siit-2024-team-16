@@ -8,8 +8,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.evenmate.clients.ClientUtils;
+import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.asset.Product;
+import com.example.evenmate.models.asset.PurchaseRequest;
 import com.example.evenmate.models.chat.Chat;
+import com.example.evenmate.models.event.Event;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,6 +23,7 @@ import retrofit2.Response;
 public class ProductDetailsViewModel extends ViewModel {
     private final MutableLiveData<Product> product = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isFavorite = new MutableLiveData<>(false);
+    private final MutableLiveData<List<Event>> events = new MutableLiveData<>();
 
     public LiveData<Product> getProduct() {
         return product;
@@ -25,6 +31,10 @@ public class ProductDetailsViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsFavorite() {
         return isFavorite;
+    }
+
+    public LiveData<List<Event>> getEvents() {
+        return events;
     }
 
     public void fetchProductById(Long productId) {
@@ -40,6 +50,23 @@ public class ProductDetailsViewModel extends ViewModel {
             public void onFailure(Call<Product> call, Throwable t) {
                 Log.e("ProductDetailsViewModel", "Failed to load product", t);
                 Toast.makeText(ClientUtils.getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void fetchEvents() {
+        ClientUtils.eventService.getEventsByOrganizer(null, null).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<PaginatedResponse<Event>> call, Response<PaginatedResponse<Event>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    events.postValue(response.body().getContent());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PaginatedResponse<Event>> call, Throwable throwable) {
+                Log.e("ProductDetailsViewModel", "Failed to load events", throwable);
+                Toast.makeText(ClientUtils.getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -78,8 +105,23 @@ public class ProductDetailsViewModel extends ViewModel {
         });
     }
 
-    public void purchaseProduct() {
-        // TODO: Show dialog
+    public void purchaseProduct(Long productId, Long eventId) {
+        ClientUtils.productService.buyProduct(productId, new PurchaseRequest(eventId)).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ClientUtils.getContext(), "Purchase successful!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ClientUtils.getContext(), "Purchase failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+                Log.e("ProductDetailsViewModel", "Failed to purchase product", throwable);
+                Toast.makeText(ClientUtils.getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void initiateChat(Long providerId) {
