@@ -13,6 +13,7 @@ import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.service.Service;
 import com.example.evenmate.models.service.ServiceCreate;
 import com.example.evenmate.models.service.ServiceUpdate;
+import com.example.evenmate.utils.ErrorUtils;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class ServiceFormViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     success.postValue("Service successfully created.");
                 } else {
-                    errorMessage.postValue("Failed to add service. Code: " + response.code());
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -87,7 +88,7 @@ public class ServiceFormViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     success.postValue("Service successfully updated.");
                 } else {
-                    errorMessage.postValue("Failed to update service. Code: " + response.code());
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 

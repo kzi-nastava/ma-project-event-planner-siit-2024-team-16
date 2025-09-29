@@ -20,9 +20,6 @@ import com.example.evenmate.adapters.BudgetItemAdapter;
 import com.example.evenmate.models.budget.BudgetItem;
 import com.example.evenmate.models.budget.BudgetItemCreate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BudgetPlannerFragment extends Fragment {
     private static final String ARG_EVENT_ID = "event_id";
     private BudgetPlannerViewModel viewModel;

@@ -13,6 +13,7 @@ import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.asset.PurchaseRequest;
 import com.example.evenmate.models.chat.Chat;
 import com.example.evenmate.models.event.Event;
+import com.example.evenmate.utils.ErrorUtils;
 
 import java.util.List;
 
@@ -77,6 +78,8 @@ public class ProductDetailsViewModel extends ViewModel {
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     isFavorite.postValue(response.body());
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -94,6 +97,8 @@ public class ProductDetailsViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     isFavorite.setValue(!Boolean.TRUE.equals(isFavorite.getValue()));
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -112,7 +117,7 @@ public class ProductDetailsViewModel extends ViewModel {
                 if (response.isSuccessful()) {
                     Toast.makeText(ClientUtils.getContext(), "Purchase successful!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(ClientUtils.getContext(), "Purchase failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -131,7 +136,7 @@ public class ProductDetailsViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(ClientUtils.getContext(), "Chat initiated, check your chats.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(ClientUtils.getContext(), "Failed to initiate chat", Toast.LENGTH_SHORT).show();
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 

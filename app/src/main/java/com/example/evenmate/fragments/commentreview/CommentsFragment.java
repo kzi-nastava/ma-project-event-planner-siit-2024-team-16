@@ -19,6 +19,7 @@ import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.commentreview.Comment;
 import com.example.evenmate.models.commentreview.CommentCreate;
+import com.example.evenmate.utils.ErrorUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
@@ -115,7 +116,7 @@ public class CommentsFragment extends Fragment {
                         inputComment.setText("");
                         loadComments();
                     } else {
-                        Toast.makeText(requireContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
+                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                     }
                 }
                 @Override
@@ -132,7 +133,7 @@ public class CommentsFragment extends Fragment {
                         inputComment.setText("");
                         loadComments();
                     } else {
-                        Toast.makeText(requireContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
+                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                     }
                 }
                 @Override

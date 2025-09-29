@@ -8,6 +8,8 @@ import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.PaginatedResponse;
 import com.example.evenmate.models.pricelist.PriceListItem;
 import com.example.evenmate.models.pricelist.PriceListItemUpdate;
+import com.example.evenmate.utils.ErrorUtils;
+
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,6 +70,7 @@ public class PriceListViewModel extends ViewModel {
                     fetchPriceList(selectedType, currentPage.getValue(), lastPageSize);
                 } else {
                     error.setValue("Failed to update price list item");
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
             @Override

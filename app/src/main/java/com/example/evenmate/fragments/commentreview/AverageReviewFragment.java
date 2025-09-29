@@ -17,6 +17,7 @@ import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.commentreview.ReviewCreate;
 import com.example.evenmate.models.user.User;
+import com.example.evenmate.utils.ErrorUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +51,7 @@ public class AverageReviewFragment extends Fragment {
             assetId = getArguments().containsKey(ARG_ASSET_ID) ? getArguments().getLong(ARG_ASSET_ID) : null;
         }
         loadAverageReview();
-        if (AuthManager.loggedInUser != null && AuthManager.loggedInUser.getId().equals(userId)) {
+        if (AuthManager.loggedInUser == null || AuthManager.loggedInUser.getId().equals(userId)) {
             ratingBar.setEnabled(false);
         }
         ratingBar.setOnRatingBarChangeListener((bar, rating, fromUser) -> {
@@ -107,7 +108,7 @@ public class AverageReviewFragment extends Fragment {
                         Toast.makeText(requireContext(), "Review submitted", Toast.LENGTH_SHORT).show();
                         loadAverageReview();
                     } else {
-                        Toast.makeText(requireContext(), "Failed to submit review", Toast.LENGTH_SHORT).show();
+                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                     }
                 }
                 @Override
@@ -128,7 +129,7 @@ public class AverageReviewFragment extends Fragment {
                         Toast.makeText(requireContext(), "Review submitted", Toast.LENGTH_SHORT).show();
                         loadAverageReview();
                     } else {
-                        Toast.makeText(requireContext(), "Failed to submit review", Toast.LENGTH_SHORT).show();
+                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                     }
                 }
                 @Override
