@@ -96,7 +96,7 @@ public class ServiceDetailsFragment extends Fragment {
         });
 
         btnFavorite.setOnClickListener(v -> viewModel.toggleFavorite(service.getId()));
-        btnReserve.setOnClickListener(v -> viewModel.reserveService());
+        btnReserve.setOnClickListener(v -> openReservationFragment());
         btnChat.setOnClickListener(v -> viewModel.initiateChat(service.getProvider().getId()));
         layoutProviderInfo.setOnClickListener(v -> {
             Bundle args = new Bundle();
@@ -118,5 +118,13 @@ public class ServiceDetailsFragment extends Fragment {
 
     private String formatTime(Integer time) {
         return time / 60 + "h " + time % 60 + "m";
+    }
+
+    private void openReservationFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("service_id", service.getId());
+
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        navController.navigate(R.id.action_serviceDetailsFragment_to_reservationFragment);
     }
 }

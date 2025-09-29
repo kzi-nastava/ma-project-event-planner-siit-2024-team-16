@@ -99,16 +99,26 @@ public class ProductAdapter extends ArrayAdapter<Product> {
             category.setText(String.format("%s%s", getContext().getString(R.string.category), product.getCategory() != null ? product.getCategory().getName() : null));
             price.setText(String.format("%s: %s", getContext().getString(R.string.price), product.getPrice()));
             priceAfterDiscount.setText(String.format("%s: %s", getContext().getString(R.string.priceAfterDiscount), product.getPriceAfterDiscount()));
+
             if (product.getImages() != null && !product.getImages().isEmpty()) {
-                String base64Image = product.getImages().get(0);
-                if (base64Image.contains(",")) {
-                    base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
+                String imageStr = product.getImages().get(0);
+                if (imageStr.contains("http") || imageStr.contains("/")) {
+                    Glide.with(getContext()).load(imageStr).placeholder(R.drawable.no_img).into(imageView);
+                } else {
+                    try {
+                        if (imageStr.contains(",")) {
+                            imageStr = imageStr.substring(imageStr.indexOf(",") + 1);
+                        }
+                        byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
+                        Glide.with(getContext()).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(imageView);
+                    } catch (IllegalArgumentException e) {
+                        imageView.setImageResource(R.drawable.no_img);
+                    }
                 }
-                Glide.with(getContext())
-                        .asBitmap()
-                        .load(Base64.decode(base64Image, Base64.DEFAULT))
-                        .into(imageView);
+            } else {
+                imageView.setImageResource(R.drawable.no_img);
             }
+
             btnEdit.setOnClickListener(v -> {
                 if (onEditClickListener != null) {
                     onEditClickListener.onEditClick(product);

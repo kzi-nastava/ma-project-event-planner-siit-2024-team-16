@@ -27,7 +27,15 @@
         android:label="Your Products and Services"
         app:popUpTo="@+id/nav_products"
         app:popUpToInclusive="true"
-        tools:layout="@layout/fragment_provider_services_products" />
+        tools:layout="@layout/fragment_provider_services_products" >
+        <action
+            android:id="@+id/action_providerServicesProducts_to_serviceDetailsFragment"
+            app:destination="@+id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_providerServicesProducts_to_editServiceFragment"
+            app:destination="@+id/editServiceFragment"/>
+    </fragment>
+
     <fragment
         android:id="@+id/eventTypesFragment"
         android:name="com.example.evenmate.fragments.event_type.EventTypesFragment"
@@ -93,6 +101,12 @@
             android:id="@+id/action_homeFragment_to_eventDetailsFragment"
             app:destination="@+id/eventDetailsFragment"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_serviceDetailsFragment"
+            app:destination="@+id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailsFragment"
+            app:destination="@+id/productDetailsFragment"/>
     </fragment>
 
     <fragment
@@ -122,7 +136,7 @@
     </fragment>
     <fragment
         android:id="@+id/productsFragment"
-        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
         android:label="@string/products"
         tools:layout="@layout/fragment_products" >
         <argument
@@ -173,7 +187,7 @@
         tools:layout="@layout/fragment_price_list" />
     <fragment
         android:id="@+id/favoriteProductsFragment"
-        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
         android:label="@string/favorite_products"
         tools:layout="@layout/fragment_products" >
         <argument
@@ -183,7 +197,7 @@
     </fragment>
     <fragment
         android:id="@+id/yourProductsFragment"
-        android:name="com.example.evenmate.fragments.asset.ProductsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
         android:label="@string/your_products"
         tools:layout="@layout/fragment_products" >
         <argument
@@ -252,6 +266,17 @@
         <action
             android:id="@+id/action_serviceDetailsFragment_to_profileFragment"
             app:destination="@id/profile" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_reservationFragment"
+            app:destination="@id/reservationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reservationFragment"
+        android:name="com.example.evenmate.fragments.reservations.ReservationFragment"
+        android:label="ReservationFragment" >
+        <argument
+            android:name="service_id"
+            app:argType="long" />
     </fragment>
     <fragment android:id="@+id/reports_approval_fragment"
         android:name="com.example.evenmate.fragments.admin_approvals.ReportApprovalsFragment"

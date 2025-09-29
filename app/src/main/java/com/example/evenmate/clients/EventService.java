@@ -40,12 +40,6 @@ public interface EventService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @GET("events/{id}")
-    Call<Event> getEvent(@Path("id") long id);
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:application/json"
-    })
     @GET("events/by-organizer")
     Call<PaginatedResponse<Event>> getEventsByOrganizer(
             @Query("page") int page,

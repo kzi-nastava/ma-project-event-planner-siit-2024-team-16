@@ -1,6 +1,7 @@
 package com.example.evenmate.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,16 +101,21 @@ public class EventAdapter extends ArrayAdapter<Event> {
             address.setText(String.format("%s: %s", getContext().getString(R.string.address), String.format("%s %s, %s, %s", event.getAddress().getStreetName(), event.getAddress().getStreetNumber(), event.getAddress().getCity(), event.getAddress().getCountry())));
             type.setText(String.format("%s %s", getContext().getString(R.string.type), event.getType() != null ?  event.getType().getName() : "None"));
             maxAttendees.setText(String.format("%s%s", getContext().getString(R.string.max_guests), event.getMaxAttendees()));
-            if (event.getPhoto() != null) {
-                String base64Image = event.getPhoto();
-                if (base64Image.contains(",")) {
-                    base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
+            if (event.getPhoto() != null && !event.getPhoto().isEmpty()) {
+                String imageStr = event.getPhoto();
+                Context context = this.getContext();
+                if (imageStr.contains("http") || imageStr.contains("/")) {
+                    Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(imageView);
+                } else {
+                    try {
+                        if (imageStr.contains(",")) {
+                            imageStr = imageStr.substring(imageStr.indexOf(",") + 1);
+                        }
+                        byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
+                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(imageView);
+                    } catch (IllegalArgumentException e) {imageView.setImageResource(R.drawable.no_img);}
                 }
-                Glide.with(getContext())
-                        .asBitmap()
-                        .load(Base64.decode(base64Image, Base64.DEFAULT))
-                        .into(imageView);
-            }
+            } else {imageView.setImageResource(R.drawable.no_img);}
             btnEdit.setOnClickListener(v -> {
                 if (onEditClickListener != null) {
                     onEditClickListener.onEditClick(event);

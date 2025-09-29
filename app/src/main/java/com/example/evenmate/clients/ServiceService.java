@@ -1,5 +1,7 @@
 package com.example.evenmate.clients;
 
+import com.example.evenmate.models.asset.Reservation;
+import com.example.evenmate.models.asset.ReservationRequest;
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.models.service.Service;
 import com.example.evenmate.models.service.ServiceCreate;
@@ -44,5 +46,8 @@ public interface ServiceService {
 
     @PUT("services/{serviceId}/favorite")
     Call<Void> toggleFavorite(@Path("serviceId") Long serviceId);
+
+    @POST("/api/v1/reservations")
+    Call<Reservation> createReservation(@Body ReservationRequest request);
 }
 

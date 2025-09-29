@@ -1,5 +1,7 @@
 package com.example.evenmate.adapters;
 
+import android.content.Context;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.evenmate.R;
 import com.example.evenmate.models.service.Service;
 import com.google.android.material.chip.Chip;
@@ -44,7 +48,21 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceV
         holder.servicePrice.setText(String.format(Locale.getDefault(), "$%.2f", service.getPrice()));
         holder.serviceType.setText(String.valueOf(service.getType()));
         holder.serviceStatus.setText(service.getIsAvailable() ? "Available" : "Unavailable");
-//        holder.serviceImage.setImageResource(service.getImageResourceId());
+        if (service.getImages() != null && !service.getImages().isEmpty()) {
+            String imageStr = service.getImages().get(0);
+            Context context = holder.itemView.getContext();
+            if (context != null) {
+                if (imageStr.contains("http") || imageStr.contains("/")) {
+                    Glide.with(context).load(imageStr).placeholder(R.drawable.no_img).into(holder.serviceImage);
+                } else {
+                    try {
+                        if (imageStr.contains(",")) {imageStr = imageStr.substring(imageStr.indexOf(",") + 1);}
+                        byte[] decoded = Base64.decode(imageStr, Base64.DEFAULT);
+                        Glide.with(context).asBitmap().load(decoded).placeholder(R.drawable.no_img).into(holder.serviceImage);
+                    } catch (IllegalArgumentException e) {holder.serviceImage.setImageResource(R.drawable.no_img);}
+                }
+            } else {holder.serviceImage.setImageResource(R.drawable.no_img);}
+        } else {holder.serviceImage.setImageResource(R.drawable.no_img);}
 
         holder.itemView.setOnClickListener(v -> listener.onServiceClick(service));
     }
