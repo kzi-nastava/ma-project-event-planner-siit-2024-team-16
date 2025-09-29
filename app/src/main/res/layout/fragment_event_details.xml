@@ -63,6 +63,13 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/download_pdf"/>
             <ImageButton
+                android:id="@+id/btnChat"
+                android:src="@drawable/ic_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/chat" />
+            <ImageButton
                 android:id="@+id/budgetButton"
                 android:src="@drawable/ic_wallet"
                 android:layout_margin="4dp"
