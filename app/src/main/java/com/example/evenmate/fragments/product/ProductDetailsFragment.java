@@ -15,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.evenmate.R;
+import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.fragments.commentreview.AverageReviewFragment;
 import com.example.evenmate.fragments.commentreview.CommentsFragment;
 import com.example.evenmate.models.asset.Product;
@@ -71,7 +72,9 @@ public class ProductDetailsFragment extends Fragment {
                 priceOld.setVisibility(View.GONE);
                 priceNew.setText(String.valueOf(product.getPrice()));
             }
-            btnPurchase.setEnabled(product.getIsAvailable());
+            btnFavorite.setEnabled(AuthManager.loggedInUser != null);
+            btnPurchase.setEnabled(product.getIsAvailable() && AuthManager.loggedInUser != null && AuthManager.loggedInUser.getRole().equals("EventOrganizer"));
+            btnChat.setEnabled(AuthManager.loggedInUser != null && !AuthManager.loggedInUser.getId().equals(product.getProvider().getId()));
 
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.product_comments_container, CommentsFragment.newInstance(product.getId(), null))
@@ -87,7 +90,7 @@ public class ProductDetailsFragment extends Fragment {
         });
 
         btnFavorite.setOnClickListener(v -> viewModel.toggleFavorite(productId));
-        btnPurchase.setOnClickListener(v -> viewModel.purchaseProduct());
+        btnPurchase.setOnClickListener(v -> purchaseProduct(productId));
         btnChat.setOnClickListener(v -> viewModel.initiateChat(product.getProvider().getId()));
         layoutProviderInfo.setOnClickListener(v -> {
             Bundle args = new Bundle();
@@ -98,5 +101,14 @@ public class ProductDetailsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void purchaseProduct(Long productId) {
+        viewModel.fetchEvents();
+        viewModel.getEvents().observe(getViewLifecycleOwner(), events -> {
+            ProductPurchaseDialogFragment dialog = new ProductPurchaseDialogFragment(events, eventId -> viewModel.purchaseProduct(productId, eventId));
+            dialog.show(getParentFragmentManager(), "ProductPurchaseDialog");
+            viewModel.getEvents().removeObservers(getViewLifecycleOwner());
+        });
     }
 }
