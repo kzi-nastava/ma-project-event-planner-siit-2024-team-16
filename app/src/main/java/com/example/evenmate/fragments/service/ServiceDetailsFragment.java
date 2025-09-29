@@ -15,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.evenmate.R;
+import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.fragments.commentreview.AverageReviewFragment;
 import com.example.evenmate.fragments.commentreview.CommentsFragment;
 import com.example.evenmate.models.service.Service;
@@ -80,7 +81,10 @@ public class ServiceDetailsFragment extends Fragment {
 
             tvCancellationDeadline.setText(service.getCancellationDeadline() + "d");
             tvReservationDeadline.setText(service.getReservationDeadline() + "d");
-            btnReserve.setEnabled(service.getIsAvailable());
+
+            btnFavorite.setEnabled(AuthManager.loggedInUser != null);
+            btnReserve.setEnabled(service.getIsAvailable() && AuthManager.loggedInUser != null && AuthManager.loggedInUser.getRole().equals("EventOrganizer"));
+            btnChat.setEnabled(AuthManager.loggedInUser != null && !AuthManager.loggedInUser.getId().equals(service.getProvider().getId()));
 
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.service_comments_container, CommentsFragment.newInstance(service.getId(), null))
