@@ -78,13 +78,6 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
                 }
             }
         });
-
-        FloatingActionButton fabChat = findViewById(R.id.fab_chat);
-        fabChat.setOnClickListener(v -> {
-            navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
-            navController.navigate(R.id.chatListFragment);
-        });
-        updateChatButtonVisibility();
     }
 
     @Override
@@ -110,6 +103,12 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
 
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_chat) {
+            navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+            navController.navigate(R.id.chatListFragment);
+            return true;
+        }
+
         if (item.getItemId() == R.id.nav_auth) {
             if (AuthManager.getInstance(this).isLoggedIn()) {
                 handleLogout();
@@ -139,7 +138,6 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
 
 
         updateMenu();
-        updateChatButtonVisibility();
     }
 
 
@@ -190,11 +188,5 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
 
         navController.navigate(R.id.HomepageFragment, null, navOptions);
         updateMenu();
-        updateChatButtonVisibility();
-    }
-
-    private void updateChatButtonVisibility() {
-        FloatingActionButton fabChat = findViewById(R.id.fab_chat);
-        fabChat.setVisibility(AuthManager.loggedInUser != null ? View.VISIBLE : View.GONE);
     }
 }
