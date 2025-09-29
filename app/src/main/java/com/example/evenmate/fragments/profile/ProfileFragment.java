@@ -2,7 +2,6 @@ package com.example.evenmate.fragments.profile;
 
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +32,8 @@ import com.example.evenmate.models.user.Block;
 import com.example.evenmate.models.user.Company;
 import com.example.evenmate.models.user.Report;
 import com.example.evenmate.models.user.User;
-import com.example.evenmate.utils.MapUtils;
 import com.example.evenmate.utils.ToastUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import org.osmdroid.util.GeoPoint;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,55 +56,39 @@ public class ProfileFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        setupCompanyImagesRecycler();
-
-        if (getArguments() != null && getArguments().containsKey("userId")) {
-            Long userId = null;
-            if (getArguments() != null && getArguments().containsKey("userId")) {
-                userId = getArguments().getLong("userId", -1);
-                if (userId == -1) userId = null;
-            }
-            if (userId != null) {
-                if (AuthManager.loggedInUser == null || !userId.equals(AuthManager.loggedInUser.getId())) {
-                    ClientUtils.userService.getUserById(userId).enqueue(new Callback<User>() {
-                        @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            user = response.body();
-                            if (user != null) {
-                                setupClickListeners();
-                                updateUI();
-                                showProperButtons();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<User> call, Throwable t) {
-                            ToastUtils.showCustomToast(requireContext(), "Cannot load user", true);
-                        }
-                    });
-                    return;
-                }
-            }
-        }
-
         viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-        viewModel.setUser(AuthManager.loggedInUser);
-        user = viewModel.getUser().getValue();
+
         setupCompanyImagesRecycler();
 
-        if (user != null && user.getRole().equalsIgnoreCase("ProductServiceProvider")) {
-            getChildFragmentManager().beginTransaction()
-                .replace(R.id.profile_comments_container, CommentsFragment.newInstance(null, user.getId()))
-                .commit();
-            getChildFragmentManager().beginTransaction()
-                .replace(R.id.profile_avg_review_container, AverageReviewFragment.newInstance(user.getId(), null))
-                .commit();
+        Long userId = null;
+        if (getArguments() != null && getArguments().containsKey("userId")) {
+            userId = getArguments().getLong("userId", -1);
+            if (userId == -1) userId = null;
         }
 
-        setupClickListeners();
-        updateUI();
-        showProperButtons();
+        if (userId != null) {
+            viewModel.fetchUserById(userId);
+        } else if (AuthManager.loggedInUser != null) {
+            viewModel.setUser(AuthManager.loggedInUser);
+        }
+
+        viewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            this.user = user;
+            setupClickListeners();
+            updateUI();
+            showProperButtons();
+
+            if (user != null && user.getRole().equalsIgnoreCase("ProductServiceProvider")) {
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.profile_comments_container, CommentsFragment.newInstance(null, user.getId()))
+                        .commit();
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.profile_avg_review_container, AverageReviewFragment.newInstance(user.getId(), null))
+                        .commit();
+            }
+        });
+
+        setupCompanyImagesRecycler();
 
         viewModel.getDeleteFailed().observe(getViewLifecycleOwner(), failed -> {
             if (failed == null) return;
