@@ -1,5 +1,7 @@
 package com.example.evenmate.models.user;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -13,15 +15,7 @@ public class Notification {
     private Long id;
     private String text;
     private LocalDateTime dateTime;
-    private boolean isRead;
-
-    //constructor is like this for now until i connect to be
-    public Notification(Long id,String text,LocalDateTime datetime,Boolean isRead){
-        this.id=id;
-        this.dateTime=datetime;
-        this.text=text;
-        this.isRead=isRead;
-    }
+    private boolean read;
     public String getDateTime() {
         LocalDateTime now = LocalDateTime.now();
         if (dateTime.toLocalDate().isEqual(now.toLocalDate())) {

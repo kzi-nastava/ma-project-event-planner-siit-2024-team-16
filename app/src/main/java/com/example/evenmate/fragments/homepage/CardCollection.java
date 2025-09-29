@@ -124,10 +124,6 @@ public class CardCollection extends Fragment {
             loadCards();
             loadLessButton.setEnabled(currentPage > 0);
             loadMoreButton.setEnabled(eventsList.size() == pageSize);
-
-            if (isAdded()) {
-                Toast.makeText(getContext(), getString(R.string.new_page) + " " + (currentPage + 1), Toast.LENGTH_SHORT).show();
-            }
         }, eventFilters);
     }
 
@@ -163,9 +159,7 @@ public class CardCollection extends Fragment {
 
             @Override
             public void onFailure(Call<PaginatedResponse<Event>> call, Throwable t) {
-                Toast.makeText(requireContext(),
-                        "Failed to load events: " + t.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Failed to load events: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 callback.accept(List.of());
                 loadMoreButton.setEnabled(false);
             }
@@ -201,9 +195,6 @@ public class CardCollection extends Fragment {
             loadLessButton.setEnabled(currentPage > 0);
             loadMoreButton.setEnabled(assetsList.size() == pageSize);
 
-            if (isAdded()) {
-                Toast.makeText(getContext(), getString(R.string.new_page) + " " + (currentPage + 1), Toast.LENGTH_SHORT).show();
-            }
         }, assetFilters);
     }
     public void getAssets(Consumer<List<Asset>> callback, @Nullable AssetFilters filters) {
@@ -243,9 +234,7 @@ public class CardCollection extends Fragment {
 
             @Override
             public void onFailure(Call<PaginatedResponse<Asset>> call, Throwable t) {
-                Toast.makeText(requireContext(),
-                        "Failed to load assets: " + t.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Failed to load assets: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 callback.accept(List.of());
                 loadMoreButton.setEnabled(false);
             }

@@ -290,6 +290,11 @@
         android:label="@string/comments_approval"
         />
     <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.evenmate.fragments.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
+  <fragment
         android:id="@+id/budgetPlannerFragment"
         android:name="com.example.evenmate.fragments.budget.BudgetPlannerFragment"
         android:label="@string/budget_planner"
