@@ -143,6 +143,9 @@
             android:name="fetch_mode"
             app:argType="string"
             android:defaultValue="ALL_PRODUCTS"/>
+        <action
+            android:id="@+id/action_productsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatListFragment"
