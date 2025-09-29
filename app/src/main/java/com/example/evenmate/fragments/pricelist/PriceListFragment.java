@@ -18,7 +18,6 @@ import com.example.evenmate.adapters.PriceListAdapter;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.asset.AssetType;
 import com.example.evenmate.models.pricelist.PriceListItem;
-import com.example.evenmate.viewmodels.PriceListViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import java.io.File;

@@ -1,10 +1,9 @@
-package com.example.evenmate.viewmodels;
+package com.example.evenmate.fragments.category;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.evenmate.clients.AssetService;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.category.Category;

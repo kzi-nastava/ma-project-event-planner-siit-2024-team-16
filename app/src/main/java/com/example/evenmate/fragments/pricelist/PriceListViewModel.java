@@ -1,4 +1,4 @@
-package com.example.evenmate.viewmodels;
+package com.example.evenmate.fragments.pricelist;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
