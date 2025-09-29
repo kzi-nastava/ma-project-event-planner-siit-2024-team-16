@@ -24,20 +24,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activities.EditServiceActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.asset.ServiceDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.asset.ProductDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.CreateServiceActivity"
-            android:exported="false" />
-        <activity android:name=".activities.notifications.NotificationsActivity"
-            android:exported="false"/>
-        <activity
             android:name=".activities.PageActivity"
             android:exported="false" />
         <activity

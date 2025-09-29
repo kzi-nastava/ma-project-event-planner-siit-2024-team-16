@@ -9,16 +9,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -30,12 +26,10 @@ import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.clients.NotificationService;
 import com.example.evenmate.databinding.ActivityPageBinding;
-import com.example.evenmate.fragments.NotificationsFragment;
 import com.example.evenmate.fragments.auth.LoginCallback;
 import com.example.evenmate.models.user.Notification;
 import com.example.evenmate.models.user.User;
 import com.example.evenmate.utils.ToastUtils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
@@ -86,21 +80,6 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.HomepageFragment) {
-                Fragment fragment = fragmentManager.findFragmentById(R.id.providerServicesProductsFragment);
-                if (fragment != null && fragment.isAdded()) {
-                    fragment.onSaveInstanceState(new Bundle());
-                }
-            } else if (destination.getId() == R.id.providerServicesProductsFragment) {
-                Fragment fragment = fragmentManager.findFragmentById(R.id.HomepageFragment);
-                if (fragment != null && fragment.isAdded()) {
-                    fragment.onSaveInstanceState(new Bundle());
-                }
-            }
-        });
     }
 
     private void startNotificationService(long userId) {

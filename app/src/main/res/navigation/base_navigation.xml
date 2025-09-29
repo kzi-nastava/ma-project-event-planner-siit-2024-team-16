@@ -22,21 +22,6 @@
         tools:layout="@layout/fragment_register" />
 
     <fragment
-        android:id="@+id/providerServicesProductsFragment"
-        android:name="com.example.evenmate.fragments.ProviderServicesProductsFragment"
-        android:label="Your Products and Services"
-        app:popUpTo="@+id/nav_products"
-        app:popUpToInclusive="true"
-        tools:layout="@layout/fragment_provider_services_products" >
-        <action
-            android:id="@+id/action_providerServicesProducts_to_serviceDetailsFragment"
-            app:destination="@+id/serviceDetailsFragment"/>
-        <action
-            android:id="@+id/action_providerServicesProducts_to_editServiceFragment"
-            app:destination="@+id/editServiceFragment"/>
-    </fragment>
-
-    <fragment
         android:id="@+id/eventTypesFragment"
         android:name="com.example.evenmate.fragments.event_type.EventTypesFragment"
         android:label="Event types"
