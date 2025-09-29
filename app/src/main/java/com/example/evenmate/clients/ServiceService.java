@@ -1,5 +1,7 @@
 package com.example.evenmate.clients;
 
+import com.example.evenmate.models.asset.Reservation;
+import com.example.evenmate.models.asset.ReservationRequest;
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.models.service.Service;
 import com.example.evenmate.models.service.ServiceCreate;
@@ -38,5 +40,8 @@ public interface ServiceService {
 
     @DELETE("services/{id}")
     Call<Void> delete(@Path("id") Long id);
+
+    @POST("/api/v1/reservations")
+    Call<Reservation> createReservation(@Body ReservationRequest request);
 }
 
