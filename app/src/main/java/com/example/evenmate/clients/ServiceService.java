@@ -38,5 +38,11 @@ public interface ServiceService {
 
     @DELETE("services/{id}")
     Call<Void> delete(@Path("id") Long id);
+
+    @GET("services/{serviceId}/favorite")
+    Call<Boolean> isFavorite(@Path("serviceId") Long serviceId);
+
+    @PUT("services/{serviceId}/favorite")
+    Call<Void> toggleFavorite(@Path("serviceId") Long serviceId);
 }
 
