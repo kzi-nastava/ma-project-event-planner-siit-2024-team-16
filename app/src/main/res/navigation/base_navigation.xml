@@ -216,6 +216,8 @@
             app:destination="@id/addServiceFragment" />
         <action android:id="@+id/action_servicesFragment_to_editServiceFragment"
             app:destination="@id/editServiceFragment" />
+        <action android:id="@+id/action_servicesFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventDetailsFragment"
@@ -238,6 +240,17 @@
             app:argType="long" />
         <action
             android:id="@+id/action_productDetailsFragment_to_profileFragment"
+            app:destination="@id/profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.example.evenmate.fragments.service.ServiceDetailsFragment"
+        android:label="ServiceDetailsFragment" >
+        <argument
+            android:name="service_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_profileFragment"
             app:destination="@id/profile" />
     </fragment>
     <fragment android:id="@+id/reports_approval_fragment"
