@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.evenmate.R;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
@@ -26,6 +28,7 @@ import retrofit2.Response;
 public class AverageReviewFragment extends Fragment {
     private static final String ARG_ASSET_ID = "asset_id";
     private static final String ARG_USER_ID = "user_id";
+    private AverageReviewViewModel viewModel;
     private Long assetId;
     private RatingBar ratingBar;
     private TextView averageReviewTextView;
@@ -44,100 +47,32 @@ public class AverageReviewFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_average_review, container, false);
+        viewModel = new ViewModelProvider(this).get(AverageReviewViewModel.class);
+
         ratingBar = view.findViewById(R.id.average_review_ratingbar);
         averageReviewTextView = view.findViewById(R.id.average_review_value);
         if (getArguments() != null) {
             userId = getArguments().containsKey(ARG_USER_ID) ? getArguments().getLong(ARG_USER_ID) : null;
             assetId = getArguments().containsKey(ARG_ASSET_ID) ? getArguments().getLong(ARG_ASSET_ID) : null;
         }
-        loadAverageReview();
+
+        viewModel.loadAverageReview(assetId, userId);
+
         if (AuthManager.loggedInUser == null || AuthManager.loggedInUser.getId().equals(userId)) {
             ratingBar.setEnabled(false);
         }
+
         ratingBar.setOnRatingBarChangeListener((bar, rating, fromUser) -> {
             if (fromUser) {
-                submitUserReview((int) rating);
+                viewModel.submitUserReview(assetId, userId, (int) rating);
             }
         });
+
+        viewModel.getAverageReview().observe(getViewLifecycleOwner(), averageReview -> {
+            averageReviewTextView.setText(String.format("%.1f", averageReview));
+            ratingBar.setRating(averageReview.floatValue());
+        });
+
         return view;
-    }
-
-    private void loadAverageReview() {
-        if (assetId != null) {
-            ClientUtils.assetService.getById(assetId).enqueue(new Callback<Asset>() {
-                @Override
-                public void onResponse(Call<Asset> call, Response<Asset> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        averageReviewTextView.setText(String.format("%.1f", response.body().getAverageReview()));
-                        ratingBar.setRating(response.body().getAverageReview().floatValue());
-                    }
-                }
-                @Override
-                public void onFailure(Call<Asset> call, Throwable t) {
-                    Log.e("AverageReviewFragment", "Failed to load average review", t);
-                    Toast.makeText(requireContext(), "Failed to load average review", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else if (userId != null) {
-            ClientUtils.userService.getById(userId).enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        if (response.body().getRole().equals("ProductServiceProvider")) {
-                            averageReviewTextView.setText(String.format("%.1f", response.body().getAverageReview()));
-                            ratingBar.setRating(response.body().getAverageReview().floatValue());
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable throwable) {
-                    Log.e("AverageReviewFragment", "Failed to load average review", throwable);
-                    Toast.makeText(requireContext(), "Failed to load average review", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private void submitUserReview(int stars) {
-        if (assetId != null) {
-            ClientUtils.commentReviewService.reviewAsset(assetId, new ReviewCreate(stars)).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Review submitted", Toast.LENGTH_SHORT).show();
-                        loadAverageReview();
-                    } else {
-                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
-                    }
-                }
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("AverageReviewFragment", "Failed to submit review", t);
-                    Toast.makeText(requireContext(), "Failed to submit review", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else if (userId != null) {
-            if (AuthManager.loggedInUser != null && userId.equals(AuthManager.loggedInUser.getId())) {
-                Toast.makeText(requireContext(), "You cannot review yourself", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            ClientUtils.commentReviewService.reviewProvider(userId, new ReviewCreate(stars)).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Review submitted", Toast.LENGTH_SHORT).show();
-                        loadAverageReview();
-                    } else {
-                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
-                    }
-                }
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("AverageReviewFragment", "Failed to submit review", t);
-                    Toast.makeText(requireContext(), "Failed to submit review", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 }
