@@ -61,7 +61,7 @@ public class CardAdapter {
         if (asset.getType().equals(AssetType.SERVICE)) {
             cardView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
-                bundle.putLong("SERVICE_ID", asset.getId());
+                bundle.putLong("service_id", asset.getId());
                 Navigation.findNavController(v)
                         .navigate(R.id.action_homeFragment_to_serviceDetailsFragment, bundle);
             });
@@ -69,7 +69,7 @@ public class CardAdapter {
         else if (asset.getType().equals(AssetType.PRODUCT)) {
             cardView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
-                bundle.putLong("PRODUCT_ID", asset.getId());
+                bundle.putLong("product_id", asset.getId());
                 Navigation.findNavController(v)
                         .navigate(R.id.action_homeFragment_to_productDetailsFragment, bundle);
             });

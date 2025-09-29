@@ -103,10 +103,10 @@
             />
         <action
             android:id="@+id/action_homeFragment_to_serviceDetailsFragment"
-            app:destination="@+id/serviceDetailsFragment"/>
+            app:destination="@id/serviceDetailsFragment"/>
         <action
             android:id="@+id/action_homeFragment_to_productDetailsFragment"
-            app:destination="@+id/productDetailsFragment"/>
+            app:destination="@id/productDetailsFragment"/>
     </fragment>
 
     <fragment
