@@ -128,6 +128,12 @@ public class EventDetailsFragment extends Fragment {
 
         binding.btnComing.setOnClickListener(v -> viewModel.addAttendee(event.getId()));
         binding.favoriteButton.setOnClickListener(v ->viewModel.changeFavoriteStatus(userId, event.getId()));
+        binding.budgetButton.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putLong("event_id", event.getId());
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_eventDetails_to_budgetPlannerFragment, args);
+        });
         binding.downloadPdfButton.setOnClickListener(v -> generatePdf(false));
         binding.downloadReportPdfButton.setOnClickListener(v -> generatePdf(true));
         binding.btnEditEvent.setOnClickListener(e -> {
