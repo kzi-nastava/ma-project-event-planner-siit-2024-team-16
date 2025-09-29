@@ -81,42 +81,46 @@ public class HomepageFragment extends Fragment {
         Button filterButton = view.findViewById(R.id.filter);
 
         filterButton.setOnClickListener(v -> {
-            Fragment filterFragment;
-
-            if (!fragmentSwitch.isChecked()) {
-                filterFragment = getChildFragmentManager().findFragmentById(R.id.filter_container);
-                if (!(filterFragment instanceof FilterSortEvents)) {
-                    filterFragment = new FilterSortEvents();
-                    ((FilterSortEvents) filterFragment).setOnFilterApplyListener(filters -> {
-                        if (allEvents instanceof CardCollection) {
-                            CardCollection cardCollection = (CardCollection) allEvents;
-                            cardCollection.eventFilters = filters;
-                            cardCollection.currentPage = 0;
-                            cardCollection.loadNewEvents();
-                        }
-                    });
-                }
+            if (filterContainer.getVisibility() == View.VISIBLE) {
+                filterContainer.setVisibility(View.GONE);
             } else {
-                filterFragment = getChildFragmentManager().findFragmentById(R.id.filter_container);
-                if (!(filterFragment instanceof FilterSortAssets)) {
-                    filterFragment = new FilterSortAssets();
-                    ((FilterSortAssets) filterFragment).setOnFilterApplyListener(filters -> {
-                        if (allServicesAndProducts instanceof CardCollection) {
-                            CardCollection cardCollection = (CardCollection) allServicesAndProducts;
-                            cardCollection.assetFilters = filters;
-                            cardCollection.currentPage = 0;
-                            cardCollection.loadNewAssets();
-                        }
-                    });
+                Fragment filterFragment;
+
+                if (!fragmentSwitch.isChecked()) {
+                    filterFragment = getChildFragmentManager().findFragmentById(R.id.filter_container);
+                    if (!(filterFragment instanceof FilterSortEvents)) {
+                        filterFragment = new FilterSortEvents();
+                        ((FilterSortEvents) filterFragment).setOnFilterApplyListener(filters -> {
+                            if (allEvents instanceof CardCollection) {
+                                CardCollection cardCollection = (CardCollection) allEvents;
+                                cardCollection.eventFilters = filters;
+                                cardCollection.currentPage = 0;
+                                cardCollection.loadNewEvents();
+                            }
+                        });
+                    }
+                } else {
+                    filterFragment = getChildFragmentManager().findFragmentById(R.id.filter_container);
+                    if (!(filterFragment instanceof FilterSortAssets)) {
+                        filterFragment = new FilterSortAssets();
+                        ((FilterSortAssets) filterFragment).setOnFilterApplyListener(filters -> {
+                            if (allServicesAndProducts instanceof CardCollection) {
+                                CardCollection cardCollection = (CardCollection) allServicesAndProducts;
+                                cardCollection.assetFilters = filters;
+                                cardCollection.currentPage = 0;
+                                cardCollection.loadNewAssets();
+                            }
+                        });
+                    }
                 }
+
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.filter_container, filterFragment)
+                        .setReorderingAllowed(true)
+                        .commit();
+
+                filterContainer.setVisibility(View.VISIBLE);
             }
-
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.filter_container, filterFragment)
-                    .setReorderingAllowed(true)
-                    .commit();
-
-            filterContainer.setVisibility(View.VISIBLE);
         });
 
     }
