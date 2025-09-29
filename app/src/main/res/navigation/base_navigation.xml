@@ -4,10 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/base_navigation"
-    app:startDestination="@+id/homepageContentFragment">
+    app:startDestination="@+id/HomepageFragment">
+    <!-- todo back <- -->
     <fragment
-        android:id="@+id/nav_login"
-        android:name="com.example.evenmate.fragments.LoginFragment"
+        android:id="@+id/nav_auth"
+        android:name="com.example.evenmate.fragments.auth.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -16,20 +17,281 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.evenmate.fragments.RegisterFragment"
+        android:name="com.example.evenmate.fragments.auth.RegisterFragment"
         android:label="Registration"
         tools:layout="@layout/fragment_register" />
+
     <fragment
-        android:id="@+id/homepageContentFragment"
-        android:name="com.example.evenmate.fragments.HomepageContentFragment"
-        android:label="Evenmate"
-        tools:layout="@layout/fragment_homepage_content"
+        android:id="@+id/eventTypesFragment"
+        android:name="com.example.evenmate.fragments.event_type.EventTypesFragment"
+        android:label="Event types"
+        tools:layout="@layout/fragment_event_types" >
+        <action
+            android:id="@+id/action_eventTypesFragment_to_createEventTypeFragment"
+            app:destination="@id/createEventTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEventTypeFragment"
+        android:name="com.example.evenmate.fragments.event_type.EventTypeFormFragment"
+        android:label="Create Event Type" />
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="@string/events_menu"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="ALL_EVENTS"/>
+        <action
+            android:id="@+id/action_eventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteEventsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="@string/favorite_events"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="FAVORITES"/>
+        <action
+            android:id="@+id/action_favoriteEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/yourEventsFragment"
+        android:name="com.example.evenmate.fragments.event.EventsFragment"
+        android:label="@string/your_events"
+        tools:layout="@layout/fragment_events">
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="YOUR_EVENTS"/>
+        <action
+            android:id="@+id/action_yourEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/HomepageFragment"
+        android:name="com.example.evenmate.fragments.homepage.HomepageFragment"
+        android:label="Home"
+        app:popUpTo="@+id/home"
+        app:popUpToInclusive="true"
+        tools:layout="@layout/fragment_homepage">
+        <action
+            android:id="@+id/action_homeFragment_to_eventDetailsFragment"
+            app:destination="@+id/eventDetailsFragment"
+            />
+        <action
+            android:id="@+id/action_homeFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.example.evenmate.fragments.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profile_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profile_to_HomepageFragment"
+            app:destination="@id/HomepageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.evenmate.fragments.profile.EditProfileFragment"
+        android:label="Edit Profile" />
+    <fragment
+        android:id="@+id/CalendarFragment"
+        android:name="com.example.evenmate.fragments.profile.CalendarFragment"
+        android:label="Calendar"
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_CalendarFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
+        android:label="@string/products"
+        tools:layout="@layout/fragment_products" >
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="ALL_PRODUCTS"/>
+        <action
+            android:id="@+id/action_productsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatListFragment"
+        android:name="com.example.evenmate.fragments.chat.ChatListFragment"
+        android:label="Chats"
+        tools:layout="@layout/fragment_chat_list" >
+        <action
+            android:id="@+id/action_chatListFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.evenmate.fragments.chat.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="chatId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryManagementFragment"
+        android:name="com.example.evenmate.fragments.category.CategoryManagementFragment"
+        android:label="Category Management"
+        tools:layout="@layout/fragment_category_management" >
+        <action
+            android:id="@+id/action_categoryManagementFragment_to_createCategoryFragment"
+            app:destination="@id/createCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createCategoryFragment"
+        android:name="com.example.evenmate.fragments.category.CategoryManagementFragment"
+        android:label="Create Category" />
+    <fragment
+        android:id="@+id/selectCategoryDialogFragment"
+        android:name="com.example.evenmate.fragments.category.SelectCategoryDialogFragment"
+        android:label="Favorite Products and Services"
+        tools:layout="@layout/dialog_select_category" />
+    <fragment
+        android:id="@+id/assetsPriceList"
+        android:name="com.example.evenmate.fragments.pricelist.PriceListFragment"
+        android:label="Price List"
+        tools:layout="@layout/fragment_price_list" />
+    <fragment
+        android:id="@+id/favoriteProductsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
+        android:label="@string/favorite_products"
+        tools:layout="@layout/fragment_products" >
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="FAVORITES"/>
+    </fragment>
+    <fragment
+        android:id="@+id/yourProductsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductsFragment"
+        android:label="@string/your_products"
+        tools:layout="@layout/fragment_products" >
+        <argument
+            android:name="fetch_mode"
+            app:argType="string"
+            android:defaultValue="YOUR_PRODUCTS"/>
+        <action android:id="@+id/action_productsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addServiceFragment"
+        android:name="com.example.evenmate.fragments.service.AddServiceFragment"
+        android:label="Add Service"
+        tools:layout="@layout/fragment_add_service" />
+    <fragment
+        android:id="@+id/editServiceFragment"
+        android:name="com.example.evenmate.fragments.service.EditServiceFragment"
+        android:label="Edit Service"
+        tools:layout="@layout/fragment_edit_service" >
+        <argument
+            android:name="service"
+            app:argType="com.example.evenmate.models.service.Service" />
+    </fragment>
+    <fragment
+        android:id="@+id/servicesFragment"
+        android:name="com.example.evenmate.fragments.service.ServicesFragment"
+        android:label="Service Management"
+        tools:layout="@layout/fragment_services" >
+        <action android:id="@+id/action_servicesFragment_to_addServiceFragment"
+            app:destination="@id/addServiceFragment" />
+        <action android:id="@+id/action_servicesFragment_to_editServiceFragment"
+            app:destination="@id/editServiceFragment" />
+        <action android:id="@+id/action_servicesFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.example.evenmate.fragments.event.EventDetailsFragment"
+        android:label="EventDetailsFragment" >
+        <argument
+            android:name="event"
+            app:argType="com.example.evenmate.models.event.Event" />
+
+        <action
+            android:id="@+id/action_eventDetails_to_profileFragment"
+            app:destination="@id/profile" />
+        <action
+            android:id="@+id/action_eventDetails_to_budgetPlannerFragment"
+            app:destination="@id/budgetPlannerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.evenmate.fragments.product.ProductDetailsFragment"
+        android:label="ProductDetailsFragment" >
+        <argument
+            android:name="product_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_profileFragment"
+            app:destination="@id/profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.example.evenmate.fragments.service.ServiceDetailsFragment"
+        android:label="ServiceDetailsFragment" >
+        <argument
+            android:name="service_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_profileFragment"
+            app:destination="@id/profile" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_reservationFragment"
+            app:destination="@id/reservationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reservationFragment"
+        android:name="com.example.evenmate.fragments.reservations.ReservationFragment"
+        android:label="ReservationFragment" >
+        <argument
+            android:name="service_id"
+            app:argType="long" />
+    </fragment>
+    <fragment android:id="@+id/reports_approval_fragment"
+        android:name="com.example.evenmate.fragments.admin_approvals.ReportApprovalsFragment"
+        android:label="@string/reports_approval"
+        />
+    <fragment android:id="@+id/comments_approval_fragment"
+        android:name="com.example.evenmate.fragments.admin_approvals.CommentApprovalsFragment"
+        android:label="@string/comments_approval"
         />
     <fragment
-        android:id="@+id/providerServicesProductsFragment"
-        android:name="com.example.evenmate.fragments.ProviderServicesProductsFragment"
-        android:label="Your Products and Services"
-        app:popUpTo="@+id/nav_products"
-        app:popUpToInclusive="true"
-        tools:layout="@layout/fragment_provider_services_products" />
+        android:id="@+id/notificationsFragment"
+        android:name="com.example.evenmate.fragments.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
+  <fragment
+        android:id="@+id/budgetPlannerFragment"
+        android:name="com.example.evenmate.fragments.budget.BudgetPlannerFragment"
+        android:label="@string/budget_planner"
+        tools:layout="@layout/fragment_budget_planner" >
+        <action
+            android:id="@+id/action_budgetPlannerFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_budgetPlannerFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
 </navigation>

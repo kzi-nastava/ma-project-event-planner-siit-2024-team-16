@@ -4,11 +4,14 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/homepageContentFragment"
+        <item android:id="@+id/HomepageFragment"
             android:title="@string/home"
             android:orderInCategory="100" />
-        <item android:id="@+id/providerServicesProductsFragment"
-            android:title="@string/providerServicesProductsNavbarItem"
+        <item android:id="@+id/eventsFragment"
+            android:title="@string/events_menu"
             android:orderInCategory="200" />
+        <item android:id="@+id/productsFragment"
+            android:title="@string/products"
+            android:orderInCategory="300" />
     </group>
 </menu>

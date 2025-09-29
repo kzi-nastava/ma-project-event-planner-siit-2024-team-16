@@ -13,7 +13,6 @@ public class FragmentTransition {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(layoutViewID, newFragment);
         if(addToBackstack) transaction.addToBackStack(null);
-
         transaction.commit();
     }
 }

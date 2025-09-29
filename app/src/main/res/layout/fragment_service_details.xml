@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="14dp"
+            android:layout_marginBottom="22dp">
+            <Button
+                android:id="@+id/btn_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/favorite"
+                android:layout_gravity="end|top"
+                android:padding="8dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/service_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="24sp"
+                    android:textColor="#141416"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:id="@+id/service_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#A881AF"
+                    android:layout_marginTop="4dp"/>
+                <FrameLayout
+                    android:id="@+id/service_average_review_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <Button
+                        android:id="@+id/btn_reserve"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reserve"
+                        android:layout_marginEnd="8dp"/>
+                    <Button
+                        android:id="@+id/btn_chat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/chat"/>
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/info_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="18dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#fff"
+                android:padding="14dp"
+                android:elevation="2dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#f3f4f6"
+                android:radius="16dp">
+                <TextView android:text="@string/description" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/service_description" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#fff"
+                android:padding="14dp"
+                android:elevation="2dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#f3f4f6"
+                android:radius="16dp">
+                <TextView android:text="@string/distinctiveness" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/service_distinctiveness" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#fff"
+                android:padding="14dp"
+                android:elevation="2dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#f3f4f6"
+                android:radius="16dp">
+                <TextView android:text="@string/reservation_deadline" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/service_reservation_deadline" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:text="@string/cancellation_deadline" android:textStyle="bold" android:layout_marginTop="10dp" android:layout_marginBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/service_cancellation_deadline" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_provider_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#fff"
+                android:padding="14dp"
+                android:elevation="2dp"
+                android:backgroundTint="#f3f4f6"
+                android:radius="16dp"
+                android:clickable="true"
+                android:focusable="true">
+                <TextView android:text="@string/company" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/provider_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#A881AF"/>
+                <TextView android:id="@+id/provider_phone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#A881AF"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#fff"
+                android:padding="14dp"
+                android:elevation="2dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#f3f4f6"
+                android:radius="16dp">
+                <TextView android:text="@string/price" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:id="@+id/service_price_old" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#A66897" android:visibility="gone"/>
+                    <TextView android:id="@+id/service_price_new" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#4CAF50" android:layout_marginStart="8dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#fff"
+                android:padding="14dp"
+                android:elevation="2dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#f3f4f6"
+                android:radius="16dp">
+                <TextView android:text="@string/length" android:textStyle="bold" android:layout_marginBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:id="@+id/service_length" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#A881AF"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/service_comments_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+</ScrollView>
