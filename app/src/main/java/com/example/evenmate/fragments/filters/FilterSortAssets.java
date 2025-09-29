@@ -54,12 +54,16 @@ public class FilterSortAssets extends Fragment {
     private final List<Long> selectedTypes = new ArrayList<>();
     private final List<Long> selectedProviders = new ArrayList<>();
     private final List<String> selectedLocations = new ArrayList<>();
-
+    private final List<Long> categoriesIds = new ArrayList<>();
+    private final List<Long> typesIds = new ArrayList<>();
+    private final List<Long> providersIds = new ArrayList<>();
     private final HashMap<Long, String> providersMap = new HashMap<>();
     private final HashMap<Long, String> typesMap = new HashMap<>();
     private final HashMap<Long, String> categoriesMap = new HashMap<>();
+
     private OnFilterApplyListener listener;
-    private final HashMap<String, String> sortOptionsMap = new HashMap<>(){{
+
+    private final HashMap<String, String> sortOptionsMap = new HashMap<>() {{
         put("id,asc", "Date added ↑");
         put("id,desc", "Date added ↓");
         put("name,asc", "Asset name ↑");
@@ -68,10 +72,10 @@ public class FilterSortAssets extends Fragment {
         put("price,desc", "Asset price ↓");
         put("discount,asc", "Asset discount ↑");
         put("discount,desc", "Asset discount ↓");
-
     }};
     private int selectedSortIndex = 0;
     private String selectedSortKey;
+
     public interface OnFilterApplyListener {
         void onApplyFilters(AssetFilters filters);
     }
@@ -161,19 +165,19 @@ public class FilterSortAssets extends Fragment {
     private void setupMultiChoiceDialogs() {
         categoriesButton.setOnClickListener(v -> {
             if (categoriesNames != null)
-                showMultiChoiceDialog("Select Categories", categoriesNames, selectedCategoriesArray, selectedCategories,categoriesMap, categoriesButton);
+                showMultiChoiceDialog("Select Categories", categoriesNames, selectedCategoriesArray, selectedCategories, categoriesIds, categoriesMap, categoriesButton);
             else Toast.makeText(requireContext(), "Categories not loaded yet", Toast.LENGTH_SHORT).show();
         });
 
         typesButton.setOnClickListener(v -> {
             if (typesNames != null)
-                showMultiChoiceDialog("Select Event Types", typesNames, selectedTypesArray, selectedTypes,typesMap, typesButton);
+                showMultiChoiceDialog("Select Event Types", typesNames, selectedTypesArray, selectedTypes, typesIds, typesMap, typesButton);
             else Toast.makeText(requireContext(), "Types not loaded yet", Toast.LENGTH_SHORT).show();
         });
 
         providersButton.setOnClickListener(v -> {
             if (providersNames != null)
-                showMultiChoiceDialog("Select Providers", providersNames, selectedProvidersArray, selectedProviders,providersMap, providersButton);
+                showMultiChoiceDialog("Select Providers", providersNames, selectedProvidersArray, selectedProviders, providersIds, providersMap, providersButton);
             else Toast.makeText(requireContext(), "Providers not loaded yet", Toast.LENGTH_SHORT).show();
         });
 
@@ -183,14 +187,13 @@ public class FilterSortAssets extends Fragment {
     }
 
     private void showMultiChoiceDialog(String title, String[] items, boolean[] checkedItems,
-                                       List<Long> selectedIdList, HashMap<Long, String> idToNameMap,
-                                       TextView targetButton) {
+                                       List<Long> selectedIdList, List<Long> idList,
+                                       HashMap<Long, String> idToNameMap, TextView targetButton) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(title);
 
         builder.setMultiChoiceItems(items, checkedItems, (dialog, which, isChecked) -> {
-            Long id = (Long) idToNameMap.keySet().toArray()[which];
-
+            Long id = idList.get(which);
             if (isChecked) {
                 if (!selectedIdList.contains(id)) selectedIdList.add(id);
             } else {
@@ -213,9 +216,9 @@ public class FilterSortAssets extends Fragment {
 
     private void setupSortDialog() {
         sortButton.setOnClickListener(v -> {
-            String[] sortLabels =  sortOptionsMap.values().toArray(new String[0]);
+            String[] sortLabels = sortOptionsMap.values().toArray(new String[0]);
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setSingleChoiceItems( sortLabels, selectedSortIndex, (dialog, which) -> selectedSortIndex = which);
+            builder.setSingleChoiceItems(sortLabels, selectedSortIndex, (dialog, which) -> selectedSortIndex = which);
 
             builder.setPositiveButton("OK", (dialog, which) -> {
                 String label = sortLabels[selectedSortIndex];
@@ -233,7 +236,6 @@ public class FilterSortAssets extends Fragment {
             builder.show();
         });
     }
-
 
     private void setupApplyButton(View view) {
         Button applyButton = view.findViewById(R.id.filter_button);
@@ -309,11 +311,13 @@ public class FilterSortAssets extends Fragment {
 
                     typesNames = new String[typesList.size()];
                     selectedTypesArray = new boolean[typesList.size()];
+                    typesIds.clear();
 
                     for (int i = 0; i < typesList.size(); i++) {
                         EventType t = typesList.get(i);
                         typesNames[i] = t.getName();
                         selectedTypesArray[i] = false;
+                        typesIds.add(t.getId());
                         typesMap.put(t.getId(), t.getName());
                     }
 
@@ -337,11 +341,13 @@ public class FilterSortAssets extends Fragment {
 
                     providersNames = new String[providersList.size()];
                     selectedProvidersArray = new boolean[providersList.size()];
+                    providersIds.clear();
 
                     for (int i = 0; i < providersList.size(); i++) {
                         String fullName = providersList.get(i).getFirstName() + " " + providersList.get(i).getLastName();
                         providersNames[i] = fullName;
                         selectedProvidersArray[i] = false;
+                        providersIds.add(providersList.get(i).getId());
                         providersMap.put(providersList.get(i).getId(), fullName);
                     }
 
@@ -399,8 +405,9 @@ public class FilterSortAssets extends Fragment {
             }
         });
     }
+
     private void loadCategoriesFromBackend() {
-        ClientUtils.categoryService.getCategories(null,null).enqueue(new Callback<>() {
+        ClientUtils.categoryService.getCategories(null, null).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<PaginatedResponse<Category>> call, @NonNull retrofit2.Response<PaginatedResponse<Category>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -408,11 +415,13 @@ public class FilterSortAssets extends Fragment {
 
                     categoriesNames = new String[categoryList.size()];
                     selectedCategoriesArray = new boolean[categoryList.size()];
+                    categoriesIds.clear();
 
                     for (int i = 0; i < categoryList.size(); i++) {
                         Category c = categoryList.get(i);
                         categoriesNames[i] = c.getName();
                         selectedCategoriesArray[i] = false;
+                        categoriesIds.add(c.getId());
                         categoriesMap.put(c.getId(), c.getName());
                     }
 
