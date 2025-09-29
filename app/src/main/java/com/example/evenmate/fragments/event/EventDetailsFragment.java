@@ -125,7 +125,9 @@ public class EventDetailsFragment extends Fragment {
         binding.downloadReportPdfButton.setVisibility(isAdmin || isOrganizer ? View.VISIBLE : View.GONE);
         binding.btnDeleteEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
         binding.btnEditEvent.setVisibility(isOrganizer ? View.VISIBLE : View.GONE);
+        binding.btnChat.setVisibility(AuthManager.loggedInUser != null && !AuthManager.loggedInUser.getId().equals(event.getOrganizer().getId()) ? View.VISIBLE : View.GONE);
 
+        binding.btnChat.setOnClickListener(v -> viewModel.initiateChat(event.getOrganizer().getId()));
         binding.btnComing.setOnClickListener(v -> viewModel.addAttendee(event.getId()));
         binding.favoriteButton.setOnClickListener(v ->viewModel.changeFavoriteStatus(userId, event.getId()));
         binding.budgetButton.setOnClickListener(v -> {

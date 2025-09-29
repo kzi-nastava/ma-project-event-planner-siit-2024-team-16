@@ -109,10 +109,11 @@ public class CommentsFragment extends Fragment {
             return;
         }
         if (assetId != null) {
-            ClientUtils.commentReviewService.commentAsset(assetId, new CommentCreate(text)).enqueue(new Callback<Comment>() {
+            ClientUtils.commentReviewService.commentAsset(assetId, new CommentCreate(text)).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Comment> call, Response<Comment> response) {
+                public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
+                        Toast.makeText(requireContext(), "Comment added successfully", Toast.LENGTH_SHORT).show();
                         inputComment.setText("");
                         loadComments();
                     } else {
@@ -120,16 +121,17 @@ public class CommentsFragment extends Fragment {
                     }
                 }
                 @Override
-                public void onFailure(Call<Comment> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     Log.e("CommentsFragment", "Failed to add comment", t);
                     Toast.makeText(requireContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
                 }
             });
         } else if (userId != null) {
-            ClientUtils.commentReviewService.commentProvider(userId, new CommentCreate(text)).enqueue(new Callback<Comment>() {
+            ClientUtils.commentReviewService.commentProvider(userId, new CommentCreate(text)).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Comment> call, Response<Comment> response) {
+                public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
+                        Toast.makeText(requireContext(), "Comment added successfully", Toast.LENGTH_SHORT).show();
                         inputComment.setText("");
                         loadComments();
                     } else {
@@ -137,7 +139,7 @@ public class CommentsFragment extends Fragment {
                     }
                 }
                 @Override
-                public void onFailure(Call<Comment> call, Throwable t) {
+                public void onFailure(Call<Void> call, Throwable t) {
                     Log.e("CommentsFragment", "Failed to add comment", t);
                     Toast.makeText(requireContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
                 }

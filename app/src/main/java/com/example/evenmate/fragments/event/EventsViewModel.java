@@ -1,6 +1,7 @@
 package com.example.evenmate.fragments.event;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -9,7 +10,9 @@ import androidx.lifecycle.ViewModel;
 import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.PaginatedResponse;
+import com.example.evenmate.models.chat.Chat;
 import com.example.evenmate.models.event.Event;
+import com.example.evenmate.utils.ErrorUtils;
 
 import java.util.List;
 
@@ -135,6 +138,25 @@ public class EventsViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
                 errorMessage.postValue(t.getMessage());
+            }
+        });
+    }
+
+    public void initiateChat(Long organizerId) {
+        ClientUtils.chatService.initiateChat(organizerId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Chat> call, Response<Chat> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(ClientUtils.getContext(), "Chat initiated, check your chats.", Toast.LENGTH_SHORT).show();
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Chat> call, Throwable throwable) {
+                Log.e("ProductDetailsViewModel", "Failed to initiate chat", throwable);
+                Toast.makeText(ClientUtils.getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

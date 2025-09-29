@@ -42,7 +42,9 @@ public class ServiceDetailsFragment extends Fragment {
         long serviceId = getArguments() != null ? getArguments().getLong(ARG_SERVICE_ID, -1) : -1;
         if (serviceId != -1) {
             viewModel.fetchServiceById(serviceId);
-            viewModel.isFavorite(serviceId);
+            if (AuthManager.loggedInUser != null) {
+                viewModel.isFavorite(serviceId);
+            }
         }
 
         Button btnFavorite = view.findViewById(R.id.btn_favorite);
@@ -82,7 +84,7 @@ public class ServiceDetailsFragment extends Fragment {
             tvCancellationDeadline.setText(service.getCancellationDeadline() + "d");
             tvReservationDeadline.setText(service.getReservationDeadline() + "d");
 
-            btnFavorite.setEnabled(AuthManager.loggedInUser != null);
+            btnFavorite.setVisibility(AuthManager.loggedInUser != null ? View.VISIBLE : View.GONE);
             btnReserve.setEnabled(service.getIsAvailable() && AuthManager.loggedInUser != null && AuthManager.loggedInUser.getRole().equals("EventOrganizer"));
             btnChat.setEnabled(AuthManager.loggedInUser != null && !AuthManager.loggedInUser.getId().equals(service.getProvider().getId()));
 
