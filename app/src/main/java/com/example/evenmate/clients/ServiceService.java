@@ -47,7 +47,7 @@ public interface ServiceService {
     @PUT("services/{serviceId}/favorite")
     Call<Void> toggleFavorite(@Path("serviceId") Long serviceId);
 
-    @POST("/api/v1/reservations")
+    @POST("reservations")
     Call<Reservation> createReservation(@Body ReservationRequest request);
 }
 
