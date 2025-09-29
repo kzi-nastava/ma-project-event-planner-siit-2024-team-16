@@ -94,10 +94,9 @@ public class ProductsFragment extends ListFragment {
         }
 
         private void setupFilterAndSearch() {
-            SearchView searchView = binding.getRoot().findViewById(R.id.search_bar);
-            Button filterButton = binding.getRoot().findViewById(R.id.filter);
-            filterContainer = binding.getRoot().findViewById(R.id.filter_container);
-
+            SearchView searchView = binding.searchBar;
+            Button filterButton = binding.filter;
+            filterContainer = binding.filterContainer;
             if(this.fetchMode.equals("FAVORITES")){
                 searchView.setVisibility(View.GONE);
                 filterContainer.setVisibility(View.GONE);
