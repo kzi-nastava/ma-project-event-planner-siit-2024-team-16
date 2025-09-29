@@ -228,7 +228,7 @@ public class AgendaFragment extends DialogFragment {
             if (error != null) {
                 ToastUtils.showCustomToast(requireContext(),
                         error,
-                        false);
+                        true);
             }
         });
     }

@@ -22,18 +22,20 @@
         <item android:id="@+id/profile"
             android:title="@string/your_profile"
             android:orderInCategory="500"/>
+        <item android:id="@+id/CalendarFragment"
+            android:title="@string/calendar"
+            android:orderInCategory="600"/>
         <item android:id="@+id/favoriteProductsFragment"
             android:title="@string/favorite_products"
-            android:orderInCategory="600"/>
+            android:orderInCategory="700"/>
         <item android:id="@+id/productsFragment"
             android:title="@string/products"
-            android:orderInCategory="700" />
+            android:orderInCategory="800" />
         <item android:id="@+id/reports_approval_fragment"
             android:title="@string/reports_approval"
-            android:orderInCategory="800"/>
+            android:orderInCategory="900"/>
          <item android:id="@+id/comments_approval_fragment"
             android:title="@string/comments_approval"
-            android:orderInCategory="800"/>
-
+            android:orderInCategory="1000"/>
     </group>
 </menu>

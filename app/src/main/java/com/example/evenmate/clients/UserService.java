@@ -6,6 +6,7 @@ import com.example.evenmate.models.asset.Product;
 import com.example.evenmate.models.event.Event;
 import com.example.evenmate.models.user.Block;
 import com.example.evenmate.models.user.CalendarItem;
+import com.example.evenmate.models.user.Notification;
 import com.example.evenmate.models.user.Report;
 import com.example.evenmate.models.user.UpdateUserRequest;
 import com.example.evenmate.models.user.User;
@@ -130,4 +131,19 @@ public interface UserService {
 
     @DELETE("users/report/{id}")
     Call<Void> deleteReport(@Path("id") Long reportId);
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @GET("users/notifications")
+    Call<List<Notification>> getAllNotifications();
+
+    @Headers({
+            "User-Agent: Mobile-Android",
+            "Content-Type:application/json"
+    })
+    @PUT("users/notifications/{id}/read")
+    Call<Notification> toggleRead(@Path("id") Long notificationId);
+
 }
