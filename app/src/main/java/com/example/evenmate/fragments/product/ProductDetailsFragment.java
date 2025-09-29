@@ -71,6 +71,7 @@ public class ProductDetailsFragment extends Fragment {
                 priceOld.setVisibility(View.GONE);
                 priceNew.setText(String.valueOf(product.getPrice()));
             }
+            btnPurchase.setEnabled(product.getIsAvailable());
 
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.product_comments_container, CommentsFragment.newInstance(product.getId(), null))

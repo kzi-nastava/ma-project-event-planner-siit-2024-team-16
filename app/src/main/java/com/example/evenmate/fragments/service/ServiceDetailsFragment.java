@@ -80,6 +80,7 @@ public class ServiceDetailsFragment extends Fragment {
 
             tvCancellationDeadline.setText(service.getCancellationDeadline() + "d");
             tvReservationDeadline.setText(service.getReservationDeadline() + "d");
+            btnReserve.setEnabled(service.getIsAvailable());
 
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.service_comments_container, CommentsFragment.newInstance(service.getId(), null))
