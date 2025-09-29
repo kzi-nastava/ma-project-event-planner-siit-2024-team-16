@@ -59,7 +59,23 @@ public class PageActivity extends AppCompatActivity implements LoginCallback {
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.HomepageFragment).setOpenableLayout(drawer).build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.HomepageFragment,
+                R.id.categoryManagementFragment,
+                R.id.eventsFragment,
+                R.id.favoriteEventsFragment,
+                R.id.eventTypesFragment,
+                R.id.profile,
+                R.id.CalendarFragment,
+                R.id.favoriteProductsFragment,
+                R.id.productsFragment,
+                R.id.reports_approval_fragment,
+                R.id.comments_approval_fragment,
+                R.id.yourEventsFragment,
+                R.id.yourProductsFragment,
+                R.id.servicesFragment,
+                R.id.assetsPriceList
+        ).setOpenableLayout(drawer).build();
 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
