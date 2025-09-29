@@ -247,4 +247,6 @@
     <string name="photo_url_optional">Photo URL (optional)</string>
     <string name="purchase">Purchase</string>
     <string name="company">Company</string>
+    <string name="reserve">Reserve</string>
+    <string name="length">Length</string>
 </resources>
