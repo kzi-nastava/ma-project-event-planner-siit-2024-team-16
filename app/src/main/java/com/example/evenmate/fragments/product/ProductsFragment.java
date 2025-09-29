@@ -136,7 +136,7 @@ public class ProductsFragment extends ListFragment {
                         .setReorderingAllowed(true)
                         .commit();
 
-                filterContainer.setVisibility(View.VISIBLE);
+                filterContainer.setVisibility(filterContainer.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
             });
         }
 
