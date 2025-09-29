@@ -10,6 +10,7 @@ import com.example.evenmate.clients.ServiceService;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.chat.Chat;
 import com.example.evenmate.models.service.Service;
+import com.example.evenmate.utils.ErrorUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +51,8 @@ public class ServiceDetailsViewModel extends ViewModel {
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     isFavorite.postValue(response.body());
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -67,6 +70,8 @@ public class ServiceDetailsViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     isFavorite.setValue(!Boolean.TRUE.equals(isFavorite.getValue()));
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -78,10 +83,6 @@ public class ServiceDetailsViewModel extends ViewModel {
         });
     }
 
-    public void reserveService() {
-        // TODO: Implement reservation logic
-    }
-
     public void initiateChat(Long providerId) {
         ClientUtils.chatService.initiateChat(providerId).enqueue(new Callback<>() {
             @Override
@@ -89,7 +90,7 @@ public class ServiceDetailsViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(ClientUtils.getContext(), "Chat initiated, check your chats.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(ClientUtils.getContext(), "Failed to initiate chat", Toast.LENGTH_SHORT).show();
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -99,9 +100,5 @@ public class ServiceDetailsViewModel extends ViewModel {
                 Toast.makeText(ClientUtils.getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void goToProviderProfile() {
-        // TODO: Implement navigation to provider profile
     }
 }

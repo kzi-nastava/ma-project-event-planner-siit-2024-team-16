@@ -13,6 +13,7 @@ import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.event.EventType;
 import com.example.evenmate.models.service.Service;
 import com.example.evenmate.models.service.ServiceFilter;
+import com.example.evenmate.utils.ErrorUtils;
 
 import java.util.List;
 
@@ -117,7 +118,7 @@ public class ServicesViewModel extends ViewModel {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()) {
-                    errorMessage.postValue("Failed to delete service. Code: " + response.code());
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 

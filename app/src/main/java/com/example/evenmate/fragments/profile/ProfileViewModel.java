@@ -10,6 +10,7 @@ import com.example.evenmate.auth.AuthManager;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.user.UpdateUserRequest;
 import com.example.evenmate.models.user.User;
+import com.example.evenmate.utils.ErrorUtils;
 
 import lombok.Getter;
 import retrofit2.Call;
@@ -33,6 +34,24 @@ public class ProfileViewModel extends ViewModel {
     }
 
     public ProfileViewModel(){ }
+
+    public void fetchUserById(Long id) {
+        ClientUtils.userService.getById(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    user.postValue(response.body());
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                errorMessage.postValue(t.getMessage());
+            }
+        });
+    }
 
     public void update(UpdateUserRequest user) {
         Call<User> call = ClientUtils.userService.update(user);

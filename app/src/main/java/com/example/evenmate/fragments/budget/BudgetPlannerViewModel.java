@@ -14,6 +14,7 @@ import com.example.evenmate.models.budget.BudgetItem;
 import com.example.evenmate.models.budget.BudgetItemCreate;
 import com.example.evenmate.models.budget.BudgetItemUpdate;
 import com.example.evenmate.models.category.Category;
+import com.example.evenmate.utils.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +96,8 @@ public class BudgetPlannerViewModel extends ViewModel {
             public void onResponse(Call<BudgetItem> call, Response<BudgetItem> response) {
                 if (response.isSuccessful()) {
                     fetchBudgetItems();
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -112,6 +115,8 @@ public class BudgetPlannerViewModel extends ViewModel {
             public void onResponse(Call<BudgetItem> call, Response<BudgetItem> response) {
                 if (response.isSuccessful()) {
                     fetchBudgetItems();
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -129,6 +134,8 @@ public class BudgetPlannerViewModel extends ViewModel {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     fetchBudgetItems();
+                } else {
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 

@@ -1,16 +1,16 @@
-package com.example.evenmate.viewmodels;
+package com.example.evenmate.fragments.category;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.evenmate.clients.AssetService;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.asset.Asset;
 import com.example.evenmate.models.category.Category;
 import com.example.evenmate.models.category.CategoryRequest;
 import com.example.evenmate.models.category.CategorySuggestion;
 import com.example.evenmate.models.PaginatedResponse;
+import com.example.evenmate.utils.ErrorUtils;
 
 import java.util.List;
 
@@ -71,6 +71,7 @@ public class CategoryViewModel extends ViewModel {
                     fetchCategories();
                 } else {
                     error.setValue("Failed to create category");
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -92,6 +93,7 @@ public class CategoryViewModel extends ViewModel {
                     fetchCategories();
                 } else {
                     error.setValue("Failed to update category");
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -113,6 +115,7 @@ public class CategoryViewModel extends ViewModel {
                     fetchCategories();
                 } else {
                     error.setValue("Failed to delete category");
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                 }
             }
 
@@ -153,6 +156,10 @@ public class CategoryViewModel extends ViewModel {
                 isLoading.setValue(false);
                 fetchCategories();
                 fetchSuggestions();
+                if (!response.isSuccessful()) {
+                    error.setValue("Failed to approve suggestion");
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
+                }
             }
 
             @Override
@@ -171,6 +178,10 @@ public class CategoryViewModel extends ViewModel {
                 isLoading.setValue(false);
                 fetchCategories();
                 fetchSuggestions();
+                if (!response.isSuccessful()) {
+                    error.setValue("Failed to edit suggestion");
+                    ErrorUtils.showErrorToast(response, ClientUtils.getContext());
+                }
             }
 
             @Override
@@ -193,6 +204,7 @@ public class CategoryViewModel extends ViewModel {
                         fetchSuggestions();
                     } else {
                         error.setValue("Failed to update asset category");
+                        ErrorUtils.showErrorToast(response, ClientUtils.getContext());
                     }
                 }
                 @Override
