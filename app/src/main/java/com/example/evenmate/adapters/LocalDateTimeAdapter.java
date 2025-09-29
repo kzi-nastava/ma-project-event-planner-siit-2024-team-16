@@ -1,5 +1,7 @@
 package com.example.evenmate.adapters;
 
+import android.util.Log;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -17,7 +19,7 @@ import java.time.temporal.ChronoField;
 public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
     private static final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
             .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
-            .appendFraction(ChronoField.NANO_OF_SECOND, 0, 6, true) // Accepts up to microseconds
+            .appendFraction(ChronoField.NANO_OF_SECOND, 0, 6, true)
             .toFormatter();
 
     @Override

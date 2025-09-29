@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import okhttp3.WebSocket;
 import retrofit2.Call;
@@ -79,21 +80,20 @@ public class ChatFragment extends Fragment {
     }
 
     private void connectWebSocket() {
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://" + ClientUtils.BASE_URL + "/ws");
+        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, ClientUtils.WEBSOCKET_URL);
         stompClient.connect();
 
-//        Disposable d = stompClient.lifecycle()
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(lifecycleEvent -> {
-//                    Log.d("STOMP_LIFECYCLE", "Event: " + lifecycleEvent.getType());
-//                    if (lifecycleEvent.getType() == LifecycleEvent.Type.OPENED) {
-//                        Log.d("STOMP_LIFECYCLE", "Connected!");
-////                        buttonSend.setEnabled(true); // Optional: enable send button here
-//                    }
-//                    if (lifecycleEvent.getType() == LifecycleEvent.Type.ERROR) {
-//                        Log.e("STOMP_LIFECYCLE", "Connection error", lifecycleEvent.getException());
-//                    }
-//                });
+        Disposable d = stompClient.lifecycle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(lifecycleEvent -> {
+                    Log.d("STOMP_LIFECYCLE", "Event: " + lifecycleEvent.getType());
+                    if (lifecycleEvent.getType() == LifecycleEvent.Type.OPENED) {
+                        Log.d("STOMP_LIFECYCLE", "Connected!");
+                    }
+                    if (lifecycleEvent.getType() == LifecycleEvent.Type.ERROR) {
+                        Log.e("STOMP_LIFECYCLE", lifecycleEvent.getException().getMessage(), lifecycleEvent.getException());
+                    }
+                });
 
         Disposable disposable = stompClient.lifecycle()
                 .filter(lifecycleEvent -> lifecycleEvent.getType() == LifecycleEvent.Type.OPENED)
@@ -101,7 +101,7 @@ public class ChatFragment extends Fragment {
 //                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(lifecycleEvent -> {
                     Disposable disposable2 = stompClient.topic("/topic/chat/" + chatId + "/messages").subscribe(topicMessage -> {
-                        Message message = new Gson().fromJson(topicMessage.getPayload(), Message.class);
+                        Message message = ClientUtils.gson.fromJson(topicMessage.getPayload(), Message.class);
                         if (getActivity() != null) {
                             getActivity().runOnUiThread(() -> {
                                 if (messageAdapter != null) {

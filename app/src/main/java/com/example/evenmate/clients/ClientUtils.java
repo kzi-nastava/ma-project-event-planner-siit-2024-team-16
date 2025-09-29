@@ -21,6 +21,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ClientUtils {
     public static final String BASE_URL = "http://" + BuildConfig.IP_ADDR + ":8080";
+    public static final String WEBSOCKET_URL = "ws://" + BuildConfig.IP_ADDR + ":8080/ws";
+
     public static final String SERVICE_API_PATH = BASE_URL + "/api/v1/";
     @Getter
     private static Context context;
