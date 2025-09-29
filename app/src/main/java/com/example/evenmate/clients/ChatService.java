@@ -7,7 +7,9 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ChatService {
     @GET("chat")
@@ -15,4 +17,7 @@ public interface ChatService {
 
     @GET("chat/{chatId}/messages")
     Call<List<Message>> getMessages(@Path("chatId") Long chatId);
+
+    @POST("chat/initiate")
+    Call<Chat> initiateChat(@Query("userId") Long userId);
 }
