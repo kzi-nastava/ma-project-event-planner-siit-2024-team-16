@@ -22,10 +22,10 @@ public interface CommentReviewService {
     Call<PaginatedResponse<Comment>> getProviderComments(@Path("userId") Long userId, @Query("page") Integer page, @Query("size") Integer size);
 
     @POST("assets/{assetId}/comment")
-    Call<Comment> commentAsset(@Path("assetId") Long assetId, @Body CommentCreate comment);
+    Call<Void> commentAsset(@Path("assetId") Long assetId, @Body CommentCreate comment);
 
     @POST("users/{userId}/comment")
-    Call<Comment> commentProvider(@Path("userId") Long userId, @Body CommentCreate comment);
+    Call<Void> commentProvider(@Path("userId") Long userId, @Body CommentCreate comment);
 
     @POST("assets/{assetId}/review")
     Call<Void> reviewAsset(@Path("assetId") Long assetId, @Body ReviewCreate review);
