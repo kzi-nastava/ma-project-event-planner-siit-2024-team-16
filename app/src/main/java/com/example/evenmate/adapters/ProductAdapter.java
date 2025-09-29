@@ -154,7 +154,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     }
 
     private void checkFavoriteStatus(Long productId, MaterialButton btnFavorite) {
-        retrofit2.Call<Boolean> call = ClientUtils.productService.checkIsProductFavorite(productId);
+        retrofit2.Call<Boolean> call = ClientUtils.productService.isFavorite(productId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Boolean> call, @NonNull Response<Boolean> response) {
@@ -176,7 +176,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
     }
 
     private void changeFavoriteStatus(Long productId, MaterialButton btnFavorite) {
-        retrofit2.Call<Void> call = ClientUtils.productService.favoriteProductToggle(productId);
+        retrofit2.Call<Void> call = ClientUtils.productService.toggleFavorite(productId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
