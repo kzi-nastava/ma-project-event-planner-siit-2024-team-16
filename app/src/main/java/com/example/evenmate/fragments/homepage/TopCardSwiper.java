@@ -99,9 +99,7 @@ public class TopCardSwiper extends Fragment {
 
             @Override
             public void onFailure(Call<List<Asset>> call, Throwable t) {
-                if (isAdded()) {
-                    Toast.makeText(requireContext(), "Error fetching assets: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                if (isAdded()) {Toast.makeText(requireContext(), "Error fetching assets: " + t.getMessage(), Toast.LENGTH_SHORT).show();}
             }
         });
     }
@@ -119,9 +117,7 @@ public class TopCardSwiper extends Fragment {
 
             @Override
             public void onFailure(Call<List<Event>> call, Throwable t) {
-                if (isAdded()) {
-                    Toast.makeText(requireContext(), "Error fetching events: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                if (isAdded()) {Toast.makeText(requireContext(), "Error fetching events: " + t.getMessage(), Toast.LENGTH_SHORT).show();}
             }
         });
     }
