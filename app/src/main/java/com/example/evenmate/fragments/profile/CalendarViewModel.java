@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.evenmate.clients.ClientUtils;
 import com.example.evenmate.models.user.CalendarItem;
+
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.ArrayList;
 import lombok.Getter;
@@ -36,7 +39,19 @@ public class CalendarViewModel extends ViewModel {
 
                     Log.d("CalendarViewModel", "Loaded " + transformedItems.size() + " calendar items");
                 } else {
-                    error.setValue("Failed to load calendar data");
+                    try {
+                        String errorJson = response.errorBody() != null ? response.errorBody().string() : null;
+                        if (errorJson != null) {
+                            JSONObject obj = new JSONObject(errorJson);
+                            String rawMsg = obj.optString("message");
+                            String cleanMsg = rawMsg.replaceAll(".*\"(.*)\".*", "$1");
+                            error.postValue(cleanMsg);
+                            Log.d("ref", cleanMsg);
+                        }
+                    } catch (Exception e) {
+                        error.setValue("Failed to parse error body");
+
+                    }
                 }
             }
 
